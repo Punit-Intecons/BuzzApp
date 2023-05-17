@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../controller/constant.dart';
 
 class MyTextField extends StatelessWidget {
   final controller;
@@ -29,7 +30,7 @@ class MyTextField extends StatelessWidget {
             fillColor: Colors.grey.shade200,
             filled: true,
             hintText: hintText,
-            hintStyle: TextStyle(color: Colors.grey[500])),
+            hintStyle: const TextStyle(color: blackColor)),
       ),
     );
   }

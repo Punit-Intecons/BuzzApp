@@ -6,9 +6,7 @@ import 'package:buzzapp/components/square_tile.dart';
 import 'package:buzzapp/pages/signup_page.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'dashboard_screen.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -185,7 +183,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: whiteColor,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -193,22 +191,22 @@ class _LoginPageState extends State<LoginPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 50),
-
                 // logo
                 const Icon(
                   Icons.lock,
                   size: 100,
+                  color: primaryColor,
                 ),
 
                 const SizedBox(height: 50),
 
                 // welcome back, you've been missed!
-                Text(
+                const Text(
                   'Welcome back you\'ve been missed!',
                   style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 16,
-                  ),
+                      color: blackColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 25),
@@ -232,14 +230,14 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 10),
 
                 // forgot password?
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Text(
                         'Forgot Password?',
-                        style: TextStyle(color: Colors.grey[600]),
+                        style: TextStyle(color: blackColor),
                       ),
                     ],
                   ),
@@ -249,32 +247,34 @@ class _LoginPageState extends State<LoginPage> {
 
                 // sign in button
                 MyButton(
-                    onTap: () => signUserIn(context), buttonText: "Sign In"),
+                    onTap: () => signUserIn(context),
+                    buttonText: "Sign In",
+                    buttonColor: primaryColor),
 
                 const SizedBox(height: 50),
 
                 // or continue with
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     children: [
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
-                          color: Colors.grey[400],
+                          color: blackColor,
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(
                           'Or continue with',
-                          style: TextStyle(color: Colors.grey[700]),
+                          style: TextStyle(color: blackColor),
                         ),
                       ),
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
-                          color: Colors.grey[400],
+                          color: blackColor,
                         ),
                       ),
                     ],
@@ -284,7 +284,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 25),
 
                 // google + apple sign in buttons
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // google button
@@ -315,9 +315,9 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Not a member?',
-                      style: TextStyle(color: Colors.grey[700]),
+                      style: TextStyle(color: blackColor),
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
@@ -331,7 +331,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: const Text(
                         'Register now',
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
