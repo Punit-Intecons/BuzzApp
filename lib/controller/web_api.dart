@@ -32,9 +32,8 @@ class WebConfig {
       'Email': emailAddress,
     };
     NetworkHelper networkHelper = NetworkHelper('$kBaseURL/check_OTP');
-    var loginData =
-        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
-    return loginData;
+    var data = await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return data;
   }
 
   static Future<dynamic> resendOTP({required String emailAddress}) async {

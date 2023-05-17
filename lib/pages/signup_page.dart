@@ -6,12 +6,13 @@ import 'package:buzzapp/components/square_tile.dart';
 import 'package:buzzapp/pages/login_page.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../controller/web_api.dart';
 
 class SignUpPage extends StatefulWidget {
   static const routeName = '/sign-up';
-  SignUpPage({super.key});
+  const SignUpPage({super.key});
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -60,7 +61,11 @@ class _SignUpPageState extends State<SignUpPage> {
           lastNameString: lastnameController.text);
       if (getData['status'] == true) {
         await EasyLoading.showSuccess(getData['msg']);
-        Navigator.pushNamed(context, VerifyOTPScreen.routeName);
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return VerifyOTPScreen(
+            emailAddress: emailController.text,
+          );
+        }));
       } else {
         await EasyLoading.showError(getData['msg']);
       }
@@ -167,14 +172,20 @@ class _SignUpPageState extends State<SignUpPage> {
                 // google + apple sign in buttons
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     // google button
-                    SquareTile(imagePath: 'assets/google.png'),
+                    SquareTile(
+                      imagePath: 'assets/google.png',
+                      onTap: () {},
+                    ),
 
-                    SizedBox(width: 25),
+                    const SizedBox(width: 25),
 
                     // apple button
-                    SquareTile(imagePath: 'assets/apple.png')
+                    SquareTile(
+                      imagePath: 'assets/apple.png',
+                      onTap: () {},
+                    )
                   ],
                 ),
 
