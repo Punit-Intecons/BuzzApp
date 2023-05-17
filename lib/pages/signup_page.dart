@@ -87,10 +87,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 const Text(
                   'Welcome To BuzzApp',
                   style: TextStyle(
-                    color: blackColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold
-                  ),
+                      color: blackColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
                 ),
 
                 const SizedBox(height: 25),
@@ -137,15 +136,17 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 25),
 
                 MyButton(
-                    onTap: () => signUpUser(context), buttonText: "Sign Up",buttonColor: primaryColor),
+                    onTap: () => signUpUser(context),
+                    buttonText: "Sign Up",
+                    buttonColor: primaryColor),
 
                 const SizedBox(height: 50),
 
                 // or continue with
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
-                    children: [
+                    children: const [
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
@@ -172,7 +173,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 25),
 
                 // google + apple sign in buttons
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // google button

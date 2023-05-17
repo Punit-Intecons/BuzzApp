@@ -1,12 +1,15 @@
 import 'package:buzzapp/controller/web_api.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:buzzapp/components/my_button.dart';
 import 'package:buzzapp/components/my_textfield.dart';
 import 'package:buzzapp/components/square_tile.dart';
 import 'package:buzzapp/pages/signup_page.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../controller/constant.dart';
 import 'dashboard_screen.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -230,11 +233,11 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 10),
 
                 // forgot password?
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
+                    children: const [
                       Text(
                         'Forgot Password?',
                         style: TextStyle(color: blackColor),
@@ -254,10 +257,10 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 50),
 
                 // or continue with
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 25.0),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
-                    children: [
+                    children: const [
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
@@ -284,7 +287,7 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 25),
 
                 // google + apple sign in buttons
-                const Row(
+                Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     // google button
