@@ -1,4 +1,5 @@
 import 'package:buzzapp/pages/verify_otp_screen.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:buzzapp/components/my_button.dart';
 import 'package:buzzapp/components/my_textfield.dart';
@@ -10,6 +11,14 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../controller/web_api.dart';
 import '../controller/constant.dart';
+import 'dashboard_screen.dart';
+
+GoogleSignIn _googleSignIn = GoogleSignIn(
+  // Optional clientId
+  scopes: <String>[
+    'email',
+  ],
+);
 
 class SignUpPage extends StatefulWidget {
   static const routeName = '/sign-up';
@@ -21,15 +30,15 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   // text editing controllers
-  final firstnameController = TextEditingController();
+  var firstnameController = TextEditingController();
 
-  final lastnameController = TextEditingController();
+  var lastnameController = TextEditingController();
 
-  final emailController = TextEditingController();
+  var emailController = TextEditingController();
 
-  final passwordController = TextEditingController();
+  var passwordController = TextEditingController();
 
-  final confirmPasswordController = TextEditingController();
+  var confirmPasswordController = TextEditingController();
 
   late String emailString;
   late String firstNameString;
@@ -37,6 +46,113 @@ class _SignUpPageState extends State<SignUpPage> {
   late String passwordString;
 
   late SharedPreferences sharedPreferences;
+
+  GoogleSignInAccount? _currentUser;
+
+  @override
+  void initState() {
+    emailController = TextEditingController();
+    firstnameController = TextEditingController();
+    lastnameController = TextEditingController();
+    passwordController = TextEditingController();
+
+    super.initState();
+    _handleSignOut();
+
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      setState(() {
+        _currentUser = account;
+      });
+      if (_currentUser != null) {
+        debugPrint(_currentUser!.displayName);
+        debugPrint(_currentUser!.photoUrl);
+        debugPrint(_currentUser!.id);
+        debugPrint(_currentUser!.email);
+      }
+      _currentUser!.authentication.then((result) {
+        debugPrint(result.accessToken);
+        EasyLoading.show();
+        socialRegister(_currentUser!.displayName, _currentUser!.id,
+            _currentUser!.email, _currentUser!.photoUrl);
+      }).catchError((err) {});
+    });
+    _googleSignIn.signInSilently();
+  }
+
+  socialRegister(String? displayName, String? socialID, String? emailAddress,
+      String? imageURL) async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    List<String> finalName = displayName!.split(' ');
+
+    String firstName = finalName[0];
+    String lastName = finalName[1];
+
+    var getData = await WebConfig.socialSignIn(
+        emailString: emailAddress!,
+        imageLink: imageURL!,
+        passwordString: 'Deck141#',
+        deviceToken: token!,
+        socialType: 'Google',
+        firstName: firstName,
+        lastName: lastName,
+        socialProfileID: socialID!);
+    if (getData['status'] == true) {
+      sharedPreferences = await SharedPreferences.getInstance();
+      sharedPreferences.setString(
+          'userID', getData['user']['User_ID'].toString());
+      sharedPreferences.setString(
+          'first_name', getData['user']['User_First_Name']);
+      sharedPreferences.setString('socialType', 'Google');
+      sharedPreferences.setString(
+          'profileImage', getData['user']['Profile_Picture']);
+      sharedPreferences.setString(
+          'last_name', getData['user']['User_Last_Name']);
+      sharedPreferences.setString('email', getData['user']['User_Email']);
+      await EasyLoading.showSuccess('Sign In Successfully');
+      Navigator.pushNamed(context, DashboardScreen.routeName);
+    } else {
+      await EasyLoading.showError(getData['msg']);
+    }
+  }
+
+  signUpWithApple(String? displayName, String? userIdentifierString,
+      String? emailAddress) async {
+    await EasyLoading.show();
+    String? token = await FirebaseMessaging.instance.getToken();
+    var getData = await WebConfig.registerWithApple(
+      emailString: emailAddress!,
+      fullNameString: displayName!,
+      userIdentifier: userIdentifierString!,
+      deviceToken: token!,
+    );
+    if (getData['status'] == true) {
+      sharedPreferences = await SharedPreferences.getInstance();
+      sharedPreferences.setString(
+          'userID', getData['user']['User_ID'].toString());
+      sharedPreferences.setString(
+          'first_name', getData['user']['User_First_Name']);
+      sharedPreferences.setString('socialType', 'Google');
+      sharedPreferences.setString(
+          'profileImage', getData['user']['Profile_Picture']);
+      sharedPreferences.setString(
+          'last_name', getData['user']['User_Last_Name']);
+      sharedPreferences.setString('email', getData['user']['User_Email']);
+      await EasyLoading.showSuccess('Sign In Successfully');
+      Navigator.pushNamed(context, DashboardScreen.routeName);
+    } else {
+      await EasyLoading.showError(getData['msg']);
+    }
+  }
+
+  Future<void> _handleSignIn() async {
+    try {
+      await _googleSignIn.signIn();
+    } catch (error) {
+      debugPrint('$error');
+    }
+  }
+
+  Future<void> _handleSignOut() => _googleSignIn.disconnect();
 
   // sign user in method
   void signUpUser(BuildContext context) async {
@@ -179,7 +295,10 @@ class _SignUpPageState extends State<SignUpPage> {
                     // google button
                     SquareTile(
                       imagePath: 'assets/google.png',
-                      onTap: () {},
+                      onTap: () {
+                        _handleSignOut();
+                        _handleSignIn();
+                      },
                     ),
 
                     const SizedBox(width: 25),
