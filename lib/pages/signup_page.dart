@@ -1,66 +1,66 @@
-import 'package:buzzapp/controller/web_api.dart';
+import 'package:buzzapp/pages/verify_otp_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:buzzapp/components/my_button.dart';
 import 'package:buzzapp/components/my_textfield.dart';
 import 'package:buzzapp/components/square_tile.dart';
-import 'package:buzzapp/pages/signup_page.dart';
+import 'package:buzzapp/pages/login_page.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'dashboard_screen.dart';
+import '../controller/web_api.dart';
 
-// ignore: must_be_immutable
-class LoginPage extends StatefulWidget {
-  LoginPage({super.key});
+class SignUpPage extends StatefulWidget {
+  static const routeName = '/sign-up';
+  SignUpPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  State<SignUpPage> createState() => _SignUpPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _SignUpPageState extends State<SignUpPage> {
   // text editing controllers
+  final firstnameController = TextEditingController();
+
+  final lastnameController = TextEditingController();
+
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
 
-  late SharedPreferences sharedPreferences;
+  final confirmPasswordController = TextEditingController();
 
   late String emailString;
-
+  late String firstNameString;
+  late String lastNameString;
   late String passwordString;
 
+  late SharedPreferences sharedPreferences;
+
   // sign user in method
-  void signUserIn(BuildContext context) async {
+  void signUpUser(BuildContext context) async {
     await EasyLoading.show();
-    if (emailController.text.isEmpty) {
-      await EasyLoading.showInfo('Email Address Required');
+    if (firstnameController.text.isEmpty) {
+      await EasyLoading.showInfo('Please enter first name');
+    } else if (lastnameController.text.isEmpty) {
+      await EasyLoading.showInfo('Please enter last name');
+    } else if (emailController.text.isEmpty) {
+      await EasyLoading.showInfo('Please enter email address');
     } else if (passwordController.text.isEmpty) {
-      await EasyLoading.showInfo('Password Required');
+      await EasyLoading.showInfo('Please enter password');
+    } else if (confirmPasswordController.text.isEmpty) {
+      await EasyLoading.showInfo('Please enter confirm password');
+    } else if (passwordController.text != confirmPasswordController.text) {
+      await EasyLoading.showInfo(
+          'Confirm password is different from the password');
     } else {
-      // await EasyLoading.show();
-      var getData = await WebConfig.makeLogin(
+      var getData = await WebConfig.signUp(
           emailString: emailController.text,
           passwordString: passwordController.text,
-          deviceToken: '123456');
-
+          firstNameString: firstnameController.text,
+          lastNameString: lastnameController.text);
       if (getData['status'] == true) {
-        sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString(
-            'userID', getData['user']['User_ID'].toString());
-        sharedPreferences.setString(
-            'first_name', getData['user']['User_First_Name']);
-        sharedPreferences.setString(
-            'last_name', getData['user']['User_Last_Name']);
-        sharedPreferences.setString('email', getData['user']['User_Email']);
-        sharedPreferences.setString('socialType', 'Form');
-        sharedPreferences.setString(
-            'profileImage', getData['user']['Profile_Picture']);
-        await EasyLoading.showSuccess('Sign In Successfully');
-        Navigator.pushNamed(context, DashboardScreen.routeName);
-
-        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-        //   return const DashboardScreen();
-        // }));
+        await EasyLoading.showSuccess(getData['msg']);
+        Navigator.pushNamed(context, VerifyOTPScreen.routeName);
       } else {
         await EasyLoading.showError(getData['msg']);
       }
@@ -77,19 +77,9 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
-
-                // logo
-                const Icon(
-                  Icons.lock,
-                  size: 100,
-                ),
-
-                const SizedBox(height: 50),
-
-                // welcome back, you've been missed!
+                const SizedBox(height: 25),
                 Text(
-                  'Welcome back you\'ve been missed!',
+                  'Welcome To BuzzApp',
                   style: TextStyle(
                     color: Colors.grey[700],
                     fontSize: 16,
@@ -99,6 +89,20 @@ class _LoginPageState extends State<LoginPage> {
                 const SizedBox(height: 25),
 
                 // username textfield
+                MyTextField(
+                  controller: firstnameController,
+                  hintText: 'First Name',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
+
+                MyTextField(
+                  controller: lastnameController,
+                  hintText: 'Last Name',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
+
                 MyTextField(
                   controller: emailController,
                   hintText: 'Email',
@@ -116,25 +120,17 @@ class _LoginPageState extends State<LoginPage> {
 
                 const SizedBox(height: 10),
 
-                // forgot password?
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: Colors.grey[600]),
-                      ),
-                    ],
-                  ),
+                // password textfield
+                MyTextField(
+                  controller: confirmPasswordController,
+                  hintText: 'Confirm Password',
+                  obscureText: true,
                 ),
 
                 const SizedBox(height: 25),
 
-                // sign in button
                 MyButton(
-                    onTap: () => signUserIn(context), buttonText: "Sign In"),
+                    onTap: () => signUpUser(context), buttonText: "Sign Up"),
 
                 const SizedBox(height: 50),
 
@@ -189,7 +185,7 @@ class _LoginPageState extends State<LoginPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'Not a member?',
+                      'Already a member?',
                       style: TextStyle(color: Colors.grey[700]),
                     ),
                     const SizedBox(width: 4),
@@ -197,11 +193,11 @@ class _LoginPageState extends State<LoginPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => SignUpPage()),
+                          MaterialPageRoute(builder: (context) => LoginPage()),
                         );
                       },
                       child: const Text(
-                        'Register now',
+                        'Sign In',
                         style: TextStyle(
                           color: Colors.blue,
                           fontWeight: FontWeight.bold,
