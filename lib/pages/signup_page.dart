@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:buzzapp/pages/verify_otp_screen.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -304,10 +305,25 @@ class _SignUpPageState extends State<SignUpPage> {
                     const SizedBox(width: 25),
 
                     // apple button
-                    SquareTile(
-                      imagePath: 'assets/apple.png',
-                      onTap: () {},
-                    )
+                    Platform.isIOS || Platform.isMacOS
+                        ? SquareTile(
+                            imagePath: 'assets/apple.png',
+                            onTap: () async {
+                              final credential =
+                                  await SignInWithApple.getAppleIDCredential(
+                                scopes: [
+                                  AppleIDAuthorizationScopes.email,
+                                  AppleIDAuthorizationScopes.fullName,
+                                ],
+                              );
+
+                              signUpWithApple(
+                                  '${credential.givenName} ${credential.familyName}',
+                                  credential.userIdentifier,
+                                  credential.email);
+                            },
+                          )
+                        : const SizedBox.shrink(),
                   ],
                 ),
 
@@ -326,7 +342,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => LoginPage()),
+                          MaterialPageRoute(
+                              builder: (context) => const LoginPage()),
                         );
                       },
                       child: const Text(

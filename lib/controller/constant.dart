@@ -15,10 +15,23 @@ const Color transparentColor = Color(0x00000000);
 const Color greyBlueColor = Color(0XFFB8B8D2);
 const Color greyColor = Color(0XFFA4A4A4);
 const Color backgroundColor = Color(0XFFF1F1FA);
+var defaultBackgroundColor = Colors.grey[300];
+var appBarColor = Colors.grey[900];
 
 const String appName = 'BuzzApp';
 
 const double kTextScaleFactor = 0.8;
+
+var tilePadding = const EdgeInsets.only(left: 8.0, right: 8, top: 8);
+
+var myAppBar = AppBar(
+  backgroundColor: appBarColor,
+  title: Text(' '),
+  centerTitle: false,
+);
+var drawerTextColor = TextStyle(
+  color: Colors.grey[600],
+);
 
 const String kBaseURL = 'http://3.226.153.18/mlsapps/nAPI/BuzzAppApi/index.php';
 
@@ -60,15 +73,17 @@ getSharedData() async {
 }
 
 ButtonStyle buttonStyle = ButtonStyle(
-    alignment: Alignment.center,
-    foregroundColor: MaterialStateProperty.all<Color>(primaryColor),
-    backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
-    shadowColor: MaterialStateProperty.all<Color>(primaryColor),
-    shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-        RoundedRectangleBorder(
+  alignment: Alignment.center,
+  foregroundColor: MaterialStateProperty.all<Color>(primaryColor),
+  backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
+  shadowColor: MaterialStateProperty.all<Color>(primaryColor),
+  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+    RoundedRectangleBorder(
       side: const BorderSide(color: Color(0XFF0d5e7c), width: 0.0),
       borderRadius: BorderRadius.circular(12.0),
-    )));
+    ),
+  ),
+);
 
 showAlert(BuildContext buildContext) {
   showDialog<void>(
@@ -162,3 +177,68 @@ showAlert(BuildContext buildContext) {
     },
   );
 }
+
+var myDrawer = Drawer(
+  backgroundColor: Colors.grey[300],
+  elevation: 0,
+  child: Column(
+    children: [
+      const DrawerHeader(
+        child: Icon(
+          Icons.favorite,
+          size: 64,
+        ),
+      ),
+      Padding(
+        padding: tilePadding,
+        child: ListTile(
+          leading: const Icon(Icons.message),
+          title: Text(
+            'I N B O X',
+            style: drawerTextColor,
+          ),
+        ),
+      ),
+      Padding(
+        padding: tilePadding,
+        child: ListTile(
+          leading: const Icon(Icons.campaign),
+          title: Text(
+            'C A M P A I G N S',
+            style: drawerTextColor,
+          ),
+        ),
+      ),
+      Padding(
+        padding: tilePadding,
+        child: ListTile(
+          leading: const Icon(Icons.contacts),
+          title: Text(
+            'C O N T A C T S',
+            style: drawerTextColor,
+          ),
+        ),
+      ),
+      Padding(
+        padding: tilePadding,
+        child: ListTile(
+          leading: const Icon(Icons.analytics),
+          title: Text(
+            'A N A L Y T I C S',
+            style: drawerTextColor,
+          ),
+        ),
+      ),
+      Padding(
+        padding: tilePadding,
+        child: ListTile(
+          leading: const Icon(Icons.logout),
+          title: Text(
+            'L O G O U T',
+            style: drawerTextColor,
+          ),
+        ),
+      ),
+    ],
+  ),
+);

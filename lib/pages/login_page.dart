@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:buzzapp/controller/web_api.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,7 @@ import 'package:buzzapp/pages/signup_page.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../controller/constant.dart';
 import 'dashboard_screen.dart';
@@ -43,9 +45,6 @@ class _LoginPageState extends State<LoginPage> {
   late String passwordString;
 
   GoogleSignInAccount? _currentUser;
-
-  String? _email;
-  String? _imageUrl;
 
   late FocusNode emailNode;
   late FocusNode passwordNode;
@@ -302,13 +301,21 @@ class _LoginPageState extends State<LoginPage> {
                     const SizedBox(width: 25),
 
                     // apple button
-                    SquareTile(
-                      imagePath: 'assets/apple.png',
-                      onTap: () {
-                        _handleSignOut();
-                        _handleSignIn();
-                      },
-                    )
+                    Platform.isIOS || Platform.isMacOS
+                        ? SquareTile(
+                            imagePath: 'assets/apple.png',
+                            onTap: () async {
+                              final credential =
+                                  await SignInWithApple.getAppleIDCredential(
+                                scopes: [
+                                  AppleIDAuthorizationScopes.email,
+                                  AppleIDAuthorizationScopes.fullName,
+                                ],
+                              );
+                              socialLoginWithApple(credential.userIdentifier);
+                            },
+                          )
+                        : const SizedBox.shrink(),
                   ],
                 ),
 
