@@ -8,6 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../controller/web_api.dart';
+import '../controller/constant.dart';
 
 class SignUpPage extends StatefulWidget {
   static const routeName = '/sign-up';
@@ -70,7 +71,7 @@ class _SignUpPageState extends State<SignUpPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: whiteColor,
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -78,11 +79,12 @@ class _SignUpPageState extends State<SignUpPage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const SizedBox(height: 25),
-                Text(
+                const Text(
                   'Welcome To BuzzApp',
                   style: TextStyle(
-                    color: Colors.grey[700],
-                    fontSize: 16,
+                    color: blackColor,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold
                   ),
                 ),
 
@@ -130,32 +132,32 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 25),
 
                 MyButton(
-                    onTap: () => signUpUser(context), buttonText: "Sign Up"),
+                    onTap: () => signUpUser(context), buttonText: "Sign Up",buttonColor: primaryColor),
 
                 const SizedBox(height: 50),
 
                 // or continue with
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     children: [
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
-                          color: Colors.grey[400],
+                          color: blackColor,
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
                         child: Text(
                           'Or continue with',
-                          style: TextStyle(color: Colors.grey[700]),
+                          style: TextStyle(color: blackColor),
                         ),
                       ),
                       Expanded(
                         child: Divider(
                           thickness: 0.5,
-                          color: Colors.grey[400],
+                          color: blackColor,
                         ),
                       ),
                     ],
@@ -165,9 +167,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 const SizedBox(height: 25),
 
                 // google + apple sign in buttons
-                Row(
+                const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  children: const [
+                  children: [
                     // google button
                     SquareTile(imagePath: 'assets/google.png'),
 
@@ -184,9 +186,9 @@ class _SignUpPageState extends State<SignUpPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
+                    const Text(
                       'Already a member?',
-                      style: TextStyle(color: Colors.grey[700]),
+                      style: TextStyle(color: blackColor),
                     ),
                     const SizedBox(width: 4),
                     GestureDetector(
@@ -199,7 +201,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       child: const Text(
                         'Sign In',
                         style: TextStyle(
-                          color: Colors.blue,
+                          color: primaryColor,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
