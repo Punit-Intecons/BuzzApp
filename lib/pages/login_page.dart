@@ -16,7 +16,7 @@ import '../responsive/desktop_body.dart';
 import '../responsive/mobile_body.dart';
 import '../responsive/responsive_layout.dart';
 import '../responsive/tablet_body.dart';
-import 'dashboard_screen.dart';
+import 'forgot_password.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   // Optional clientId
@@ -260,10 +260,21 @@ class _LoginPageState extends State<LoginPage> {
                     padding: const EdgeInsets.symmetric(horizontal: 25.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [
-                        Text(
-                          'Forgot Password?',
-                          style: TextStyle(color: blackColor),
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const ForgotPassword()),
+                            );
+                          },
+                          child: const Text(
+                            'Forgot Password?',
+                            style: TextStyle(
+                              color: blackColor,
+                            ),
+                          ),
                         ),
                       ],
                     ),
@@ -371,7 +382,8 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                     ],
-                  )
+                  ),
+                  const SizedBox(height: 20),
                 ],
               ),
             ),
