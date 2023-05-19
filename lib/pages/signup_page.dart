@@ -12,6 +12,10 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../controller/web_api.dart';
 import '../controller/constant.dart';
+import '../responsive/desktop_body.dart';
+import '../responsive/mobile_body.dart';
+import '../responsive/responsive_layout.dart';
+import '../responsive/tablet_body.dart';
 import 'dashboard_screen.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -110,7 +114,13 @@ class _SignUpPageState extends State<SignUpPage> {
           'last_name', getData['user']['User_Last_Name']);
       sharedPreferences.setString('email', getData['user']['User_Email']);
       await EasyLoading.showSuccess('Sign In Successfully');
-      Navigator.pushNamed(context, DashboardScreen.routeName);
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ResponsiveLayout(
+          mobileBody: const MobileScaffold(),
+          tabletBody: const TabletScaffold(),
+          desktopBody: const DesktopScaffold(),
+        );
+      }));
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -139,7 +149,13 @@ class _SignUpPageState extends State<SignUpPage> {
           'last_name', getData['user']['User_Last_Name']);
       sharedPreferences.setString('email', getData['user']['User_Email']);
       await EasyLoading.showSuccess('Sign In Successfully');
-      Navigator.pushNamed(context, DashboardScreen.routeName);
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ResponsiveLayout(
+          mobileBody: const MobileScaffold(),
+          tabletBody: const TabletScaffold(),
+          desktopBody: const DesktopScaffold(),
+        );
+      }));
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -197,166 +213,169 @@ class _SignUpPageState extends State<SignUpPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 25),
-                const Text(
-                  'Welcome To BuzzApp',
-                  style: TextStyle(
-                      color: blackColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 25),
+                  const Text(
+                    'Welcome To BuzzApp',
+                    style: TextStyle(
+                        color: blackColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 25),
 
-                // username textfield
-                MyTextField(
-                  controller: firstnameController,
-                  hintText: 'First Name',
-                  obscureText: false,
-                ),
-                const SizedBox(height: 10),
+                  // username textfield
+                  MyTextField(
+                    controller: firstnameController,
+                    hintText: 'First Name',
+                    obscureText: false,
+                  ),
+                  const SizedBox(height: 10),
 
-                MyTextField(
-                  controller: lastnameController,
-                  hintText: 'Last Name',
-                  obscureText: false,
-                ),
-                const SizedBox(height: 10),
+                  MyTextField(
+                    controller: lastnameController,
+                    hintText: 'Last Name',
+                    obscureText: false,
+                  ),
+                  const SizedBox(height: 10),
 
-                MyTextField(
-                  controller: emailController,
-                  hintText: 'Email',
-                  obscureText: false,
-                ),
+                  MyTextField(
+                    controller: emailController,
+                    hintText: 'Email',
+                    obscureText: false,
+                  ),
 
-                const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                // password textfield
-                MyTextField(
-                  controller: passwordController,
-                  hintText: 'Password',
-                  obscureText: true,
-                ),
+                  // password textfield
+                  MyTextField(
+                    controller: passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
+                  ),
 
-                const SizedBox(height: 10),
+                  const SizedBox(height: 10),
 
-                // password textfield
-                MyTextField(
-                  controller: confirmPasswordController,
-                  hintText: 'Confirm Password',
-                  obscureText: true,
-                ),
+                  // password textfield
+                  MyTextField(
+                    controller: confirmPasswordController,
+                    hintText: 'Confirm Password',
+                    obscureText: true,
+                  ),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 25),
 
-                MyButton(
-                    onTap: () => signUpUser(context),
-                    buttonText: "Sign Up",
-                    buttonColor: primaryColor),
+                  MyButton(
+                      onTap: () => signUpUser(context),
+                      buttonText: "Sign Up",
+                      buttonColor: primaryColor),
 
-                const SizedBox(height: 50),
+                  const SizedBox(height: 50),
 
-                // or continue with
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: const [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: blackColor,
+                  // or continue with
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      children: const [
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: blackColor,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'Or continue with',
-                          style: TextStyle(color: blackColor),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text(
+                            'Or continue with',
+                            style: TextStyle(color: blackColor),
+                          ),
                         ),
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: blackColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // google + apple sign in buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // google button
+                      SquareTile(
+                        imagePath: 'assets/google.png',
+                        onTap: () {
+                          _handleSignOut();
+                          _handleSignIn();
+                        },
                       ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: blackColor,
+
+                      const SizedBox(width: 25),
+
+                      // apple button
+                      Platform.isIOS || Platform.isMacOS
+                          ? SquareTile(
+                              imagePath: 'assets/apple.png',
+                              onTap: () async {
+                                final credential =
+                                    await SignInWithApple.getAppleIDCredential(
+                                  scopes: [
+                                    AppleIDAuthorizationScopes.email,
+                                    AppleIDAuthorizationScopes.fullName,
+                                  ],
+                                );
+
+                                signUpWithApple(
+                                    '${credential.givenName} ${credential.familyName}',
+                                    credential.userIdentifier,
+                                    credential.email);
+                              },
+                            )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // not a member? register now
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Already a member?',
+                        style: TextStyle(color: blackColor),
+                      ),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const LoginPage()),
+                          );
+                        },
+                        child: const Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
-                  ),
-                ),
-
-                const SizedBox(height: 25),
-
-                // google + apple sign in buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // google button
-                    SquareTile(
-                      imagePath: 'assets/google.png',
-                      onTap: () {
-                        _handleSignOut();
-                        _handleSignIn();
-                      },
-                    ),
-
-                    const SizedBox(width: 25),
-
-                    // apple button
-                    Platform.isIOS || Platform.isMacOS
-                        ? SquareTile(
-                            imagePath: 'assets/apple.png',
-                            onTap: () async {
-                              final credential =
-                                  await SignInWithApple.getAppleIDCredential(
-                                scopes: [
-                                  AppleIDAuthorizationScopes.email,
-                                  AppleIDAuthorizationScopes.fullName,
-                                ],
-                              );
-
-                              signUpWithApple(
-                                  '${credential.givenName} ${credential.familyName}',
-                                  credential.userIdentifier,
-                                  credential.email);
-                            },
-                          )
-                        : const SizedBox.shrink(),
-                  ],
-                ),
-
-                const SizedBox(height: 25),
-
-                // not a member? register now
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Already a member?',
-                      style: TextStyle(color: blackColor),
-                    ),
-                    const SizedBox(width: 4),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const LoginPage()),
-                        );
-                      },
-                      child: const Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

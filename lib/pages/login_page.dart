@@ -12,6 +12,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../controller/constant.dart';
+import '../responsive/desktop_body.dart';
+import '../responsive/mobile_body.dart';
+import '../responsive/responsive_layout.dart';
+import '../responsive/tablet_body.dart';
 import 'dashboard_screen.dart';
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -106,7 +110,13 @@ class _LoginPageState extends State<LoginPage> {
       sharedPreferences.setString('email', getData['user']['User_Email']);
 
       await EasyLoading.showSuccess('Sign In Successfully');
-      Navigator.pushNamed(context, DashboardScreen.routeName);
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ResponsiveLayout(
+          mobileBody: const MobileScaffold(),
+          tabletBody: const TabletScaffold(),
+          desktopBody: const DesktopScaffold(),
+        );
+      }));
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -130,7 +140,13 @@ class _LoginPageState extends State<LoginPage> {
       sharedPreferences.setString('email', getData['user']['User_Email']);
       sharedPreferences.setString('phoneNo', getData['user']['User_Mobile_No']);
       await EasyLoading.showSuccess('Sign In Successfully');
-      Navigator.pushNamed(context, DashboardScreen.routeName);
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ResponsiveLayout(
+          mobileBody: const MobileScaffold(),
+          tabletBody: const TabletScaffold(),
+          desktopBody: const DesktopScaffold(),
+        );
+      }));
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -171,7 +187,13 @@ class _LoginPageState extends State<LoginPage> {
         sharedPreferences.setString(
             'profileImage', getData['user']['Profile_Picture']);
         await EasyLoading.showSuccess('Sign In Successfully');
-        Navigator.pushNamed(context, DashboardScreen.routeName);
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ResponsiveLayout(
+            mobileBody: const MobileScaffold(),
+            tabletBody: const TabletScaffold(),
+            desktopBody: const DesktopScaffold(),
+          );
+        }));
 
         // Navigator.push(context, MaterialPageRoute(builder: (context) {
         //   return const DashboardScreen();
@@ -189,166 +211,169 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 50),
-                // logo
-                const Icon(
-                  Icons.lock,
-                  size: 100,
-                  color: primaryColor,
-                ),
-
-                const SizedBox(height: 50),
-
-                // welcome back, you've been missed!
-                const Text(
-                  'Welcome back you\'ve been missed!',
-                  style: TextStyle(
-                      color: blackColor,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold),
-                ),
-
-                const SizedBox(height: 25),
-
-                // username textfield
-                MyTextField(
-                  controller: emailController,
-                  hintText: 'Email',
-                  obscureText: false,
-                ),
-
-                const SizedBox(height: 10),
-
-                // password textfield
-                MyTextField(
-                  controller: passwordController,
-                  hintText: 'Password',
-                  obscureText: true,
-                ),
-
-                const SizedBox(height: 10),
-
-                // forgot password?
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: const [
-                      Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: blackColor),
-                      ),
-                    ],
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 50),
+                  // logo
+                  const Icon(
+                    Icons.lock,
+                    size: 100,
+                    color: primaryColor,
                   ),
-                ),
 
-                const SizedBox(height: 25),
+                  const SizedBox(height: 50),
 
-                // sign in button
-                MyButton(
-                    onTap: () => signUserIn(context),
-                    buttonText: "Sign In",
-                    buttonColor: primaryColor),
+                  // welcome back, you've been missed!
+                  const Text(
+                    'Welcome back you\'ve been missed!',
+                    style: TextStyle(
+                        color: blackColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
 
-                const SizedBox(height: 50),
+                  const SizedBox(height: 25),
 
-                // or continue with
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                  child: Row(
-                    children: const [
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: blackColor,
-                        ),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        child: Text(
-                          'Or continue with',
+                  // username textfield
+                  MyTextField(
+                    controller: emailController,
+                    hintText: 'Email',
+                    obscureText: false,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // password textfield
+                  MyTextField(
+                    controller: passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // forgot password?
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: const [
+                        Text(
+                          'Forgot Password?',
                           style: TextStyle(color: blackColor),
                         ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // sign in button
+                  MyButton(
+                      onTap: () => signUserIn(context),
+                      buttonText: "Sign In",
+                      buttonColor: primaryColor),
+
+                  const SizedBox(height: 50),
+
+                  // or continue with
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      children: const [
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: blackColor,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text(
+                            'Or continue with',
+                            style: TextStyle(color: blackColor),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: blackColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // google + apple sign in buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // google button
+                      SquareTile(
+                        imagePath: 'assets/google.png',
+                        onTap: () {
+                          _handleSignOut();
+                          _handleSignIn();
+                        },
                       ),
-                      Expanded(
-                        child: Divider(
-                          thickness: 0.5,
-                          color: blackColor,
+
+                      const SizedBox(width: 25),
+
+                      // apple button
+                      Platform.isIOS || Platform.isMacOS
+                          ? SquareTile(
+                              imagePath: 'assets/apple.png',
+                              onTap: () async {
+                                final credential =
+                                    await SignInWithApple.getAppleIDCredential(
+                                  scopes: [
+                                    AppleIDAuthorizationScopes.email,
+                                    AppleIDAuthorizationScopes.fullName,
+                                  ],
+                                );
+                                socialLoginWithApple(credential.userIdentifier);
+                              },
+                            )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // not a member? register now
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Not a member?',
+                        style: TextStyle(color: blackColor),
+                      ),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUpPage()),
+                          );
+                        },
+                        child: const Text(
+                          'Register now',
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
                     ],
-                  ),
-                ),
-
-                const SizedBox(height: 25),
-
-                // google + apple sign in buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // google button
-                    SquareTile(
-                      imagePath: 'assets/google.png',
-                      onTap: () {
-                        _handleSignOut();
-                        _handleSignIn();
-                      },
-                    ),
-
-                    const SizedBox(width: 25),
-
-                    // apple button
-                    Platform.isIOS || Platform.isMacOS
-                        ? SquareTile(
-                            imagePath: 'assets/apple.png',
-                            onTap: () async {
-                              final credential =
-                                  await SignInWithApple.getAppleIDCredential(
-                                scopes: [
-                                  AppleIDAuthorizationScopes.email,
-                                  AppleIDAuthorizationScopes.fullName,
-                                ],
-                              );
-                              socialLoginWithApple(credential.userIdentifier);
-                            },
-                          )
-                        : const SizedBox.shrink(),
-                  ],
-                ),
-
-                const SizedBox(height: 25),
-
-                // not a member? register now
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Not a member?',
-                      style: TextStyle(color: blackColor),
-                    ),
-                    const SizedBox(width: 4),
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const SignUpPage()),
-                        );
-                      },
-                      child: const Text(
-                        'Register now',
-                        style: TextStyle(
-                          color: primaryColor,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                )
-              ],
+                  )
+                ],
+              ),
             ),
           ),
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,19 +19,21 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late SharedPreferences sharedPreferences;
 
   @override
   void initState() {
     checkLogin();
     super.initState();
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive);
   }
 
   checkLogin() async {
     sharedPreferences = await SharedPreferences.getInstance();
     if (sharedPreferences.containsKey('userID')) {
-      Future.delayed(const Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 1), () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ResponsiveLayout(
             mobileBody: const MobileScaffold(),
@@ -40,7 +43,7 @@ class _SplashScreenState extends State<SplashScreen> {
         }));
       });
     } else {
-      Future.delayed(const Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 1), () {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return const LoginPage();
         }));
@@ -52,12 +55,12 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
+        width: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [whiteColor, primaryColor, whiteColor],
-            stops: [0.0, 0.5, 1],
+            begin: Alignment.topRight,
+            end: Alignment.bottomLeft,
+            colors: [primaryColor, Colors.purple],
           ),
         ),
         child: Center(

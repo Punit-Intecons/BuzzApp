@@ -5,7 +5,11 @@ class MyButton extends StatelessWidget {
   final String buttonText;
   final Color buttonColor;
 
-  const MyButton({super.key, required this.onTap, required this.buttonText, required this.buttonColor});
+  const MyButton(
+      {super.key,
+      required this.onTap,
+      required this.buttonText,
+      required this.buttonColor});
 
   @override
   Widget build(BuildContext context) {

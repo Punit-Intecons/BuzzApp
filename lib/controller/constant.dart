@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../pages/splash_screen.dart';
+
 const Color whiteColor = Color(0xFFFFFFFF);
 const Color blackColor = Colors.black;
 const Color primaryColor = Color(0XFF296EFF);
@@ -15,8 +17,9 @@ const Color transparentColor = Color(0x00000000);
 const Color greyBlueColor = Color(0XFFB8B8D2);
 const Color greyColor = Color(0XFFA4A4A4);
 const Color backgroundColor = Color(0XFFF1F1FA);
+const Color secondaryBackgroundColor = Color(0XFFF6F8FC);
 var defaultBackgroundColor = Colors.grey[300];
-var appBarColor = Colors.grey[900];
+const Color appBarColor = Color(0XFF296EFF);
 
 const String appName = 'BuzzApp';
 
@@ -85,90 +88,101 @@ ButtonStyle buttonStyle = ButtonStyle(
   ),
 );
 
-showAlert(BuildContext buildContext) {
+showAlert(BuildContext context) {
   showDialog<void>(
-    context: buildContext,
+    context: context,
     barrierDismissible: false, // user must tap button!
     builder: (BuildContext context) {
+      var buildContext = context;
       if (Platform.isIOS) {
         return CupertinoAlertDialog(
-          title: Text(
-            'Exit from application',
+          title: const Text(
+            'Are you sure',
             textScaleFactor: kTextScaleFactor,
             style: TextStyle(
               fontFamily: 'DMSans',
               fontWeight: FontWeight.bold,
-              fontSize: 18.0.sp,
+              fontSize: 22.0,
             ),
           ),
-          content: Text(
-            'Are you sure?',
+          content: const Text(
+            'You want to logout?',
             textScaleFactor: kTextScaleFactor,
-            style: TextStyle(fontFamily: 'DMSans', fontSize: 16.0.sp),
+            style: TextStyle(fontFamily: 'DMSans', fontSize: 18.0),
           ),
           actions: <Widget>[
             CupertinoDialogAction(
-              child: Text(
+              child: const Text(
                 'No',
-                style: TextStyle(fontFamily: 'DMSans', fontSize: 14.0.sp),
+                style: TextStyle(fontFamily: 'DMSans', fontSize: 16.0),
               ),
               onPressed: () {
                 Navigator.pop(buildContext);
               },
             ),
             CupertinoDialogAction(
-              child: Text(
+              child: const Text(
                 'Yes',
-                style: TextStyle(fontFamily: 'DMSans', fontSize: 14.0.sp),
+                style: TextStyle(fontFamily: 'DMSans', fontSize: 16.0),
               ),
-              onPressed: () {
-                SystemNavigator.pop();
+              onPressed: () async {
+                SharedPreferences sharedPreferences =
+                    await SharedPreferences.getInstance();
+                await sharedPreferences.clear();
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const SplashScreen();
+                }));
               },
             ),
           ],
         );
       } else {
         return AlertDialog(
-          title: Text(
-            'Exit from application',
+          title: const Text(
+            'Are you sure',
             textScaleFactor: kTextScaleFactor,
             style: TextStyle(
                 fontFamily: 'DMSans',
-                fontSize: 18.0.sp,
+                fontSize: 22.0,
                 fontWeight: FontWeight.bold),
           ),
           content: SingleChildScrollView(
             child: ListBody(
-              children: <Widget>[
+              children: const <Widget>[
                 Text(
-                  'Are you sure?',
+                  'You want to logout?',
                   textScaleFactor: kTextScaleFactor,
-                  style: TextStyle(fontFamily: 'DMSans', fontSize: 16.0.sp),
+                  style: TextStyle(fontFamily: 'DMSans', fontSize: 18.0),
                 ),
               ],
             ),
           ),
           actions: <Widget>[
             TextButton(
-              child: Text(
+              child: const Text(
                 'No',
                 textScaleFactor: kTextScaleFactor,
                 style: TextStyle(
-                    fontFamily: 'DMSans', fontSize: 16.0.sp, color: blackColor),
+                    fontFamily: 'DMSans', fontSize: 16.0, color: blackColor),
               ),
               onPressed: () {
                 Navigator.pop(buildContext);
               },
             ),
             TextButton(
-              child: Text(
+              child: const Text(
                 'Yes',
                 textScaleFactor: kTextScaleFactor,
                 style: TextStyle(
-                    fontFamily: 'DMSans', fontSize: 16.0.sp, color: blackColor),
+                    fontFamily: 'DMSans', fontSize: 16.0, color: blackColor),
               ),
-              onPressed: () {
-                SystemNavigator.pop();
+              onPressed: () async {
+                SharedPreferences sharedPreferences =
+                    await SharedPreferences.getInstance();
+                await sharedPreferences.clear();
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const SplashScreen();
+                }));
               },
             ),
           ],
@@ -178,67 +192,75 @@ showAlert(BuildContext buildContext) {
   );
 }
 
-var myDrawer = Drawer(
-  backgroundColor: Colors.grey[300],
-  elevation: 0,
-  child: Column(
-    children: [
-      const DrawerHeader(
-        child: Icon(
-          Icons.favorite,
-          size: 64,
-        ),
-      ),
-      Padding(
-        padding: tilePadding,
-        child: ListTile(
-          leading: const Icon(Icons.message),
-          title: Text(
-            'I N B O X',
-            style: drawerTextColor,
+Widget myDrawer(BuildContext context) {
+  return Drawer(
+    backgroundColor: whiteColor,
+    elevation: 0,
+    child: Column(
+      children: [
+        DrawerHeader(
+          child: Image.asset(
+            'assets/logo.png',
+            width: 202.px,
+            height: 216.px,
           ),
         ),
-      ),
-      Padding(
-        padding: tilePadding,
-        child: ListTile(
-          leading: const Icon(Icons.campaign),
-          title: Text(
-            'C A M P A I G N S',
-            style: drawerTextColor,
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            leading: const Icon(Icons.message),
+            title: Text(
+              'I N B O X',
+              style: drawerTextColor,
+            ),
           ),
         ),
-      ),
-      Padding(
-        padding: tilePadding,
-        child: ListTile(
-          leading: const Icon(Icons.contacts),
-          title: Text(
-            'C O N T A C T S',
-            style: drawerTextColor,
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            leading: const Icon(Icons.campaign),
+            title: Text(
+              'C A M P A I G N S',
+              style: drawerTextColor,
+            ),
           ),
         ),
-      ),
-      Padding(
-        padding: tilePadding,
-        child: ListTile(
-          leading: const Icon(Icons.analytics),
-          title: Text(
-            'A N A L Y T I C S',
-            style: drawerTextColor,
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            leading: const Icon(Icons.contacts),
+            title: Text(
+              'C O N T A C T S',
+              style: drawerTextColor,
+            ),
           ),
         ),
-      ),
-      Padding(
-        padding: tilePadding,
-        child: ListTile(
-          leading: const Icon(Icons.logout),
-          title: Text(
-            'L O G O U T',
-            style: drawerTextColor,
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            leading: const Icon(Icons.analytics),
+            title: Text(
+              'A N A L Y T I C S',
+              style: drawerTextColor,
+            ),
           ),
         ),
-      ),
-    ],
-  ),
-);
+        Padding(
+          padding: tilePadding,
+          child: GestureDetector(
+            onTap: () {
+              showAlert(context);
+            },
+            child: ListTile(
+              leading: const Icon(Icons.logout),
+              title: Text(
+                'L O G O U T',
+                style: drawerTextColor,
+              ),
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}

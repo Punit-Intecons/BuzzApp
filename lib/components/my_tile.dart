@@ -1,3 +1,4 @@
+import 'package:buzzapp/controller/constant.dart';
 import 'package:flutter/material.dart';
 
 class MyTile extends StatelessWidget {
@@ -10,7 +11,7 @@ class MyTile extends StatelessWidget {
       child: Container(
         height: 78,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(8), color: Colors.grey[200]),
+            borderRadius: BorderRadius.circular(8), color: whiteColor),
       ),
     );
   }
