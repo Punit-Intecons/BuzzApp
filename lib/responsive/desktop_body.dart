@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:buzzapp/components/my_box.dart';
-import 'package:buzzapp/components/my_tile.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import '../controller/constant.dart';
 import 'package:buzzapp/models/message_model.dart';
 
