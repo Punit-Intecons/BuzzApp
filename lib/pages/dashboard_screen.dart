@@ -26,10 +26,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () => signUserOut(context), icon: Icon(Icons.logout))
+              onPressed: () => signUserOut(context),
+              icon: const Icon(Icons.logout))
         ],
       ),
-      body: Center(
+      body: const Center(
         child: Text("Logged In"),
       ),
     );
