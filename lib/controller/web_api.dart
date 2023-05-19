@@ -157,4 +157,19 @@ class WebConfig {
         await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return loginData;
   }
+
+  static Future<dynamic> getMessages(
+      {required String userID, required String userName}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': '3MUZqCyosJx8sALQ',
+    };
+    Map<String, String> bodyParams = {
+      'userID': userID,
+      'userName': userName,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getMessages');
+    var loginData =
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return loginData;
+  }
 }
