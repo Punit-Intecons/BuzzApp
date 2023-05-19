@@ -26,14 +26,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   // text editing controllers
   var emailController = TextEditingController();
   late String emailString;
-  late FocusNode emailNode;
   late FocusNode passwordNode;
   late SharedPreferences sharedPreferences;
+  bool _error = false;
+  final FocusNode emailFocusNode = FocusNode();
 
   @override
   void initState() {
-    emailController = TextEditingController();
-    emailNode = FocusNode();
     super.initState();
   }
 
@@ -42,7 +41,15 @@ class _ForgotPasswordState extends State<ForgotPassword> {
     await EasyLoading.show();
     if (emailController.text.isEmpty) {
       await EasyLoading.showInfo('Email Address Required');
+      setState(() {
+        _error = true;
+      });
+      FocusScope.of(context).requestFocus(emailFocusNode);
+      return;
     } else {
+      setState(() {
+        _error = false;
+      });
       var getData = await WebConfig.forgotPassword(
           emailString: emailController.text,
       );
@@ -71,128 +78,122 @@ class _ForgotPasswordState extends State<ForgotPassword> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: whiteColor,
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            begin: Alignment.topRight,
-            end: Alignment.bottomLeft,
-            colors: [primaryColor, Colors.purple],
-          ),
-        ),
-        child: Column(
-          children: [
-            SizedBox(
-              height: 7.5.h,
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 75.0, right: 75.0),
-              child: Center(
-                child: Image.asset(
-                  'assets/logo_white.png',
-                ),
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [primaryColor, Colors.purple],
               ),
             ),
-            SizedBox(
-              height: 2.5.h,
-            ),
-            Expanded(
-              child:Container(
-                decoration: const BoxDecoration(
-                  color: backgroundColor,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(10.0),
-                      topRight: Radius.circular(10.0)
+          ),
+          Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.075,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 75.0, right: 75.0),
+                child: Center(
+                  child: Image.asset(
+                    'assets/logo_white.png',
                   ),
                 ),
-                child: SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 800),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const SizedBox(height: 80),
-                        // logo
-                        // Image.asset(
-                        //   'assets/logo.png',
-                        //   width: 202.px,
-                        //   height: 100.px,
-                        // ),
-                        // const Icon(
-                        //   Icons.password,
-                        //   size: 100,
-                        //   color: primaryColor,
-                        // ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.025,
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: backgroundColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10.0),
+                      topRight: Radius.circular(10.0),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 800),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.08),
 
-                        // const SizedBox(height: 10),
-
-                        // welcome back, you've been missed!
-                        const Text(
-                          'Forgot Password!',
-                          style: TextStyle(
+                          // welcome back, you've been missed!
+                          const Text(
+                            'Forgot Password!',
+                            style: TextStyle(
                               color: blackColor,
                               fontSize: 30,
-                              fontWeight: FontWeight.bold),
-                        ),
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
 
-                        const SizedBox(height: 130),
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.10),
 
-                        // username textfield
-                        MyTextField(
-                          controller: emailController,
-                          hintText: 'Email',
-                          obscureText: false,
-                        ),
-                        const SizedBox(height: 50),
+                          // username textfield
+                          MyTextField(
+                            controller: emailController,
+                            hintText: 'Email',
+                            obscureText: false,
+                            error:_error,
+                            focusNode: emailFocusNode
+                          ),
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
 
-                        // sign in button
-                        MyButton(
+                          // sign in button
+                          MyButton(
                             onTap: () => forgotPassword(context),
                             buttonText: "Send",
-                            buttonColor: primaryColor),
+                            buttonColor: primaryColor,
+                          ),
 
-                        const SizedBox(height: 150),
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.15),
 
-                        // not a member? register now
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
+                          // not a member? register now
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              GestureDetector(
                                 onTap: () {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const LoginPage()),
+                                      builder: (context) => const LoginPage(),
+                                    ),
                                   );
                                 },
                                 child: const Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Icon(
-                                        Icons.arrow_circle_left_outlined,
-                                        size: 24,
-                                        color: primaryColor,
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Icon(
+                                      Icons.arrow_circle_left_outlined,
+                                      size: 24,
+                                      color: primaryColor,
+                                    ),
+                                    Text(
+                                      ' Go Back To Login',
+                                      style: TextStyle(
+                                        color: greyColor,
                                       ),
-                                      Text(
-                                        ' Go Back To Login',
-                                        style: TextStyle(
-                                          color: greyColor,
-                                        ),
-                                      ),
-                                    ]
-                                )
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 20),
-                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ),
     );
   }

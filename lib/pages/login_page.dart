@@ -50,15 +50,14 @@ class _LoginPageState extends State<LoginPage> {
 
   GoogleSignInAccount? _currentUser;
 
-  late FocusNode emailNode;
-  late FocusNode passwordNode;
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+  bool _error = false;
 
   @override
   void initState() {
     emailController = TextEditingController();
     passwordController = TextEditingController();
-    emailNode = FocusNode();
-    passwordNode = FocusNode();
     _handleSignOut();
 
     _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
@@ -165,9 +164,23 @@ class _LoginPageState extends State<LoginPage> {
     await EasyLoading.show();
     if (emailController.text.isEmpty) {
       await EasyLoading.showInfo('Email Address Required');
+      setState(() {
+        _error = true;
+      });
+      FocusScope.of(context).requestFocus(emailFocusNode);
+      return;
     } else if (passwordController.text.isEmpty) {
       await EasyLoading.showInfo('Password Required');
+      passwordFocusNode.requestFocus();
+      setState(() {
+        _error = true;
+      });
+      FocusScope.of(context).requestFocus(passwordFocusNode);
+      return;
     } else {
+      setState(() {
+        _error = false;
+      });
       // await EasyLoading.show();
       var getData = await WebConfig.makeLogin(
           emailString: emailController.text,
@@ -207,188 +220,221 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: whiteColor,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 800),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 50),
-                  // logo
-                  const Icon(
-                    Icons.lock,
-                    size: 100,
-                    color: primaryColor,
-                  ),
-
-                  const SizedBox(height: 50),
-
-                  // welcome back, you've been missed!
-                  const Text(
-                    'Welcome back you\'ve been missed!',
-                    style: TextStyle(
-                        color: blackColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // username textfield
-                  MyTextField(
-                    controller: emailController,
-                    hintText: 'Email',
-                    obscureText: false,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // password textfield
-                  MyTextField(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // forgot password?
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const ForgotPassword()),
-                            );
-                          },
-                          child: const Text(
-                            'Forgot Password?',
-                            style: TextStyle(
-                              color: blackColor,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // sign in button
-                  MyButton(
-                      onTap: () => signUserIn(context),
-                      buttonText: "Sign In",
-                      buttonColor: primaryColor),
-
-                  const SizedBox(height: 50),
-
-                  // or continue with
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: blackColor,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Text(
-                            'Or continue with',
-                            style: TextStyle(color: blackColor),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: blackColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // google + apple sign in buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // google button
-                      SquareTile(
-                        imagePath: 'assets/google.png',
-                        onTap: () {
-                          _handleSignOut();
-                          _handleSignIn();
-                        },
-                      ),
-
-                      const SizedBox(width: 25),
-
-                      // apple button
-                      Platform.isIOS || Platform.isMacOS
-                          ? SquareTile(
-                              imagePath: 'assets/apple.png',
-                              onTap: () async {
-                                final credential =
-                                    await SignInWithApple.getAppleIDCredential(
-                                  scopes: [
-                                    AppleIDAuthorizationScopes.email,
-                                    AppleIDAuthorizationScopes.fullName,
-                                  ],
-                                );
-                                socialLoginWithApple(credential.userIdentifier);
-                              },
-                            )
-                          : const SizedBox.shrink(),
-                    ],
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // not a member? register now
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Not a member?',
-                        style: TextStyle(color: blackColor),
-                      ),
-                      const SizedBox(width: 4),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SignUpPage()),
-                          );
-                        },
-                        child: const Text(
-                          'Register now',
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 20),
-                ],
+      body: Stack(
+        children: [
+          Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topRight,
+                end: Alignment.bottomLeft,
+                colors: [primaryColor, Colors.purple],
               ),
             ),
           ),
-        ),
+          Column(
+            children: [
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.075,
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 75.0, right: 75.0),
+                child: Center(
+                  child: Image.asset(
+                    'assets/logo_white.png',
+                  ),
+                ),
+              ),
+              SizedBox(
+                height: MediaQuery.of(context).size.height * 0.025,
+              ),
+              Expanded(
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: backgroundColor,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(10.0),
+                      topRight: Radius.circular(10.0),
+                    ),
+                  ),
+                  child: SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 800),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                          const Text(
+                            'Welcome back you\'ve been missed!',
+                            style: TextStyle(
+                              color: blackColor,
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+
+                          // username textfield
+                          MyTextField(
+                            controller: emailController,
+                            hintText: 'Email',
+                            obscureText: false,
+                            error: _error,
+                            focusNode: emailFocusNode
+                          ),
+
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+
+                          // password textfield
+                          MyTextField(
+                            controller: passwordController,
+                            hintText: 'Password',
+                            obscureText: true,
+                            error: _error,
+                            focusNode: passwordFocusNode
+                          ),
+
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.01),
+
+                          // forgot password?
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => const ForgotPassword()),
+                                    );
+                                  },
+                                  child: const Text(
+                                    'Forgot Password?',
+                                    style: TextStyle(
+                                      color: primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+
+                          // sign in button
+                          MyButton(
+                              onTap: () => signUserIn(context),
+                              buttonText: "Sign In",
+                              buttonColor: primaryColor),
+
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+
+                          // or continue with
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                            child: Row(
+                              children: const [
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 0.5,
+                                    color: blackColor,
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  child: Text(
+                                    'Or continue with',
+                                    style: TextStyle(color: blackColor),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: Divider(
+                                    thickness: 0.5,
+                                    color: blackColor,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+
+                          // google + apple sign in buttons
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              // google button
+                              SquareTile(
+                                imagePath: 'assets/google.png',
+                                onTap: () {
+                                  _handleSignOut();
+                                  _handleSignIn();
+                                },
+                              ),
+
+                              const SizedBox(width: 25),
+
+                              // apple button
+                              Platform.isIOS || Platform.isMacOS
+                                  ? SquareTile(
+                                imagePath: 'assets/apple.png',
+                                onTap: () async {
+                                  final credential =
+                                  await SignInWithApple.getAppleIDCredential(
+                                    scopes: [
+                                      AppleIDAuthorizationScopes.email,
+                                      AppleIDAuthorizationScopes.fullName,
+                                    ],
+                                  );
+                                  socialLoginWithApple(credential.userIdentifier);
+                                },
+                              )
+                                  : const SizedBox.shrink(),
+                            ],
+                          ),
+
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+
+                          // not a member? register now
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Not a member?',
+                                style: TextStyle(color: blackColor),
+                              ),
+                              const SizedBox(width: 4),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => const SignUpPage()),
+                                  );
+                                },
+                                child: const Text(
+                                  'Register now',
+                                  style: TextStyle(
+                                    color: primaryColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }
