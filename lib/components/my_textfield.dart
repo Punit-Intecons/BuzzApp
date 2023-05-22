@@ -30,7 +30,7 @@ class _MyTextFieldState extends State<MyTextField> {
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
         controller: widget.controller,
-        focusNode:widget.focusNode,
+        focusNode: widget.focusNode,
         obscureText: widget.obscureText && !_passwordVisible,
         decoration: InputDecoration(
           enabledBorder: const OutlineInputBorder(
@@ -38,14 +38,17 @@ class _MyTextFieldState extends State<MyTextField> {
           ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(
-              color: widget.focusNode?.hasFocus ?? false ? Colors.red : Colors.grey,
+              color: widget.focusNode?.hasFocus ?? false
+                  ? Colors.red
+                  : Colors.grey,
             ),
           ),
           fillColor: Colors.grey.shade200,
           filled: true,
           hintText: widget.hintText,
           hintStyle: const TextStyle(color: blackColor),
-          suffixIcon: widget.hintText == 'Password' || widget.hintText == 'Confirm Password'
+          suffixIcon: widget.hintText == 'Password' ||
+                  widget.hintText == 'Confirm Password'
               ? IconButton(
                   onPressed: () {
                     setState(() {

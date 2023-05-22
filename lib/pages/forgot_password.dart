@@ -12,7 +12,6 @@ import '../responsive/responsive_layout.dart';
 import '../responsive/tablet_body.dart';
 import 'login_page.dart';
 
-
 // ignore: must_be_immutable
 class ForgotPassword extends StatefulWidget {
   static const routeName = '/sign-in';
@@ -51,13 +50,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
         _error = false;
       });
       var getData = await WebConfig.forgotPassword(
-          emailString: emailController.text,
+        emailString: emailController.text,
       );
 
       if (getData['status'] == true) {
         sharedPreferences = await SharedPreferences.getInstance();
         sharedPreferences.setString('email', getData['user']['User_Email']);
-        await EasyLoading.showSuccess('We have sent you verification mail. Please verify and set your password');
+        await EasyLoading.showSuccess(
+            'We have sent you verification mail. Please verify and set your password');
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return ResponsiveLayout(
             mobileBody: const MobileScaffold(),
@@ -120,7 +120,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.08),
 
                           // welcome back, you've been missed!
                           const Text(
@@ -132,17 +134,20 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             ),
                           ),
 
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.10),
 
                           // username textfield
                           MyTextField(
-                            controller: emailController,
-                            hintText: 'Email',
-                            obscureText: false,
-                            error:_error,
-                            focusNode: emailFocusNode
-                          ),
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                              controller: emailController,
+                              hintText: 'Email',
+                              obscureText: false,
+                              error: _error,
+                              focusNode: emailFocusNode),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.05),
 
                           // sign in button
                           MyButton(
@@ -151,7 +156,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                             buttonColor: primaryColor,
                           ),
 
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.15),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.15),
 
                           // not a member? register now
                           Row(
@@ -166,9 +173,10 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                                     ),
                                   );
                                 },
-                                child: const Row(
-                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                  children: [
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: const [
                                     Icon(
                                       Icons.arrow_circle_left_outlined,
                                       size: 24,
