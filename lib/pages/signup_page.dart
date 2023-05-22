@@ -12,18 +12,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import '../controller/web_api.dart';
 import '../controller/constant.dart';
-import '../responsive/desktop_body.dart';
-import '../responsive/mobile_body.dart';
-import '../responsive/responsive_layout.dart';
-import '../responsive/tablet_body.dart';
-import 'dashboard_screen.dart';
-
-GoogleSignIn _googleSignIn = GoogleSignIn(
-  // Optional clientId
-  scopes: <String>[
-    'email',
-  ],
-);
 
 class SignUpPage extends StatefulWidget {
   static const routeName = '/sign-up';
@@ -51,6 +39,130 @@ class _SignUpPageState extends State<SignUpPage> {
   late String passwordString;
 
   late SharedPreferences sharedPreferences;
+  bool _error = false;
+  late FocusNode emailFocusNode = FocusNode();
+  late FocusNode passwordFocusNode = FocusNode();
+  late FocusNode firstnameFocusNode = FocusNode();
+  late FocusNode lastnameFocusNode = FocusNode();
+  late FocusNode confirmPasswordFocusNode = FocusNode();
+  GoogleSignInAccount? _currentUser;
+
+  @override
+  void initState() {
+    emailController = TextEditingController();
+    firstnameController = TextEditingController();
+    lastnameController = TextEditingController();
+    passwordController = TextEditingController();
+
+    super.initState();
+    _handleSignOut();
+
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      setState(() {
+        _currentUser = account;
+      });
+      if (_currentUser != null) {
+        debugPrint(_currentUser!.displayName);
+        debugPrint(_currentUser!.photoUrl);
+        debugPrint(_currentUser!.id);
+        debugPrint(_currentUser!.email);
+      }
+      _currentUser!.authentication.then((result) {
+        debugPrint(result.accessToken);
+        EasyLoading.show();
+        socialRegister(_currentUser!.displayName, _currentUser!.id,
+            _currentUser!.email, _currentUser!.photoUrl);
+      }).catchError((err) {});
+    });
+    _googleSignIn.signInSilently();
+  }
+
+  socialRegister(String? displayName, String? socialID, String? emailAddress,
+      String? imageURL) async {
+    String? token = await FirebaseMessaging.instance.getToken();
+    List<String> finalName = displayName!.split(' ');
+
+    String firstName = finalName[0];
+    String lastName = finalName[1];
+
+    var getData = await WebConfig.socialSignIn(
+        emailString: emailAddress!,
+        imageLink: imageURL!,
+        passwordString: 'Deck141#',
+        deviceToken: token!,
+        socialType: 'Google',
+        firstName: firstName,
+        lastName: lastName,
+        socialProfileID: socialID!);
+    if (getData['status'] == true) {
+      sharedPreferences = await SharedPreferences.getInstance();
+      sharedPreferences.setString(
+          'userID', getData['user']['User_ID'].toString());
+      sharedPreferences.setString(
+          'first_name', getData['user']['User_First_Name']);
+      sharedPreferences.setString('socialType', 'Google');
+      sharedPreferences.setString(
+          'profileImage', getData['user']['Profile_Picture']);
+      sharedPreferences.setString(
+          'last_name', getData['user']['User_Last_Name']);
+      sharedPreferences.setString('email', getData['user']['User_Email']);
+      await EasyLoading.showSuccess('Sign In Successfully');
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ResponsiveLayout(
+          mobileBody: const MobileScaffold(),
+          tabletBody: const TabletScaffold(),
+          desktopBody: const DesktopScaffold(),
+        );
+      }));
+    } else {
+      await EasyLoading.showError(getData['msg']);
+    }
+  }
+
+  signUpWithApple(String? displayName, String? userIdentifierString,
+      String? emailAddress) async {
+    await EasyLoading.show();
+    String? token = await FirebaseMessaging.instance.getToken();
+    var getData = await WebConfig.registerWithApple(
+      emailString: emailAddress!,
+      fullNameString: displayName!,
+      userIdentifier: userIdentifierString!,
+      deviceToken: token!,
+    );
+    if (getData['status'] == true) {
+      sharedPreferences = await SharedPreferences.getInstance();
+      sharedPreferences.setString(
+          'userID', getData['user']['User_ID'].toString());
+      sharedPreferences.setString(
+          'first_name', getData['user']['User_First_Name']);
+      sharedPreferences.setString('socialType', 'Google');
+      sharedPreferences.setString(
+          'profileImage', getData['user']['Profile_Picture']);
+      sharedPreferences.setString(
+          'last_name', getData['user']['User_Last_Name']);
+      sharedPreferences.setString('email', getData['user']['User_Email']);
+      await EasyLoading.showSuccess('Sign In Successfully');
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ResponsiveLayout(
+          mobileBody: const MobileScaffold(),
+          tabletBody: const TabletScaffold(),
+          desktopBody: const DesktopScaffold(),
+        );
+      }));
+    } else {
+      await EasyLoading.showError(getData['msg']);
+    }
+  }
+
+  Future<void> _handleSignIn() async {
+    try {
+      await _googleSignIn.signIn();
+    } catch (error) {
+      debugPrint('$error');
+    }
+  }
+
+  Future<void> _handleSignOut() => _googleSignIn.disconnect();
 
   GoogleSignInAccount? _currentUser;
 
@@ -176,18 +288,51 @@ class _SignUpPageState extends State<SignUpPage> {
     await EasyLoading.show();
     if (firstnameController.text.isEmpty) {
       await EasyLoading.showInfo('Please enter first name');
+      setState(() {
+        _error = true;
+      });
+      FocusScope.of(context).requestFocus(firstnameFocusNode);
+      return;
     } else if (lastnameController.text.isEmpty) {
       await EasyLoading.showInfo('Please enter last name');
+      setState(() {
+        _error = true;
+      });
+      FocusScope.of(context).requestFocus(lastnameFocusNode);
+      return;
     } else if (emailController.text.isEmpty) {
       await EasyLoading.showInfo('Please enter email address');
+      setState(() {
+        _error = true;
+      });
+      FocusScope.of(context).requestFocus(emailFocusNode);
+      return;
     } else if (passwordController.text.isEmpty) {
       await EasyLoading.showInfo('Please enter password');
+      setState(() {
+        _error = true;
+      });
+      FocusScope.of(context).requestFocus(passwordFocusNode);
+      return;
     } else if (confirmPasswordController.text.isEmpty) {
       await EasyLoading.showInfo('Please enter confirm password');
+      setState(() {
+        _error = true;
+      });
+      FocusScope.of(context).requestFocus(confirmPasswordFocusNode);
+      return;
     } else if (passwordController.text != confirmPasswordController.text) {
       await EasyLoading.showInfo(
           'Confirm password is different from the password');
+      setState(() {
+        _error = true;
+      });
+      FocusScope.of(context).requestFocus(confirmPasswordFocusNode);
+      return;
     } else {
+      setState(() {
+        _error = false;
+      });
       var getData = await WebConfig.signUp(
           emailString: emailController.text,
           passwordString: passwordController.text,
@@ -213,169 +358,147 @@ class _SignUpPageState extends State<SignUpPage> {
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 800),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 25),
-                  const Text(
-                    'Welcome To BuzzApp',
-                    style: TextStyle(
-                        color: blackColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(height: 25),
+                const Text(
+                  'Welcome To BuzzApp',
+                  style: TextStyle(
+                      color: blackColor,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold),
+                ),
 
-                  const SizedBox(height: 25),
+                const SizedBox(height: 25),
 
-                  // username textfield
-                  MyTextField(
-                    controller: firstnameController,
-                    hintText: 'First Name',
-                    obscureText: false,
-                  ),
-                  const SizedBox(height: 10),
+                // username textfield
+                MyTextField(
+                  controller: firstnameController,
+                  hintText: 'First Name',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
 
-                  MyTextField(
-                    controller: lastnameController,
-                    hintText: 'Last Name',
-                    obscureText: false,
-                  ),
-                  const SizedBox(height: 10),
+                MyTextField(
+                  controller: lastnameController,
+                  hintText: 'Last Name',
+                  obscureText: false,
+                ),
+                const SizedBox(height: 10),
 
-                  MyTextField(
-                    controller: emailController,
-                    hintText: 'Email',
-                    obscureText: false,
-                  ),
+                MyTextField(
+                  controller: emailController,
+                  hintText: 'Email',
+                  obscureText: false,
+                ),
 
-                  const SizedBox(height: 10),
+                const SizedBox(height: 10),
 
-                  // password textfield
-                  MyTextField(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                  ),
+                // password textfield
+                MyTextField(
+                  controller: passwordController,
+                  hintText: 'Password',
+                  obscureText: true,
+                ),
 
-                  const SizedBox(height: 10),
+                const SizedBox(height: 10),
 
-                  // password textfield
-                  MyTextField(
-                    controller: confirmPasswordController,
-                    hintText: 'Confirm Password',
-                    obscureText: true,
-                  ),
+                // password textfield
+                MyTextField(
+                  controller: confirmPasswordController,
+                  hintText: 'Confirm Password',
+                  obscureText: true,
+                ),
 
-                  const SizedBox(height: 25),
+                const SizedBox(height: 25),
 
-                  MyButton(
-                      onTap: () => signUpUser(context),
-                      buttonText: "Sign Up",
-                      buttonColor: primaryColor),
+                MyButton(
+                    onTap: () => signUpUser(context),
+                    buttonText: "Sign Up",
+                    buttonColor: primaryColor),
 
-                  const SizedBox(height: 50),
+                const SizedBox(height: 50),
 
-                  // or continue with
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: blackColor,
-                          ),
+                // or continue with
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                  child: Row(
+                    children: const [
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: blackColor,
                         ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Text(
-                            'Or continue with',
-                            style: TextStyle(color: blackColor),
-                          ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        child: Text(
+                          'Or continue with',
+                          style: TextStyle(color: blackColor),
                         ),
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: blackColor,
-                          ),
+                      ),
+                      Expanded(
+                        child: Divider(
+                          thickness: 0.5,
+                          color: blackColor,
                         ),
-                      ],
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 25),
+
+                // google + apple sign in buttons
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // google button
+                    SquareTile(
+                      imagePath: 'assets/google.png',
+                      onTap: () {},
                     ),
-                  ),
 
-                  const SizedBox(height: 25),
+                    const SizedBox(width: 25),
 
-                  // google + apple sign in buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // google button
-                      SquareTile(
-                        imagePath: 'assets/google.png',
-                        onTap: () {
-                          _handleSignOut();
-                          _handleSignIn();
-                        },
-                      ),
+                    // apple button
+                    SquareTile(
+                      imagePath: 'assets/apple.png',
+                      onTap: () {},
+                    )
+                  ],
+                ),
 
-                      const SizedBox(width: 25),
+                const SizedBox(height: 25),
 
-                      // apple button
-                      Platform.isIOS || Platform.isMacOS
-                          ? SquareTile(
-                              imagePath: 'assets/apple.png',
-                              onTap: () async {
-                                final credential =
-                                    await SignInWithApple.getAppleIDCredential(
-                                  scopes: [
-                                    AppleIDAuthorizationScopes.email,
-                                    AppleIDAuthorizationScopes.fullName,
-                                  ],
-                                );
-
-                                signUpWithApple(
-                                    '${credential.givenName} ${credential.familyName}',
-                                    credential.userIdentifier,
-                                    credential.email);
-                              },
-                            )
-                          : const SizedBox.shrink(),
-                    ],
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // not a member? register now
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Already a member?',
-                        style: TextStyle(color: blackColor),
-                      ),
-                      const SizedBox(width: 4),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const LoginPage()),
-                          );
-                        },
-                        child: const Text(
-                          'Sign In',
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
+                // not a member? register now
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Already a member?',
+                      style: TextStyle(color: blackColor),
+                    ),
+                    const SizedBox(width: 4),
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => LoginPage()),
+                        );
+                      },
+                      child: const Text(
+                        'Sign In',
+                        style: TextStyle(
+                          color: primaryColor,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                    ],
-                  )
-                ],
-              ),
+                    ),
+                  ],
+                )
+              ],
             ),
           ),
         ),
