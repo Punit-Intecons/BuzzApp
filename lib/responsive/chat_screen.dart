@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:buzzapp/models/message_model.dart';
 import 'package:buzzapp/models/user_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/constant.dart';
+import '../controller/web_api.dart';
 
 class ChatScreen extends StatefulWidget {
   final User user;
@@ -14,6 +16,59 @@ class ChatScreen extends StatefulWidget {
 }
 
 class _ChatScreenState extends State<ChatScreen> {
+  late List<Message> userMessages = [];
+  bool isLoading = true;
+  late SharedPreferences sharedPreferences;
+  late String userID;
+  late String userName;
+  @override
+  void initState() {
+    getSharedData();
+    super.initState();
+  }
+
+  getSharedData() async {
+    sharedPreferences = await SharedPreferences.getInstance();
+    setState(() {
+      userID = sharedPreferences.getString('userID')!;
+      userName = sharedPreferences.getString('first_name')!;
+      getUserMessages();
+    });
+  }
+
+  getUserMessages() async {
+    setState(() {
+      isLoading = true;
+      userMessages.clear();
+    });
+    var getData = await WebConfig.getMessages(
+      userID: userID,
+      userName: userName,
+    );
+    if (getData['status'] == true) {
+      var list = getData['Messages'];
+      setState(() {
+        for (int i = 0; i < list.length; i++) {
+          userMessages.add(Message(
+            sender: User(
+                id: list[i]['sender']['id'],
+                name: list[i]['sender']['name'],
+                imageUrl: list[i]['sender']['imageUrl'],
+                isOnline: list[i]['sender']['isOnline']),
+            time: list[i]['time'],
+            text: list[i]['text'],
+            unread: list[i]['unread'],
+          ));
+        }
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        isLoading = false;
+      });
+    }
+  }
+
   _chatBubble(Message message, bool isMe, bool isSameUser) {
     if (isMe) {
       return Column(
@@ -213,19 +268,30 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: <Widget>[
           Expanded(
-            child: ListView.builder(
-              reverse: true,
-              padding: const EdgeInsets.all(20),
-              itemCount: messages.length,
-              itemBuilder: (BuildContext context, int index) {
-                final Message message = messages[index];
-                final bool isMe = message.sender.id == currentUser.id;
-                var prevUserId;
-                final bool isSameUser = prevUserId == message.sender.id;
-                prevUserId = message.sender.id;
-                return _chatBubble(message, isMe, isSameUser);
-              },
-            ),
+            child: isLoading == true
+                ? const Center(
+                    child: CircularProgressIndicator(
+                      color: primaryColor,
+                    ),
+                  )
+                : userMessages.isNotEmpty
+                    ? ListView.builder(
+                        reverse: true,
+                        padding: const EdgeInsets.all(20),
+                        itemCount: userMessages.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          final Message message = userMessages[index];
+                          final bool isMe = message.sender.id == currentUser.id;
+                          var prevUserId;
+                          final bool isSameUser =
+                              prevUserId == message.sender.id;
+                          prevUserId = message.sender.id;
+                          return _chatBubble(message, isMe, isSameUser);
+                        },
+                      )
+                    : const Center(
+                        child: Text("No messages found."),
+                      ),
           ),
           _sendMessageArea(),
         ],

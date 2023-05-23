@@ -158,6 +158,21 @@ class WebConfig {
     return loginData;
   }
 
+  static Future<dynamic> getChats(
+      {required String userID, required String userName}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': '3MUZqCyosJx8sALQ',
+    };
+    Map<String, String> bodyParams = {
+      'userID': userID,
+      'userName': userName,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getChats');
+    var existingChatData =
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return existingChatData;
+  }
+
   static Future<dynamic> getMessages(
       {required String userID, required String userName}) async {
     Map<String, String> stringParams = {
@@ -168,8 +183,41 @@ class WebConfig {
       'userName': userName,
     };
     NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getMessages');
-    var loginData =
+    var messagesData =
         await networkHelper.postHeaderBodyData(stringParams, bodyParams);
-    return loginData;
+    return messagesData;
+  }
+
+  static Future<dynamic> getCampaignListing(
+      {required String userID, required String userName}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': '3MUZqCyosJx8sALQ',
+    };
+    Map<String, String> bodyParams = {
+      'userID': userID,
+      'userName': userName,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getCampaignListing');
+    var existingCamapignData =
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return existingCamapignData;
+  }
+
+  static Future<dynamic> getCampaignDetails(
+      {required String userID,
+      required String userName,
+      required String campaignID}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': '3MUZqCyosJx8sALQ',
+    };
+    Map<String, String> bodyParams = {
+      'userID': userID,
+      'userName': userName,
+      'campaignID': campaignID,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getCampaignDetails');
+    var camapignDetailData =
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return camapignDetailData;
   }
 }

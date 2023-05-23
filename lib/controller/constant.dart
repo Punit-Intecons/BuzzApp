@@ -6,7 +6,15 @@ import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../campaign/desktop_campaign.dart';
+import '../campaign/mobile_campaign.dart';
+import '../campaign/responsive_campaign.dart';
+import '../campaign/tablet_campaign.dart';
 import '../pages/splash_screen.dart';
+import '../responsive/desktop_body.dart';
+import '../responsive/mobile_body.dart';
+import '../responsive/responsive_layout.dart';
+import '../responsive/tablet_body.dart';
 
 const Color whiteColor = Color(0xFFFFFFFF);
 const Color blackColor = Colors.black;
@@ -214,7 +222,13 @@ Widget myDrawer(BuildContext context) {
               style: drawerTextColor,
             ),
             onTap: () {
-              // Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const ResponsiveLayout(
+                  mobileBody: MobileScaffold(),
+                  tabletBody: TabletScaffold(),
+                  desktopBody: DesktopScaffold(),
+                );
+              }));
             },
           ),
         ),
@@ -227,7 +241,13 @@ Widget myDrawer(BuildContext context) {
               style: drawerTextColor,
             ),
             onTap: () {
-              // Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const ResponsiveCampaign(
+                  mobileCampaign: MobileCampaign(),
+                  tabletCampaign: TabletCampaign(),
+                  desktopCampaign: DesktopCampaign(),
+                );
+              }));
             },
           ),
         ),
