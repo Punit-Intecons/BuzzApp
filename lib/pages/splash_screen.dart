@@ -8,7 +8,6 @@ import '../responsive/desktop_body.dart';
 import '../responsive/mobile_body.dart';
 import '../responsive/responsive_layout.dart';
 import '../responsive/tablet_body.dart';
-import 'dashboard_screen.dart';
 import 'login_page.dart';
 
 class SplashScreen extends StatefulWidget {
