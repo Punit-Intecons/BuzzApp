@@ -1,23 +1,23 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:buzzapp/controller/web_api.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:buzzapp/components/my_button.dart';
 import 'package:buzzapp/components/my_textfield.dart';
 import 'package:buzzapp/components/square_tile.dart';
 import 'package:buzzapp/pages/signup_page.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-
 import '../controller/constant.dart';
-import '../responsive/desktop_body.dart';
-import '../responsive/mobile_body.dart';
-import '../responsive/responsive_layout.dart';
-import '../responsive/tablet_body.dart';
-import 'dashboard_screen.dart';
+import '../controller/shared_preferences_utils.dart';
 import 'forgot_password.dart';
+import 'package:lottie/lottie.dart';
+import 'dart:developer' as developer;
 
 GoogleSignIn _googleSignIn = GoogleSignIn(
   // Optional clientId
@@ -54,6 +54,9 @@ class _LoginPageState extends State<LoginPage> {
   final FocusNode emailFocusNode = FocusNode();
   final FocusNode passwordFocusNode = FocusNode();
   bool _error = false;
+  // ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  // final Connectivity _connectivity = Connectivity();
+  // late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   @override
   void initState() {
@@ -75,8 +78,43 @@ class _LoginPageState extends State<LoginPage> {
     });
     _googleSignIn.signInSilently();
     super.initState();
+    // initConnectivity();
+
+    // _connectivitySubscription =
+    //     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
 
+  @override
+  void dispose() {
+    // _connectivitySubscription.cancel();
+    super.dispose();
+  }
+
+  // Future<void> initConnectivity() async {
+  //   late ConnectivityResult result;
+  //   // Platform messages may fail, so we use a try/catch PlatformException.
+  //   try {
+  //     result = await _connectivity.checkConnectivity();
+  //   } on PlatformException catch (e) {
+  //     developer.log('Couldn\'t check connectivity status', error: e);
+  //     return;
+  //   }
+  //
+  //   // If the widget was removed from the tree while the asynchronous platform
+  //   // message was in flight, we want to discard the reply rather than calling
+  //   // setState to update our non-existent appearance.
+  //   if (!mounted) {
+  //     return Future.value(null);
+  //   }
+  //
+  //   return _updateConnectionStatus(result);
+  // }
+
+  // Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+  //   setState(() {
+  //     _connectionStatus = result;
+  //   });
+  // }
   Future<void> _handleSignOut() => _googleSignIn.disconnect();
 
   socialRegister(String? displayName, String? socialID, String? emailAddress,
@@ -97,26 +135,8 @@ class _LoginPageState extends State<LoginPage> {
         lastName: lastName,
         socialProfileID: socialID!);
     if (getData['status'] == true) {
-      sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.setString(
-          'userID', getData['user']['User_ID'].toString());
-      sharedPreferences.setString(
-          'first_name', getData['user']['User_First_Name']);
-      sharedPreferences.setString(
-          'profileImage', getData['user']['Profile_Picture']);
-      sharedPreferences.setString('socialType', 'Google');
-      sharedPreferences.setString(
-          'last_name', getData['user']['User_Last_Name']);
-      sharedPreferences.setString('email', getData['user']['User_Email']);
-
       await EasyLoading.showSuccess('Sign In Successfully');
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return ResponsiveLayout(
-          mobileBody: const MobileScaffold(),
-          tabletBody: const TabletScaffold(),
-          desktopBody: const DesktopScaffold(),
-        );
-      }));
+      updateUI(context, getData, 'Google');
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -127,26 +147,8 @@ class _LoginPageState extends State<LoginPage> {
     var getData = await WebConfig.signInWithApple(
         deviceToken: token!, userIdentifier: userIdentifierString!);
     if (getData['status'] == true) {
-      sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.setString(
-          'userID', getData['user']['User_ID'].toString());
-      sharedPreferences.setString(
-          'first_name', getData['user']['User_First_Name']);
-      sharedPreferences.setString(
-          'profileImage', getData['user']['Profile_Picture']);
-      sharedPreferences.setString('socialType', 'Apple');
-      sharedPreferences.setString(
-          'last_name', getData['user']['User_Last_Name']);
-      sharedPreferences.setString('email', getData['user']['User_Email']);
-      sharedPreferences.setString('phoneNo', getData['user']['User_Mobile_No']);
       await EasyLoading.showSuccess('Sign In Successfully');
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return ResponsiveLayout(
-          mobileBody: const MobileScaffold(),
-          tabletBody: const TabletScaffold(),
-          desktopBody: const DesktopScaffold(),
-        );
-      }));
+      updateUI(context, getData, 'Apple');
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -189,29 +191,8 @@ class _LoginPageState extends State<LoginPage> {
           deviceToken: '123456');
 
       if (getData['status'] == true) {
-        sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString(
-            'userID', getData['user']['User_ID'].toString());
-        sharedPreferences.setString(
-            'first_name', getData['user']['User_First_Name']);
-        sharedPreferences.setString(
-            'last_name', getData['user']['User_Last_Name']);
-        sharedPreferences.setString('email', getData['user']['User_Email']);
-        sharedPreferences.setString('socialType', 'Form');
-        sharedPreferences.setString(
-            'profileImage', getData['user']['Profile_Picture']);
         await EasyLoading.showSuccess('Sign In Successfully');
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ResponsiveLayout(
-            mobileBody: const MobileScaffold(),
-            tabletBody: const TabletScaffold(),
-            desktopBody: const DesktopScaffold(),
-          );
-        }));
-
-        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-        //   return const DashboardScreen();
-        // }));
+        updateUI(context, getData, 'Form');
       } else {
         await EasyLoading.showError(getData['msg']);
       }
@@ -220,8 +201,32 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // print(_connectionStatus);
     return Scaffold(
-      body: Stack(
+      body:
+          // : _connectionStatus == ConnectivityResult.none
+          //     ? Container(
+          //   alignment: Alignment.center,
+          //   padding: const EdgeInsets.all(15.0),
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       LottieBuilder.asset('assets/network_error.json'),
+          //       SizedBox(height: MediaQuery
+          //           .of(context)
+          //           .size
+          //           .height * 0.10),
+          //       const Text(
+          //         'No Connection Available',
+          //         style: TextStyle(
+          //             fontFamily: 'DMSans',
+          //             color: blackColor,
+          //             fontWeight: FontWeight.bold),
+          //       ),
+          //     ],
+          //   ),
+          // ):
+          Stack(
         children: [
           Container(
             decoration: const BoxDecoration(

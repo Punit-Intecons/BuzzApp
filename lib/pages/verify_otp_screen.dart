@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
+import 'dart:async';
 
+import 'package:buzzapp/pages/resetPassword.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:buzzapp/controller/web_api.dart';
@@ -12,12 +14,12 @@ import '../responsive/desktop_body.dart';
 import '../responsive/mobile_body.dart';
 import '../responsive/responsive_layout.dart';
 import '../responsive/tablet_body.dart';
-import 'dashboard_screen.dart';
 
 class VerifyOTPScreen extends StatefulWidget {
   final String emailAddress;
+  final String screenType;
   static const routeName = '/verify-otp';
-  const VerifyOTPScreen({super.key, required this.emailAddress});
+  const VerifyOTPScreen({super.key, required this.emailAddress,required this.screenType});
 
   @override
   State<VerifyOTPScreen> createState() => _VerifyOTPScreenState();
@@ -28,11 +30,49 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
   late String otpString;
   final pinController = TextEditingController();
   final focusNode = FocusNode();
+  late String email;
+  late String _screenType;
+  Timer? _timer;
+  int _countdown = 15;
+  bool _timerInProgress = true;
 
   @override
   void initState() {
     otpNode = FocusNode();
+    email = widget.emailAddress;
+    startTimer();
     super.initState();
+  }
+  void startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        if (_countdown > 0) {
+          _countdown--;
+        } else {
+          _timerInProgress = false;
+          _timer?.cancel();
+        }
+      });
+    });
+  }
+  Future<void> resendOTP() async {
+    var getData = await WebConfig.forgotPassword(
+      emailString: email,
+    );
+    if (getData['status'] == true) {
+      await EasyLoading.showSuccess('We have sent you verification mail. Please verify and set your password');
+      setState(() {
+        _countdown = 15;
+        _timerInProgress = true;
+      });
+      startTimer();
+    } else {
+      await EasyLoading.showError(getData['msg']);
+    }
+  }
+  void onTimerFinish() {
+    // Call your API to expire the OTP
+    // You can perform any necessary actions here
   }
 
   @override
@@ -83,10 +123,23 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
   }
 
   makeLogin(String otp) async {
+    print("IN");
     var getData = await WebConfig.verifyOTP(
-        otp: otp, gcmID: 'Form', emailAddress: widget.emailAddress);
+        otp: otp, gcmID: 'Form', emailAddress: widget.emailAddress,screenType: widget.screenType);
+    print(getData);
     if (getData['status'] == true) {
-      updateUI(getData);
+      if(widget.screenType == 'forgotScreen') {
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ResetPasswordScreen(
+              emailAddress: widget.emailAddress,
+              otp: otp,
+              screenType: widget.screenType
+          );
+        }));
+      }
+      else {
+        updateUI(getData);
+      }
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -124,31 +177,65 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                 decoration: const BoxDecoration(
                   color: backgroundColor,
                   borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(20.0),
-                      topRight: Radius.circular(20.0)),
+                      topLeft: Radius.circular(10.0),
+                      topRight: Radius.circular(10.0)),
                 ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 600),
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 4.5.h,
+                        height: MediaQuery.of(context).size.height * 0.075,
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 7.0.w, right: 7.0.w),
-                        child: Text(
-                          'Enter OTP',
-                          textAlign: TextAlign.center,
-                          textScaleFactor: kTextScaleFactor,
-                          style: TextStyle(
-                              fontFamily: 'DMSans',
-                              color: blackColor,
-                              fontSize: 14.0.sp,
-                              fontWeight: FontWeight.bold),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            double screenWidth = constraints.maxWidth;
+                            double fontSize = screenWidth *
+                                0.08; // Adjust this value as needed
+
+                            return Text(
+                              'Verification Code',
+                              textAlign: TextAlign.center,
+                              textScaleFactor: MediaQuery
+                                  .of(context)
+                                  .textScaleFactor,
+                              style: TextStyle(
+                                  fontFamily: 'DMSans',
+                                  color: blackColor,
+                                  fontSize: fontSize,
+                                  fontWeight: FontWeight.bold
+                              ),
+                            );
+                          }
                         ),
                       ),
                       SizedBox(
-                        height: 3.5.h,
+                        height: MediaQuery.of(context).size.height * 0.025,
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(left: 7.0.w, right: 7.0.w),
+                        child: LayoutBuilder(
+                          builder: (context, constraints) {
+                            double screenWidth = constraints.maxWidth;
+                            double fontSize = screenWidth * 0.04; // Adjust this value as needed
+
+                            return Text(
+                              'We have sent the verification code to your email address\n\n$email',
+                              textAlign: TextAlign.center,
+                              textScaleFactor: MediaQuery.of(context).textScaleFactor,
+                              style: TextStyle(
+                                fontFamily: 'DMSans',
+                                color: greyColor,
+                                fontSize: fontSize,
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: 4.5.w, right: 4.5.w),
@@ -198,31 +285,6 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: 2.5.h,
-                      ),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 5.5.w),
-                          child: InkWell(
-                            onTap: () {
-                              // getSharedPreferences();
-                            },
-                            child: const Text(
-                              'Resend OTP',
-                              textAlign: TextAlign.center,
-                              textScaleFactor: kTextScaleFactor,
-                              style: TextStyle(
-                                fontFamily: 'DMSans',
-                                // color: primaryColor,
-                                color: transparentColor,
-                                fontSize: 18.0,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
                       const Spacer(),
                       Container(
                         width: 100.0.w,
@@ -245,17 +307,113 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
                           ),
                           onPressed: () async {
                             if (pinController.text.isEmpty) {
-                              showSnackBar(
-                                  bottom: 10.0.h,
-                                  context: context,
-                                  text: 'OTP Required');
+                              await EasyLoading.showError('OTP Required');
                             } else {
                               _submitOTP(otpString);
                             }
                           },
                         ),
                       ),
-                      SizedBox(height: 3.5.h),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.025,
+                      ),
+                      Visibility(
+                        visible: _timerInProgress,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 7.0.w, right: 7.0.w),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        double screenWidth = constraints.maxWidth;
+                                        double fontSize = screenWidth * 0.08; // Adjust this value as needed
+
+                                        return Text(
+                                          "Didn't receive the code? ",
+                                          textScaleFactor: MediaQuery.of(context).textScaleFactor,
+                                          style: TextStyle(fontSize: fontSize, color: blackColor),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        double screenWidth = constraints.maxWidth;
+                                        double fontSize = screenWidth * 0.08; // Adjust this value as needed
+
+                                        return Text(
+                                          'Resend in $_countdown sec',
+                                          textScaleFactor: MediaQuery.of(context).textScaleFactor,
+                                          style: TextStyle(fontSize: fontSize, color: greyColor),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Visibility(
+                        visible: !_timerInProgress,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.only(left: 7.0.w, right: 7.0.w),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Flexible(
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        double screenWidth = constraints.maxWidth;
+                                        double fontSize = screenWidth * 0.08; // Adjust this value as needed
+
+                                        return Text(
+                                          "Didn't receive the code? ",
+                                          textScaleFactor: MediaQuery.of(context).textScaleFactor,
+                                          style: TextStyle(fontSize: fontSize, color: blackColor),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                  Flexible(
+                                    child: LayoutBuilder(
+                                      builder: (context, constraints) {
+                                        double screenWidth = constraints.maxWidth;
+                                        double fontSize = screenWidth * 0.08; // Adjust this value as needed
+
+                                        return TextButton(
+                                          onPressed: _timerInProgress ? null : resendOTP,
+                                          child: Text(
+                                            'Resend',
+                                            textScaleFactor: MediaQuery.of(context).textScaleFactor,
+                                            style: TextStyle(
+                                                fontSize: fontSize,
+                                                color: primaryColor
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.05,
+                      ),
                     ],
                   ),
                 ),
