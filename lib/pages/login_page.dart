@@ -136,7 +136,7 @@ class _LoginPageState extends State<LoginPage> {
         socialProfileID: socialID!);
     if (getData['status'] == true) {
       await EasyLoading.showSuccess('Sign In Successfully');
-      updateUI(context, getData,'Google');
+      updateUI(context, getData,'Google','Not Filled');
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -148,7 +148,7 @@ class _LoginPageState extends State<LoginPage> {
         deviceToken: token!, userIdentifier: userIdentifierString!);
     if (getData['status'] == true) {
       await EasyLoading.showSuccess('Sign In Successfully');
-      updateUI(context, getData,'Apple');
+      updateUI(context, getData,'Apple','Not Filled');
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -192,7 +192,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (getData['status'] == true) {
         await EasyLoading.showSuccess('Sign In Successfully');
-        updateUI(context, getData,'Form');
+        updateUI(context, getData,'Form','Not Filled');
       } else {
         await EasyLoading.showError(getData['msg']);
       }

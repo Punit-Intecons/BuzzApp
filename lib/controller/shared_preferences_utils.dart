@@ -7,13 +7,14 @@ import '../responsive/mobile_body.dart';
 import '../responsive/responsive_layout.dart';
 import '../responsive/tablet_body.dart';
 
-Future<void> updateUI(BuildContext context, var response, var socialType) async {
+Future<void> updateUI(BuildContext context, var response, var socialType, var dataFilled) async {
   SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
   await sharedPreferences.setString('userID', response['user']['User_ID'].toString());
   await sharedPreferences.setString('first_name', response['user']['User_First_Name']);
   await sharedPreferences.setString('last_name', response['user']['User_Last_Name']);
   await sharedPreferences.setString('email', response['user']['User_Email']);
   sharedPreferences.setString('socialType', socialType);
+  sharedPreferences.setString('dataFilled', dataFilled);
   await sharedPreferences.setString('profileImage', response['user']['Profile_Picture']);
   sharedPreferences.setString('phoneNo', response['user']['User_Mobile_No']??'');
   await EasyLoading.showSuccess('Sign In Successfully');
