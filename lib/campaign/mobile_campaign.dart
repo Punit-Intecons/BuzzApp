@@ -2,21 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/constant.dart';
 import '../controller/web_api.dart';
-import '../models/message_model.dart';
-import '../models/user_model.dart';
-import 'chat_screen.dart';
+import '../models/campaign_model.dart';
 
-class MobileScaffold extends StatefulWidget {
-  const MobileScaffold({Key? key}) : super(key: key);
+class MobileCampaign extends StatefulWidget {
+  const MobileCampaign({Key? key}) : super(key: key);
 
   @override
-  State<MobileScaffold> createState() => _MobileScaffoldState();
+  State<MobileCampaign> createState() => _MobileCampaignState();
 }
 
-class _MobileScaffoldState extends State<MobileScaffold> {
+class _MobileCampaignState extends State<MobileCampaign> {
   DateTime? backPressedTime;
-  late List<Message> userChats = [];
-  bool isChatLoading = true;
+  late List<Campaign> userCampaigns = [];
+  bool isCampaignLoading = true;
   late SharedPreferences sharedPreferences;
   late String userID;
   late String userName;
@@ -32,39 +30,36 @@ class _MobileScaffoldState extends State<MobileScaffold> {
     setState(() {
       userID = sharedPreferences.getString('userID')!;
       userName = sharedPreferences.getString('first_name')!;
-      getChats();
+      getCampaignListing();
     });
   }
 
-  getChats() async {
+  getCampaignListing() async {
     setState(() {
-      isChatLoading = true;
-      userChats.clear();
+      isCampaignLoading = true;
+      userCampaigns.clear();
     });
-    var getData = await WebConfig.getChats(
+    var getData = await WebConfig.getCampaignListing(
       userID: userID,
       userName: userName,
     );
     if (getData['status'] == true) {
-      var list = getData['chats'];
+      var list = getData['campaignDetail'];
       setState(() {
         for (int i = 0; i < list.length; i++) {
-          userChats.add(Message(
-            sender: User(
-                id: list[i]['sender']['id'],
-                name: list[i]['sender']['name'],
-                imageUrl: list[i]['sender']['imageUrl'],
-                isOnline: list[i]['sender']['isOnline']),
+          userCampaigns.add(Campaign(
+            campaignID: list[i]['campaignID'],
+            campaignName: list[i]['campaignName'],
             time: list[i]['time'],
-            text: list[i]['text'],
-            unread: list[i]['unread'],
+            size: list[i]['size'],
+            metaCampaignName: list[i]['metaCampaignName'],
           ));
         }
-        isChatLoading = false;
+        isCampaignLoading = false;
       });
     } else {
       setState(() {
-        isChatLoading = false;
+        isCampaignLoading = false;
       });
     }
   }
@@ -94,28 +89,21 @@ class _MobileScaffoldState extends State<MobileScaffold> {
         backgroundColor: secondaryBackgroundColor,
         appBar: myAppBar,
         drawer: drawer,
-        body: isChatLoading == true
+        body: isCampaignLoading == true
             ? const Center(
                 child: CircularProgressIndicator(
                   color: primaryColor,
                 ),
               )
-            : userChats.isNotEmpty
+            : userCampaigns.isNotEmpty
                 ? ListView.builder(
-                    itemCount: userChats.length,
+                    itemCount: userCampaigns.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final Message chat = userChats[index];
+                      final Campaign campaigns = userCampaigns[index];
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                         child: GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => ChatScreen(
-                                user: chat.sender,
-                              ),
-                            ),
-                          ),
+                          onTap: () => {},
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 20,
@@ -127,44 +115,6 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                             ),
                             child: Row(
                               children: <Widget>[
-                                Container(
-                                  padding: const EdgeInsets.all(2),
-                                  decoration: chat.unread
-                                      ? BoxDecoration(
-                                          borderRadius: const BorderRadius.all(
-                                              Radius.circular(40)),
-                                          border: Border.all(
-                                            width: 2,
-                                            color:
-                                                Theme.of(context).primaryColor,
-                                          ),
-                                          // shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.5),
-                                              spreadRadius: 2,
-                                              blurRadius: 5,
-                                            ),
-                                          ],
-                                        )
-                                      : BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color:
-                                                  Colors.grey.withOpacity(0.5),
-                                              spreadRadius: 2,
-                                              blurRadius: 5,
-                                            ),
-                                          ],
-                                        ),
-                                  child: CircleAvatar(
-                                    radius: 35,
-                                    backgroundImage:
-                                        AssetImage(chat.sender.imageUrl),
-                                  ),
-                                ),
                                 Container(
                                   width:
                                       MediaQuery.of(context).size.width * 0.60,
@@ -180,7 +130,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                                           Row(
                                             children: <Widget>[
                                               Text(
-                                                chat.sender.name,
+                                                campaigns.campaignName,
                                                 style: const TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
@@ -189,7 +139,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                                             ],
                                           ),
                                           Text(
-                                            chat.time,
+                                            campaigns.time,
                                             style: const TextStyle(
                                               fontSize: 11,
                                               fontWeight: FontWeight.w300,
@@ -201,17 +151,30 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                                       const SizedBox(
                                         height: 10,
                                       ),
-                                      Container(
-                                        alignment: Alignment.topLeft,
-                                        child: Text(
-                                          chat.text,
-                                          style: const TextStyle(
-                                            fontSize: 13,
-                                            color: Colors.black54,
+                                      Row(
+                                        children: <Widget>[
+                                          Row(
+                                            children: <Widget>[
+                                              Text(
+                                                "Size:${campaigns.size}",
+                                                style: const TextStyle(
+                                                  fontSize: 12,
+                                                  color: successColor,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                          overflow: TextOverflow.ellipsis,
-                                          maxLines: 2,
-                                        ),
+                                          const SizedBox(width: 10),
+                                          Text(
+                                            campaigns.metaCampaignName,
+                                            style: const TextStyle(
+                                              fontSize: 12,
+                                              color: successColor,
+                                            ),
+                                            overflow: TextOverflow.ellipsis,
+                                            maxLines: 2,
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
@@ -224,7 +187,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
                     },
                   )
                 : const Center(
-                    child: Text("No Chats found."),
+                    child: Text("No Campaign found."),
                   ),
       ),
     );

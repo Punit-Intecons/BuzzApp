@@ -83,6 +83,7 @@ class _LoginPageState extends State<LoginPage> {
     // _connectivitySubscription =
     //     _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
   }
+
   @override
   void dispose() {
     // _connectivitySubscription.cancel();
@@ -135,7 +136,17 @@ class _LoginPageState extends State<LoginPage> {
         socialProfileID: socialID!);
     if (getData['status'] == true) {
       await EasyLoading.showSuccess('Sign In Successfully');
+<<<<<<<<< Temporary merge branch 1
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ResponsiveLayout(
+          mobileBody: const MobileScaffold(),
+          tabletBody: const TabletScaffold(),
+          desktopBody: const DesktopScaffold(),
+        );
+      }));
+=========
       updateUI(context, getData,'Google');
+>>>>>>>>> Temporary merge branch 2
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -147,7 +158,17 @@ class _LoginPageState extends State<LoginPage> {
         deviceToken: token!, userIdentifier: userIdentifierString!);
     if (getData['status'] == true) {
       await EasyLoading.showSuccess('Sign In Successfully');
+<<<<<<<<< Temporary merge branch 1
+      Navigator.push(context, MaterialPageRoute(builder: (context) {
+        return ResponsiveLayout(
+          mobileBody: const MobileScaffold(),
+          tabletBody: const TabletScaffold(),
+          desktopBody: const DesktopScaffold(),
+        );
+      }));
+=========
       updateUI(context, getData,'Apple');
+>>>>>>>>> Temporary merge branch 2
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -191,7 +212,21 @@ class _LoginPageState extends State<LoginPage> {
 
       if (getData['status'] == true) {
         await EasyLoading.showSuccess('Sign In Successfully');
+<<<<<<<<< Temporary merge branch 1
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return ResponsiveLayout(
+            mobileBody: const MobileScaffold(),
+            tabletBody: const TabletScaffold(),
+            desktopBody: const DesktopScaffold(),
+          );
+        }));
+
+        // Navigator.push(context, MaterialPageRoute(builder: (context) {
+        //   return const DashboardScreen();
+        // }));
+=========
         updateUI(context, getData,'Form');
+>>>>>>>>> Temporary merge branch 2
       } else {
         await EasyLoading.showError(getData['msg']);
       }
@@ -202,31 +237,199 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     // print(_connectionStatus);
     return Scaffold(
+<<<<<<<<< Temporary merge branch 1
+      backgroundColor: whiteColor,
+      body: SafeArea(
+        child: Center(
+          child: SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 800),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(height: 50),
+                  // logo
+                  const Icon(
+                    Icons.lock,
+                    size: 100,
+                    color: primaryColor,
+                  ),
+
+                  const SizedBox(height: 50),
+
+                  // welcome back, you've been missed!
+                  const Text(
+                    'Welcome back you\'ve been missed!',
+                    style: TextStyle(
+                        color: blackColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // username textfield
+                  MyTextField(
+                    controller: emailController,
+                    hintText: 'Email',
+                    obscureText: false,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // password textfield
+                  MyTextField(
+                    controller: passwordController,
+                    hintText: 'Password',
+                    obscureText: true,
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  // forgot password?
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: const [
+                        Text(
+                          'Forgot Password?',
+                          style: TextStyle(color: blackColor),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // sign in button
+                  MyButton(
+                      onTap: () => signUserIn(context),
+                      buttonText: "Sign In",
+                      buttonColor: primaryColor),
+
+                  const SizedBox(height: 50),
+
+                  // or continue with
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+                    child: Row(
+                      children: const [
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: blackColor,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text(
+                            'Or continue with',
+                            style: TextStyle(color: blackColor),
+                          ),
+                        ),
+                        Expanded(
+                          child: Divider(
+                            thickness: 0.5,
+                            color: blackColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // google + apple sign in buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      // google button
+                      SquareTile(
+                        imagePath: 'assets/google.png',
+                        onTap: () {
+                          _handleSignOut();
+                          _handleSignIn();
+                        },
+                      ),
+
+                      const SizedBox(width: 25),
+
+                      // apple button
+                      Platform.isIOS || Platform.isMacOS
+                          ? SquareTile(
+                              imagePath: 'assets/apple.png',
+                              onTap: () async {
+                                final credential =
+                                    await SignInWithApple.getAppleIDCredential(
+                                  scopes: [
+                                    AppleIDAuthorizationScopes.email,
+                                    AppleIDAuthorizationScopes.fullName,
+                                  ],
+                                );
+                                socialLoginWithApple(credential.userIdentifier);
+                              },
+                            )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
+
+                  const SizedBox(height: 25),
+
+                  // not a member? register now
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text(
+                        'Not a member?',
+                        style: TextStyle(color: blackColor),
+                      ),
+                      const SizedBox(width: 4),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const SignUpPage()),
+                          );
+                        },
+                        child: const Text(
+                          'Register now',
+                          style: TextStyle(
+                            color: primaryColor,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                ],
+=========
 
       body:
-      // : _connectionStatus == ConnectivityResult.none
-      //     ? Container(
-      //   alignment: Alignment.center,
-      //   padding: const EdgeInsets.all(15.0),
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: [
-      //       LottieBuilder.asset('assets/network_error.json'),
-      //       SizedBox(height: MediaQuery
-      //           .of(context)
-      //           .size
-      //           .height * 0.10),
-      //       const Text(
-      //         'No Connection Available',
-      //         style: TextStyle(
-      //             fontFamily: 'DMSans',
-      //             color: blackColor,
-      //             fontWeight: FontWeight.bold),
-      //       ),
-      //     ],
-      //   ),
-      // ):
-      Stack(
+          // : _connectionStatus == ConnectivityResult.none
+          //     ? Container(
+          //   alignment: Alignment.center,
+          //   padding: const EdgeInsets.all(15.0),
+          //   child: Column(
+          //     mainAxisAlignment: MainAxisAlignment.center,
+          //     children: [
+          //       LottieBuilder.asset('assets/network_error.json'),
+          //       SizedBox(height: MediaQuery
+          //           .of(context)
+          //           .size
+          //           .height * 0.10),
+          //       const Text(
+          //         'No Connection Available',
+          //         style: TextStyle(
+          //             fontFamily: 'DMSans',
+          //             color: blackColor,
+          //             fontWeight: FontWeight.bold),
+          //       ),
+          //     ],
+          //   ),
+          // ):
+          Stack(
         children: [
           Container(
             decoration: const BoxDecoration(
@@ -240,10 +443,7 @@ class _LoginPageState extends State<LoginPage> {
           Column(
             children: [
               SizedBox(
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.075,
+                height: MediaQuery.of(context).size.height * 0.075,
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 75.0, right: 75.0),
@@ -254,10 +454,7 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
               SizedBox(
-                height: MediaQuery
-                    .of(context)
-                    .size
-                    .height * 0.025,
+                height: MediaQuery.of(context).size.height * 0.025,
               ),
               Expanded(
                 child: Container(
@@ -274,24 +471,21 @@ class _LoginPageState extends State<LoginPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.08),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.08),
                           const Text(
                             'Welcome back you\'ve been missed!',
                             style: TextStyle(
                                 color: blackColor,
                                 fontSize: 25,
-                                fontWeight: FontWeight.bold
-                            ),
+                                fontWeight: FontWeight.bold),
                             textAlign: TextAlign.center,
                           ),
 
-                          SizedBox(height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.10),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.10),
 
                           // username textfield
                           MyTextField(
@@ -299,13 +493,11 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Email',
                               obscureText: false,
                               error: _error,
-                              focusNode: emailFocusNode
-                          ),
+                              focusNode: emailFocusNode),
 
-                          SizedBox(height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.02),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
 
                           // password textfield
                           MyTextField(
@@ -313,18 +505,16 @@ class _LoginPageState extends State<LoginPage> {
                               hintText: 'Password',
                               obscureText: true,
                               error: _error,
-                              focusNode: passwordFocusNode
-                          ),
+                              focusNode: passwordFocusNode),
 
-                          SizedBox(height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.01),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.01),
 
                           // forgot password?
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 25.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 25.0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
@@ -333,8 +523,8 @@ class _LoginPageState extends State<LoginPage> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                          builder: (
-                                              context) => const ForgotPassword()),
+                                          builder: (context) =>
+                                              const ForgotPassword()),
                                     );
                                   },
                                   child: const Text(
@@ -348,10 +538,9 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
 
-                          SizedBox(height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.05),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.05),
 
                           // sign in button
                           MyButton(
@@ -359,15 +548,14 @@ class _LoginPageState extends State<LoginPage> {
                               buttonText: "Sign In",
                               buttonColor: primaryColor),
 
-                          SizedBox(height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.05),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.05),
 
                           // or continue with
                           Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 25.0),
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 25.0),
                             child: Row(
                               children: const [
                                 Expanded(
@@ -377,8 +565,8 @@ class _LoginPageState extends State<LoginPage> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: 10.0),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.0),
                                   child: Text(
                                     'Or continue with',
                                     style: TextStyle(color: blackColor),
@@ -394,10 +582,9 @@ class _LoginPageState extends State<LoginPage> {
                             ),
                           ),
 
-                          SizedBox(height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.05),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.05),
 
                           // google + apple sign in buttons
                           Row(
@@ -417,27 +604,26 @@ class _LoginPageState extends State<LoginPage> {
                               // apple button
                               Platform.isIOS || Platform.isMacOS
                                   ? SquareTile(
-                                imagePath: 'assets/apple.png',
-                                onTap: () async {
-                                  final credential =
-                                  await SignInWithApple.getAppleIDCredential(
-                                    scopes: [
-                                      AppleIDAuthorizationScopes.email,
-                                      AppleIDAuthorizationScopes.fullName,
-                                    ],
-                                  );
-                                  socialLoginWithApple(
-                                      credential.userIdentifier);
-                                },
-                              )
+                                      imagePath: 'assets/apple.png',
+                                      onTap: () async {
+                                        final credential = await SignInWithApple
+                                            .getAppleIDCredential(
+                                          scopes: [
+                                            AppleIDAuthorizationScopes.email,
+                                            AppleIDAuthorizationScopes.fullName,
+                                          ],
+                                        );
+                                        socialLoginWithApple(
+                                            credential.userIdentifier);
+                                      },
+                                    )
                                   : const SizedBox.shrink(),
                             ],
                           ),
 
-                          SizedBox(height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.02),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
 
                           // not a member? register now
                           Row(
@@ -453,8 +639,8 @@ class _LoginPageState extends State<LoginPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (
-                                            context) => const SignUpPage()),
+                                        builder: (context) =>
+                                            const SignUpPage()),
                                   );
                                 },
                                 child: const Text(
@@ -467,10 +653,9 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                             ],
                           ),
-                          SizedBox(height: MediaQuery
-                              .of(context)
-                              .size
-                              .height * 0.05),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.05),
                         ],
                       ),
                     ),

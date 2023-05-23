@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ResponsiveLayout extends StatelessWidget {
+  static const routeName = '/dashboard';
   final Widget mobileBody;
   final Widget tabletBody;
   final Widget desktopBody;
 
-  ResponsiveLayout({
+  const ResponsiveLayout({
+    super.key,
     required this.mobileBody,
     required this.tabletBody,
     required this.desktopBody,

@@ -257,7 +257,9 @@ class _SignUpPageState extends State<SignUpPage> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.08),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.08),
 
                           const Text(
                             'Welcome To BuzzApp',
@@ -267,71 +269,81 @@ class _SignUpPageState extends State<SignUpPage> {
                                 fontWeight: FontWeight.bold),
                           ),
 
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.10),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.10),
 
                           // username textfield
                           MyTextField(
-                            controller: firstnameController,
-                            hintText: 'First Name',
-                            obscureText: false,
-                            error: _error,
-                            focusNode: firstnameFocusNode
-                          ),
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                              controller: firstnameController,
+                              hintText: 'First Name',
+                              obscureText: false,
+                              error: _error,
+                              focusNode: firstnameFocusNode),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
 
                           MyTextField(
-                            controller: lastnameController,
-                            hintText: 'Last Name',
-                            obscureText: false,
-                            error: _error,
-                            focusNode: lastnameFocusNode
-                          ),
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                              controller: lastnameController,
+                              hintText: 'Last Name',
+                              obscureText: false,
+                              error: _error,
+                              focusNode: lastnameFocusNode),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
 
                           MyTextField(
-                            controller: emailController,
-                            hintText: 'Email',
-                            obscureText: false,
-                            error: _error,
-                            focusNode: emailFocusNode
-                          ),
+                              controller: emailController,
+                              hintText: 'Email',
+                              obscureText: false,
+                              error: _error,
+                              focusNode: emailFocusNode),
 
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
 
                           // password textfield
                           MyTextField(
-                            controller: passwordController,
-                            hintText: 'Password',
-                            obscureText: true,
-                            error: _error,
-                            focusNode: passwordFocusNode
-                          ),
+                              controller: passwordController,
+                              hintText: 'Password',
+                              obscureText: true,
+                              error: _error,
+                              focusNode: passwordFocusNode),
 
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
 
                           // password textfield
                           MyTextField(
-                            controller: confirmPasswordController,
-                            hintText: 'Confirm Password',
-                            obscureText: true,
-                            error: _error,
-                            focusNode: confirmPasswordFocusNode
-                          ),
+                              controller: confirmPasswordController,
+                              hintText: 'Confirm Password',
+                              obscureText: true,
+                              error: _error,
+                              focusNode: confirmPasswordFocusNode),
 
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.03),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.03),
 
                           MyButton(
                               onTap: () => signUpUser(context),
                               buttonText: "Sign Up",
                               buttonColor: primaryColor),
 
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.05),
 
                           // or continue with
-                          const Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 25.0),
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 25.0),
                             child: Row(
-                              children: [
+                              children: const [
                                 Expanded(
                                   child: Divider(
                                     thickness: 0.5,
@@ -339,7 +351,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  padding:
+                                      EdgeInsets.symmetric(horizontal: 10.0),
                                   child: Text(
                                     'Or continue with',
                                     style: TextStyle(color: blackColor),
@@ -355,7 +368,9 @@ class _SignUpPageState extends State<SignUpPage> {
                             ),
                           ),
 
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.05),
 
                           // google + apple sign in buttons
                           Row(
@@ -375,27 +390,29 @@ class _SignUpPageState extends State<SignUpPage> {
                               // apple button
                               Platform.isIOS || Platform.isMacOS
                                   ? SquareTile(
-                                imagePath: 'assets/apple.png',
-                                onTap: () async {
-                                  final credential =
-                                  await SignInWithApple.getAppleIDCredential(
-                                    scopes: [
-                                      AppleIDAuthorizationScopes.email,
-                                      AppleIDAuthorizationScopes.fullName,
-                                    ],
-                                  );
+                                      imagePath: 'assets/apple.png',
+                                      onTap: () async {
+                                        final credential = await SignInWithApple
+                                            .getAppleIDCredential(
+                                          scopes: [
+                                            AppleIDAuthorizationScopes.email,
+                                            AppleIDAuthorizationScopes.fullName,
+                                          ],
+                                        );
 
-                                  signUpWithApple(
-                                      '${credential.givenName} ${credential.familyName}',
-                                      credential.userIdentifier,
-                                      credential.email);
-                                },
-                              )
+                                        signUpWithApple(
+                                            '${credential.givenName} ${credential.familyName}',
+                                            credential.userIdentifier,
+                                            credential.email);
+                                      },
+                                    )
                                   : const SizedBox.shrink(),
                             ],
                           ),
 
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.02),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.02),
 
                           // not a member? register now
                           Row(
@@ -411,7 +428,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                   Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const LoginPage()),
+                                        builder: (context) =>
+                                            const LoginPage()),
                                   );
                                 },
                                 child: const Text(
@@ -424,7 +442,9 @@ class _SignUpPageState extends State<SignUpPage> {
                               ),
                             ],
                           ),
-                          SizedBox(height: MediaQuery.of(context).size.height * 0.05),
+                          SizedBox(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.05),
                         ],
                       ),
                     ),
