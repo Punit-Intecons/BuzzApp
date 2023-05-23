@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
           SplashScreen.routeName: (context) => const SplashScreen(),
           DashboardScreen.routeName: (context) => const DashboardScreen(),
           VerifyOTPScreen.routeName: (context) =>
-              const VerifyOTPScreen(emailAddress: ''),
+              const VerifyOTPScreen(emailAddress: '',screenType: ''),
         },
       );
     });

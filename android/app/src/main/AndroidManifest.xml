@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.intecons.buzzapp">
-   <application
+    <application
         android:label="BuzzApp"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

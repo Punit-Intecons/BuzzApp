@@ -24,12 +24,13 @@ class WebConfig {
   static Future<dynamic> verifyOTP(
       {required String otp,
       required String gcmID,
-      required String emailAddress}) async {
+      required String emailAddress,required String screenType}) async {
     Map<String, String> stringParams = {'csrf-token': '3MUZqCyosJx8sALQ'};
     Map<String, String> bodyParams = {
       'OTP': otp,
       'GCMID': gcmID,
       'Email': emailAddress,
+      'screenType': screenType,
     };
     NetworkHelper networkHelper = NetworkHelper('$kBaseURL/check_OTP');
     var data = await networkHelper.postHeaderBodyData(stringParams, bodyParams);

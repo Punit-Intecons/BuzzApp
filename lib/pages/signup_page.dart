@@ -10,6 +10,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
+import '../controller/shared_preferences_utils.dart';
 import '../controller/web_api.dart';
 import '../controller/constant.dart';
 import '../responsive/desktop_body.dart';
@@ -106,25 +107,8 @@ class _SignUpPageState extends State<SignUpPage> {
         lastName: lastName,
         socialProfileID: socialID!);
     if (getData['status'] == true) {
-      sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.setString(
-          'userID', getData['user']['User_ID'].toString());
-      sharedPreferences.setString(
-          'first_name', getData['user']['User_First_Name']);
-      sharedPreferences.setString('socialType', 'Google');
-      sharedPreferences.setString(
-          'profileImage', getData['user']['Profile_Picture']);
-      sharedPreferences.setString(
-          'last_name', getData['user']['User_Last_Name']);
-      sharedPreferences.setString('email', getData['user']['User_Email']);
       await EasyLoading.showSuccess('Sign In Successfully');
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return ResponsiveLayout(
-          mobileBody: const MobileScaffold(),
-          tabletBody: const TabletScaffold(),
-          desktopBody: const DesktopScaffold(),
-        );
-      }));
+      updateUI(context, getData,'Google');
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -141,25 +125,8 @@ class _SignUpPageState extends State<SignUpPage> {
       deviceToken: token!,
     );
     if (getData['status'] == true) {
-      sharedPreferences = await SharedPreferences.getInstance();
-      sharedPreferences.setString(
-          'userID', getData['user']['User_ID'].toString());
-      sharedPreferences.setString(
-          'first_name', getData['user']['User_First_Name']);
-      sharedPreferences.setString('socialType', 'Google');
-      sharedPreferences.setString(
-          'profileImage', getData['user']['Profile_Picture']);
-      sharedPreferences.setString(
-          'last_name', getData['user']['User_Last_Name']);
-      sharedPreferences.setString('email', getData['user']['User_Email']);
       await EasyLoading.showSuccess('Sign In Successfully');
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return ResponsiveLayout(
-          mobileBody: const MobileScaffold(),
-          tabletBody: const TabletScaffold(),
-          desktopBody: const DesktopScaffold(),
-        );
-      }));
+      updateUI(context, getData,'Apple');
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -235,6 +202,7 @@ class _SignUpPageState extends State<SignUpPage> {
         Navigator.push(context, MaterialPageRoute(builder: (context) {
           return VerifyOTPScreen(
             emailAddress: emailController.text,
+            screenType: 'signUP'
           );
         }));
       } else {

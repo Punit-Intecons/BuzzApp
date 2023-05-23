@@ -1,15 +1,11 @@
 import 'package:buzzapp/controller/web_api.dart';
+import 'package:buzzapp/pages/verify_otp_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:buzzapp/components/my_button.dart';
 import 'package:buzzapp/components/my_textfield.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/constant.dart';
-import '../responsive/desktop_body.dart';
-import '../responsive/mobile_body.dart';
-import '../responsive/responsive_layout.dart';
-import '../responsive/tablet_body.dart';
 import 'login_page.dart';
 
 
@@ -55,20 +51,14 @@ class _ForgotPasswordState extends State<ForgotPassword> {
       );
 
       if (getData['status'] == true) {
-        sharedPreferences = await SharedPreferences.getInstance();
-        sharedPreferences.setString('email', getData['user']['User_Email']);
+        print(getData);
         await EasyLoading.showSuccess('We have sent you verification mail. Please verify and set your password');
         Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ResponsiveLayout(
-            mobileBody: const MobileScaffold(),
-            tabletBody: const TabletScaffold(),
-            desktopBody: const DesktopScaffold(),
+          return VerifyOTPScreen(
+            emailAddress: emailController.text,
+              screenType: 'forgotScreen'
           );
         }));
-
-        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-        //   return const DashboardScreen();
-        // }));
       } else {
         await EasyLoading.showError(getData['msg']);
       }
