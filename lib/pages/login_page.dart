@@ -136,17 +136,7 @@ class _LoginPageState extends State<LoginPage> {
         socialProfileID: socialID!);
     if (getData['status'] == true) {
       await EasyLoading.showSuccess('Sign In Successfully');
-<<<<<<<<< Temporary merge branch 1
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return ResponsiveLayout(
-          mobileBody: const MobileScaffold(),
-          tabletBody: const TabletScaffold(),
-          desktopBody: const DesktopScaffold(),
-        );
-      }));
-=========
       updateUI(context, getData,'Google');
->>>>>>>>> Temporary merge branch 2
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -158,17 +148,7 @@ class _LoginPageState extends State<LoginPage> {
         deviceToken: token!, userIdentifier: userIdentifierString!);
     if (getData['status'] == true) {
       await EasyLoading.showSuccess('Sign In Successfully');
-<<<<<<<<< Temporary merge branch 1
-      Navigator.push(context, MaterialPageRoute(builder: (context) {
-        return ResponsiveLayout(
-          mobileBody: const MobileScaffold(),
-          tabletBody: const TabletScaffold(),
-          desktopBody: const DesktopScaffold(),
-        );
-      }));
-=========
       updateUI(context, getData,'Apple');
->>>>>>>>> Temporary merge branch 2
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -212,21 +192,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (getData['status'] == true) {
         await EasyLoading.showSuccess('Sign In Successfully');
-<<<<<<<<< Temporary merge branch 1
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ResponsiveLayout(
-            mobileBody: const MobileScaffold(),
-            tabletBody: const TabletScaffold(),
-            desktopBody: const DesktopScaffold(),
-          );
-        }));
-
-        // Navigator.push(context, MaterialPageRoute(builder: (context) {
-        //   return const DashboardScreen();
-        // }));
-=========
         updateUI(context, getData,'Form');
->>>>>>>>> Temporary merge branch 2
       } else {
         await EasyLoading.showError(getData['msg']);
       }
@@ -237,175 +203,6 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     // print(_connectionStatus);
     return Scaffold(
-<<<<<<<<< Temporary merge branch 1
-      backgroundColor: whiteColor,
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 800),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(height: 50),
-                  // logo
-                  const Icon(
-                    Icons.lock,
-                    size: 100,
-                    color: primaryColor,
-                  ),
-
-                  const SizedBox(height: 50),
-
-                  // welcome back, you've been missed!
-                  const Text(
-                    'Welcome back you\'ve been missed!',
-                    style: TextStyle(
-                        color: blackColor,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // username textfield
-                  MyTextField(
-                    controller: emailController,
-                    hintText: 'Email',
-                    obscureText: false,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // password textfield
-                  MyTextField(
-                    controller: passwordController,
-                    hintText: 'Password',
-                    obscureText: true,
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  // forgot password?
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: const [
-                        Text(
-                          'Forgot Password?',
-                          style: TextStyle(color: blackColor),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // sign in button
-                  MyButton(
-                      onTap: () => signUserIn(context),
-                      buttonText: "Sign In",
-                      buttonColor: primaryColor),
-
-                  const SizedBox(height: 50),
-
-                  // or continue with
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
-                      children: const [
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: blackColor,
-                          ),
-                        ),
-                        Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
-                          child: Text(
-                            'Or continue with',
-                            style: TextStyle(color: blackColor),
-                          ),
-                        ),
-                        Expanded(
-                          child: Divider(
-                            thickness: 0.5,
-                            color: blackColor,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // google + apple sign in buttons
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // google button
-                      SquareTile(
-                        imagePath: 'assets/google.png',
-                        onTap: () {
-                          _handleSignOut();
-                          _handleSignIn();
-                        },
-                      ),
-
-                      const SizedBox(width: 25),
-
-                      // apple button
-                      Platform.isIOS || Platform.isMacOS
-                          ? SquareTile(
-                              imagePath: 'assets/apple.png',
-                              onTap: () async {
-                                final credential =
-                                    await SignInWithApple.getAppleIDCredential(
-                                  scopes: [
-                                    AppleIDAuthorizationScopes.email,
-                                    AppleIDAuthorizationScopes.fullName,
-                                  ],
-                                );
-                                socialLoginWithApple(credential.userIdentifier);
-                              },
-                            )
-                          : const SizedBox.shrink(),
-                    ],
-                  ),
-
-                  const SizedBox(height: 25),
-
-                  // not a member? register now
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Not a member?',
-                        style: TextStyle(color: blackColor),
-                      ),
-                      const SizedBox(width: 4),
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const SignUpPage()),
-                          );
-                        },
-                        child: const Text(
-                          'Register now',
-                          style: TextStyle(
-                            color: primaryColor,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-=========
-
       body:
           // : _connectionStatus == ConnectivityResult.none
           //     ? Container(
