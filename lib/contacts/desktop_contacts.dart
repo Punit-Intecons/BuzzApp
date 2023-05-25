@@ -119,7 +119,7 @@ class _DesktopContactsState extends State<DesktopContacts> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context);
+    var drawer = myDrawer(context, 'contacts');
     return Scaffold(
       backgroundColor: secondaryBackgroundColor,
       body: Padding(

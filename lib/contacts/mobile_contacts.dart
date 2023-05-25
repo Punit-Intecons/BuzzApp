@@ -120,7 +120,7 @@ class _MobileContactsState extends State<MobileContacts> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context);
+    var drawer = myDrawer(context, 'contacts');
     return Scaffold(
       backgroundColor: secondaryBackgroundColor,
       appBar: myAppBar,
