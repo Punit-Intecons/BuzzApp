@@ -1,3 +1,4 @@
+import 'package:buzzapp/campaign/campaign_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -111,7 +112,13 @@ class _TabletCampaignState extends State<TabletCampaign> {
                                 padding:
                                     const EdgeInsets.fromLTRB(10, 10, 10, 10),
                                 child: GestureDetector(
-                                  onTap: () => {},
+                                  onTap: () => Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (_) => CampaignDetail(
+                                          campaignId: campaigns.campaignID),
+                                    ),
+                                  ),
                                   child: Container(
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 20,
@@ -207,6 +214,12 @@ class _TabletCampaignState extends State<TabletCampaign> {
               ),
             ],
           ),
+        ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          tooltip: 'New',
+          backgroundColor: primaryColor,
+          child: const Icon(Icons.add),
         ),
       ),
     );

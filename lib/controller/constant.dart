@@ -10,6 +10,10 @@ import '../campaign/desktop_campaign.dart';
 import '../campaign/mobile_campaign.dart';
 import '../campaign/responsive_campaign.dart';
 import '../campaign/tablet_campaign.dart';
+import '../contacts/desktop_contacts.dart';
+import '../contacts/mobile_contacts.dart';
+import '../contacts/responsive_contacts.dart';
+import '../contacts/tablet_contacts.dart';
 import '../pages/splash_screen.dart';
 import '../responsive/desktop_body.dart';
 import '../responsive/mobile_body.dart';
@@ -260,7 +264,13 @@ Widget myDrawer(BuildContext context) {
               style: drawerTextColor,
             ),
             onTap: () {
-              // Navigator.pop(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const ResponsiveContacts(
+                  mobileContacts: MobileContacts(),
+                  tabletContacts: TabletContacts(),
+                  desktopContacts: DesktopContacts(),
+                );
+              }));
             },
           ),
         ),

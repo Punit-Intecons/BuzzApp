@@ -1,3 +1,4 @@
+import 'package:buzzapp/campaign/campaign_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/constant.dart';
@@ -103,7 +104,13 @@ class _MobileCampaignState extends State<MobileCampaign> {
                       return Padding(
                         padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                         child: GestureDetector(
-                          onTap: () => {},
+                          onTap: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CampaignDetail(
+                                  campaignId: campaigns.campaignID),
+                            ),
+                          ),
                           child: Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 20,
@@ -189,6 +196,12 @@ class _MobileCampaignState extends State<MobileCampaign> {
                 : const Center(
                     child: Text("No Campaign found."),
                   ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {},
+          tooltip: 'New',
+          backgroundColor: primaryColor,
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
