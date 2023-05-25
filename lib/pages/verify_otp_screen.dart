@@ -102,10 +102,8 @@ class _VerifyOTPScreenState extends State<VerifyOTPScreen> {
   }
 
   makeLogin(String otp) async {
-    print("IN");
     var getData = await WebConfig.verifyOTP(
         otp: otp, gcmID: 'Form', emailAddress: widget.emailAddress,screenType: widget.screenType);
-    print(getData);
     if (getData['status'] == true) {
       if(widget.screenType == 'forgotScreen') {
         Navigator.push(context, MaterialPageRoute(builder: (context) {

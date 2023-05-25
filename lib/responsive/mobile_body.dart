@@ -87,7 +87,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context);
+    var drawer = myDrawer(context,'inbox');
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(

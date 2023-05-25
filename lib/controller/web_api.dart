@@ -7,7 +7,7 @@ class WebConfig {
       required String lastNameString,
       required String emailString,
       required String passwordString}) async {
-    Map<String, String> stringParams = {'csrf-token': '3MUZqCyosJx8sALQ'};
+    Map<String, String> stringParams = {'csrf-token': crsfToken};
     Map<String, String> bodyParams = {
       'First_Name': firstNameString,
       'Email': emailString,
@@ -25,7 +25,7 @@ class WebConfig {
       {required String otp,
       required String gcmID,
       required String emailAddress,required String screenType}) async {
-    Map<String, String> stringParams = {'csrf-token': '3MUZqCyosJx8sALQ'};
+    Map<String, String> stringParams = {'csrf-token': crsfToken};
     Map<String, String> bodyParams = {
       'OTP': otp,
       'GCMID': gcmID,
@@ -38,7 +38,7 @@ class WebConfig {
   }
 
   static Future<dynamic> resendOTP({required String emailAddress}) async {
-    Map<String, String> stringParams = {'csrf-token': '3MUZqCyosJx8sALQ'};
+    Map<String, String> stringParams = {'csrf-token': crsfToken};
     Map<String, String> bodyParams = {
       'Email ': emailAddress,
     };
@@ -52,7 +52,7 @@ class WebConfig {
       {required String emailString,
       required String passwordString,
       required String deviceToken}) async {
-    Map<String, String> stringParams = {'csrf-token': '3MUZqCyosJx8sALQ'};
+    Map<String, String> stringParams = {'csrf-token': crsfToken};
     Map<String, String> bodyParams = {
       'Email': emailString,
       'Password': passwordString,
@@ -71,7 +71,7 @@ class WebConfig {
       required String fullNameString,
       required String userIdentifier,
       required String deviceToken}) async {
-    Map<String, String> stringParams = {'csrf-token': '3MUZqCyosJx8sALQ'};
+    Map<String, String> stringParams = {'csrf-token': crsfToken};
     Map<String, String> bodyParams = {
       'Email': emailString,
       'Name': fullNameString,
@@ -96,7 +96,7 @@ class WebConfig {
     required String imageLink,
     required String socialProfileID,
   }) async {
-    Map<String, String> stringParams = {'csrf-token': '3MUZqCyosJx8sALQ'};
+    Map<String, String> stringParams = {'csrf-token': crsfToken};
     Map<String, String> bodyParams = {
       'Email': emailString,
       'Password': passwordString,
@@ -119,7 +119,7 @@ class WebConfig {
     required String userIdentifier,
     required String deviceToken,
   }) async {
-    Map<String, String> stringParams = {'csrf-token': '3MUZqCyosJx8sALQ'};
+    Map<String, String> stringParams = {'csrf-token': crsfToken};
     Map<String, String> bodyParams = {
       'Social_ProfileID': userIdentifier,
       'Mode': 'Apple',
@@ -133,7 +133,7 @@ class WebConfig {
   }
 
   static Future<dynamic> forgotPassword({required String emailString}) async {
-    Map<String, String> stringParams = {'csrf-token': '3MUZqCyosJx8sALQ'};
+    Map<String, String> stringParams = {'csrf-token': crsfToken};
     Map<String, String> bodyParams = {
       'Email': emailString,
     };
@@ -147,7 +147,7 @@ class WebConfig {
       {required String emailString,
       required String otp,
       required String password}) async {
-    Map<String, String> stringParams = {'csrf-token': '3MUZqCyosJx8sALQ'};
+    Map<String, String> stringParams = {'csrf-token': crsfToken};
     Map<String, String> bodyParams = {
       'Email': emailString,
       'OTP': otp,
@@ -162,7 +162,7 @@ class WebConfig {
   static Future<dynamic> getChats(
       {required String userID, required String userName}) async {
     Map<String, String> stringParams = {
-      'csrf-token': '3MUZqCyosJx8sALQ',
+      'csrf-token': crsfToken,
     };
     Map<String, String> bodyParams = {
       'userID': userID,
@@ -177,7 +177,7 @@ class WebConfig {
   static Future<dynamic> getMessages(
       {required String userID, required String userName}) async {
     Map<String, String> stringParams = {
-      'csrf-token': '3MUZqCyosJx8sALQ',
+      'csrf-token': crsfToken,
     };
     Map<String, String> bodyParams = {
       'userID': userID,
@@ -192,7 +192,7 @@ class WebConfig {
   static Future<dynamic> getCampaignListing(
       {required String userID, required String userName}) async {
     Map<String, String> stringParams = {
-      'csrf-token': '3MUZqCyosJx8sALQ',
+      'csrf-token': crsfToken,
     };
     Map<String, String> bodyParams = {
       'userID': userID,
@@ -209,7 +209,7 @@ class WebConfig {
       required String userName,
       required String campaignID}) async {
     Map<String, String> stringParams = {
-      'csrf-token': '3MUZqCyosJx8sALQ',
+      'csrf-token': crsfToken,
     };
     Map<String, String> bodyParams = {
       'userID': userID,
@@ -220,5 +220,70 @@ class WebConfig {
     var camapignDetailData =
         await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return camapignDetailData;
+  }
+
+  static Future<dynamic> saveMetaDetails(
+      {required String metaKey,
+        required String WABA_ID,required String userID,required String userName}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      'userName': userName,
+      'userID': userID,
+      'metaKey': metaKey,
+      'wabaId': WABA_ID,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/addMetaKeys');
+    var metaResponse =
+    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return metaResponse;
+  }
+
+  static Future<dynamic> getCountryCode() async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {};
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/countryCodes');
+    var response =
+    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return response;
+  }
+
+  static Future<dynamic> updateProfile(
+      {required String firstName,required String lastName,required String email,required String userID,required String mobileNumber,required String countryCode}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      'Email': email,
+      'firstName': firstName,
+      'lastName': lastName,
+      'userID': userID,
+      'mobileNumber': mobileNumber,
+      'countryCode': countryCode,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/updateProfileDetails');
+    var metaResponse =
+    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return metaResponse;
+  }
+
+  static Future<dynamic> updatePassword(
+      {required String currentPassword,required String newPassword,required String confirmPassword,required String userID}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      "currentPassword": currentPassword,
+      "newPassword": newPassword,
+      "confirmPassword": confirmPassword,
+      "userID": userID,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/updatePassword');
+    var metaResponse =
+    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return metaResponse;
   }
 }

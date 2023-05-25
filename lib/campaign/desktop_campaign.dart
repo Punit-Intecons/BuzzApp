@@ -178,7 +178,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context);
+    var drawer = myDrawer(context,'campaign');
     return Scaffold(
       backgroundColor: secondaryBackgroundColor,
       body: Padding(

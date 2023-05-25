@@ -1,3 +1,5 @@
+import 'package:buzzapp/pages/get_meta_details.dart';
+import 'package:buzzapp/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:buzzapp/pages/dashboard_screen.dart';
 import 'package:buzzapp/pages/splash_screen.dart';
@@ -28,10 +30,12 @@ class MyApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         initialRoute: SplashScreen.routeName,
         routes: {
+          LoginPage.routeName: (context) => const LoginPage(),
           SplashScreen.routeName: (context) => const SplashScreen(),
           DashboardScreen.routeName: (context) => const DashboardScreen(),
           VerifyOTPScreen.routeName: (context) =>
               const VerifyOTPScreen(emailAddress: '',screenType: ''),
+          UserMetaDetails.routeName: (context) => const UserMetaDetails(),
         },
       );
     });

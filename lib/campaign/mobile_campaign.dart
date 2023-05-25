@@ -82,7 +82,7 @@ class _MobileCampaignState extends State<MobileCampaign> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context);
+    var drawer = myDrawer(context,'campaign');
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(

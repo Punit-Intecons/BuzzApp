@@ -46,9 +46,9 @@ class _MyTextFieldState extends State<MyTextField> {
           fillColor: Colors.grey.shade200,
           filled: true,
           hintText: widget.hintText,
-          hintStyle: const TextStyle(color: blackColor),
+          hintStyle: const TextStyle(color: greyColor),
           suffixIcon: widget.hintText == 'Password' ||
-                  widget.hintText == 'Confirm Password'
+                  widget.hintText == 'Confirm Password' || widget.hintText == 'New Password' || widget.hintText == 'Current Password'
               ? IconButton(
                   onPressed: () {
                     setState(() {
@@ -57,7 +57,7 @@ class _MyTextFieldState extends State<MyTextField> {
                   },
                   icon: Icon(
                     _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                    color: blackColor,
+                    color: greyColor,
                   ),
                 )
               : null,
