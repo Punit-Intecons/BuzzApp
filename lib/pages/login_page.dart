@@ -51,8 +51,8 @@ class _LoginPageState extends State<LoginPage> {
 
   GoogleSignInAccount? _currentUser;
 
-  final FocusNode emailFocusNode = FocusNode();
-  final FocusNode passwordFocusNode = FocusNode();
+  late FocusNode emailFocusNode = FocusNode();
+  late FocusNode passwordFocusNode = FocusNode();
   bool _error = false;
   // ConnectivityResult _connectionStatus = ConnectivityResult.none;
   // final Connectivity _connectivity = Connectivity();
@@ -88,6 +88,8 @@ class _LoginPageState extends State<LoginPage> {
   void dispose() {
     // _connectivitySubscription.cancel();
     super.dispose();
+    emailFocusNode = FocusNode();
+    passwordFocusNode = FocusNode();
   }
 
   // Future<void> initConnectivity() async {
@@ -136,7 +138,7 @@ class _LoginPageState extends State<LoginPage> {
         socialProfileID: socialID!);
     if (getData['status'] == true) {
       await EasyLoading.showSuccess('Sign In Successfully');
-      updateUI(context, getData, 'Google');
+      updateUI(context, getData,'Google',getData['user']['metaKeysAvailable']);
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -148,7 +150,7 @@ class _LoginPageState extends State<LoginPage> {
         deviceToken: token!, userIdentifier: userIdentifierString!);
     if (getData['status'] == true) {
       await EasyLoading.showSuccess('Sign In Successfully');
-      updateUI(context, getData, 'Apple');
+      updateUI(context, getData,'Apple',getData['user']['metaKeysAvailable']);
     } else {
       await EasyLoading.showError(getData['msg']);
     }
@@ -192,7 +194,7 @@ class _LoginPageState extends State<LoginPage> {
 
       if (getData['status'] == true) {
         await EasyLoading.showSuccess('Sign In Successfully');
-        updateUI(context, getData, 'Form');
+        updateUI(context, getData,'Form',getData['user']['metaKeysAvailable']);
       } else {
         await EasyLoading.showError(getData['msg']);
       }

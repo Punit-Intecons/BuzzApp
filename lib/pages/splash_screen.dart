@@ -8,7 +8,7 @@ import '../responsive/desktop_body.dart';
 import '../responsive/mobile_body.dart';
 import '../responsive/responsive_layout.dart';
 import '../responsive/tablet_body.dart';
-import 'dashboard_screen.dart';
+import 'get_meta_details.dart';
 import 'login_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -32,21 +32,23 @@ class _SplashScreenState extends State<SplashScreen>
 
   checkLogin() async {
     sharedPreferences = await SharedPreferences.getInstance();
-    if (sharedPreferences.containsKey('userID')) {
+    if(sharedPreferences.containsKey('metaKeysAvailable') && sharedPreferences.getString('metaKeysAvailable') == 'No') {
       Future.delayed(const Duration(seconds: 1), () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return ResponsiveLayout(
-            mobileBody: const MobileScaffold(),
-            tabletBody: const TabletScaffold(),
-            desktopBody: const DesktopScaffold(),
-          );
-        }));
+        Navigator.pushNamed(context, UserMetaDetails.routeName);
       });
+    } else if (sharedPreferences.containsKey('userID')) {
+        Future.delayed(const Duration(seconds: 1), () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) {
+            return ResponsiveLayout(
+              mobileBody: const MobileScaffold(),
+              tabletBody: const TabletScaffold(),
+              desktopBody: const DesktopScaffold(),
+            );
+          }));
+        });
     } else {
       Future.delayed(const Duration(seconds: 1), () {
-        Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return const LoginPage();
-        }));
+        Navigator.pushNamed(context, LoginPage.routeName);
       });
     }
   }

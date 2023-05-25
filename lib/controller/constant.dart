@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../campaign/desktop_campaign.dart';
 import '../campaign/mobile_campaign.dart';
 import '../campaign/responsive_campaign.dart';
@@ -19,8 +18,12 @@ import '../responsive/desktop_body.dart';
 import '../responsive/mobile_body.dart';
 import '../responsive/responsive_layout.dart';
 import '../responsive/tablet_body.dart';
+import '../settings/desktop_setting.dart';
+import '../settings/mobile_setting.dart';
+import '../settings/tablet_campaign.dart';
 
 const Color whiteColor = Color(0xFFFFFFFF);
+const Color iconColor = Color(0xFFFFFFFF);
 const Color blackColor = Colors.black;
 const Color primaryColor = Color(0XFF296EFF);
 const Color successColor = Color(0XFF628776);
@@ -32,6 +35,8 @@ const Color backgroundColor = Color(0XFFF1F1FA);
 const Color secondaryBackgroundColor = Color(0XFFF6F8FC);
 var defaultBackgroundColor = Colors.grey[300];
 const Color appBarColor = Color(0XFF296EFF);
+
+const crsfToken = '3MUZqCyosJx8sALQ';
 
 const String appName = 'BuzzApp';
 
@@ -47,7 +52,9 @@ var myAppBar = AppBar(
 var drawerTextColor = TextStyle(
   color: Colors.grey[600],
 );
-
+var drawerTextActiveColor = const TextStyle(
+  color: iconColor,
+);
 const String kBaseURL = 'http://3.226.153.18/mlsapps/nAPI/BuzzAppApi/index.php';
 
 showSnackBar(
@@ -204,7 +211,7 @@ showAlert(BuildContext context) {
   );
 }
 
-Widget myDrawer(BuildContext context) {
+Widget myDrawer(BuildContext context, String currentRouteName) {
   return Drawer(
     backgroundColor: whiteColor,
     elevation: 0,
@@ -220,10 +227,16 @@ Widget myDrawer(BuildContext context) {
         Padding(
           padding: tilePadding,
           child: ListTile(
-            leading: const Icon(Icons.message),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            tileColor: currentRouteName == 'inbox' ? primaryColor : null,
+            leading: Icon(
+                Icons.message_outlined,
+                color: currentRouteName == 'inbox' ? iconColor : null),
             title: Text(
               'I N B O X',
-              style: drawerTextColor,
+              style: currentRouteName == 'inbox' ? drawerTextActiveColor : drawerTextColor,
             ),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -239,10 +252,16 @@ Widget myDrawer(BuildContext context) {
         Padding(
           padding: tilePadding,
           child: ListTile(
-            leading: const Icon(Icons.campaign),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            tileColor: currentRouteName == 'campaign' ? primaryColor : null,
+            leading: Icon(
+                Icons.campaign,
+                color: currentRouteName == 'campaign' ? iconColor : null),
             title: Text(
               'C A M P A I G N S',
-              style: drawerTextColor,
+              style: currentRouteName == 'campaign' ? drawerTextActiveColor : drawerTextColor,
             ),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -258,10 +277,15 @@ Widget myDrawer(BuildContext context) {
         Padding(
           padding: tilePadding,
           child: ListTile(
-            leading: const Icon(Icons.contacts),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            tileColor: currentRouteName == 'contacts' ? primaryColor : null,
+            leading: Icon(Icons.contacts,
+            color: currentRouteName == 'contacts' ? iconColor : null),
             title: Text(
               'C O N T A C T S',
-              style: drawerTextColor,
+              style: currentRouteName == 'contacts' ? drawerTextActiveColor : drawerTextColor,
             ),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
@@ -277,13 +301,42 @@ Widget myDrawer(BuildContext context) {
         Padding(
           padding: tilePadding,
           child: ListTile(
-            leading: const Icon(Icons.analytics),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            tileColor: currentRouteName == 'analytics' ? primaryColor : null,
+            leading: Icon(Icons.analytics,
+                color: currentRouteName == 'analytics' ? iconColor : null),
             title: Text(
               'A N A L Y T I C S',
-              style: drawerTextColor,
+              style: currentRouteName == 'analytics' ? drawerTextActiveColor : drawerTextColor,
             ),
             onTap: () {
               // Navigator.pop(context);
+            },
+          ),
+        ),
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            tileColor: currentRouteName == 'settings' ? primaryColor : null,
+            leading: Icon(Icons.settings,
+                color: currentRouteName == 'settings' ? iconColor : null),
+            title: Text(
+              'S E T T I N G S',
+              style: currentRouteName == 'settings' ? drawerTextActiveColor : drawerTextColor,
+            ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const ResponsiveLayout(
+                  mobileBody: MobileSetting(),
+                  tabletBody: TabletSetting(),
+                  desktopBody: DesktopSetting(),
+                );
+              }));
             },
           ),
         ),
