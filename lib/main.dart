@@ -1,3 +1,4 @@
+import 'package:buzzapp/pages/login_page.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:buzzapp/pages/dashboard_screen.dart';
 import 'package:buzzapp/pages/splash_screen.dart';
@@ -11,6 +12,7 @@ import 'campaign/mobile_campaign.dart';
 import 'campaign/tablet_campaign.dart';
 import 'contacts/desktop_contacts.dart';
 import 'contacts/mobile_contacts.dart';
+import 'contacts/responsive_contacts.dart';
 import 'contacts/tablet_contacts.dart';
 import 'firebase_options.dart';
 
