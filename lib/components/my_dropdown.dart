@@ -3,10 +3,11 @@ class MyDropdown extends StatefulWidget {
   final String selectedCountryCode;
   final List<DropdownMenuItem<String>> list;
   final Function(String) onValueChanged;
+  final EdgeInsets margin;
 
   const MyDropdown({
     Key? key,
-    required this.selectedCountryCode, required this.list,required this.onValueChanged,
+    required this.selectedCountryCode, required this.list,required this.onValueChanged, required this.margin,
   }) : super(key: key);
 
   @override
@@ -26,7 +27,7 @@ class _MyDropdownState extends State<MyDropdown> {
   Widget build(BuildContext context) {
       // Set the desired width factor (adjust as needed)
         return Container(
-          margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.01),
+          margin: widget.margin,
           width: 80, // Set the desired width for the dropdown
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(8),

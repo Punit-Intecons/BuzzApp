@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'constant.dart';
 import 'network.dart';
 
@@ -252,21 +254,28 @@ class WebConfig {
   }
 
   static Future<dynamic> updateProfile(
-      {required String firstName,required String lastName,required String email,required String userID,required String mobileNumber,required String countryCode}) async {
+      {required String firstName,required String lastName,required String email,required String userID,required String mobileNumber,required String countryCode,File? profileImage}) async {
     Map<String, String> stringParams = {
       'csrf-token': crsfToken,
     };
-    Map<String, String> bodyParams = {
+    Map<String, String> bodyParams;
+    var profile = '';
+    if(profileImage!=null)
+    {
+      profile = profileImage.path;
+    }
+    bodyParams = {
       'Email': email,
       'firstName': firstName,
       'lastName': lastName,
       'userID': userID,
       'mobileNumber': mobileNumber,
-      'countryCode': countryCode,
+      'countryCode': countryCode
     };
+
     NetworkHelper networkHelper = NetworkHelper('$kBaseURL/updateProfileDetails');
     var metaResponse =
-    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    await networkHelper.uploadFileData(profile, bodyParams,stringParams);
     return metaResponse;
   }
 
@@ -282,6 +291,20 @@ class WebConfig {
       "userID": userID,
     };
     NetworkHelper networkHelper = NetworkHelper('$kBaseURL/updatePassword');
+    var metaResponse =
+    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return metaResponse;
+  }
+
+  static Future<dynamic> getWhatsappNumber(
+      {required String userID}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      "userID": userID,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getWhatsappNumber');
     var metaResponse =
     await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return metaResponse;

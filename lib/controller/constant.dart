@@ -1,8 +1,8 @@
 import 'dart:io';
 
+import 'package:buzzapp/controller/userWhatsappNumber.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../campaign/desktop_campaign.dart';
@@ -20,7 +20,8 @@ import '../responsive/responsive_layout.dart';
 import '../responsive/tablet_body.dart';
 import '../settings/desktop_setting.dart';
 import '../settings/mobile_setting.dart';
-import '../settings/tablet_campaign.dart';
+import '../settings/responsive_setting.dart';
+import '../settings/tablet_setting.dart';
 
 const Color whiteColor = Color(0xFFFFFFFF);
 const Color iconColor = Color(0xFFFFFFFF);
@@ -42,7 +43,7 @@ const String appName = 'BuzzApp';
 
 const double kTextScaleFactor = 0.8;
 
-var tilePadding = const EdgeInsets.only(left: 8.0, right: 8, top: 8);
+var tilePadding = const EdgeInsets.only(left: 10.0, right: 5.0);
 
 var myAppBar = AppBar(
   backgroundColor: appBarColor,
@@ -93,6 +94,8 @@ getSharedData() async {
   };
   return data;
 }
+
+
 
 ButtonStyle buttonStyle = ButtonStyle(
   alignment: Alignment.center,
@@ -211,17 +214,19 @@ showAlert(BuildContext context) {
   );
 }
 
-Widget myDrawer(BuildContext context, String currentRouteName) {
+Widget myDrawer(BuildContext context, String currentRouteName, String username) {
   return Drawer(
     backgroundColor: whiteColor,
     elevation: 0,
     child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DrawerHeader(
           child: Image.asset(
             'assets/logo.png',
             width: 202.px,
-            height: 216.px,
+            height: 150.px,
           ),
         ),
         Padding(
@@ -331,10 +336,10 @@ Widget myDrawer(BuildContext context, String currentRouteName) {
             ),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const ResponsiveLayout(
-                  mobileBody: MobileSetting(),
-                  tabletBody: TabletSetting(),
-                  desktopBody: DesktopSetting(),
+                return  const ResponsiveSettings(
+                  mobileSettings: MobileSetting(),
+                  tabletSettings: TabletSetting(),
+                  desktopSettings: DesktopSetting(),
                 );
               }));
             },
@@ -352,6 +357,30 @@ Widget myDrawer(BuildContext context, String currentRouteName) {
               showAlert(context);
             },
           ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 25.0, top: 2.0),
+          child:Text(
+            'Selected Number:',
+            style: drawerTextColor,
+          ),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 25.0),
+          child: UserWhatsappNumber(),
+        ),
+        Padding(
+          padding: EdgeInsets.only(left: 25.0),
+          child:ListTile(
+            leading: const Icon(Icons.account_circle_rounded),
+            title: Text(
+              'Hi, $username',
+              style: drawerTextColor,
+            ),
+            onTap: () {
+
+            },
+          )
         ),
       ],
     ),

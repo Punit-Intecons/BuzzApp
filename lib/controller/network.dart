@@ -93,7 +93,7 @@ class NetworkHelper {
     var request = http.MultipartRequest('POST', Uri.parse(url));
     request.fields.addAll(bodyParams);
     request.files
-        .add(await http.MultipartFile.fromPath('Profile_Image', filePath));
+        .add(await http.MultipartFile.fromPath('profileImage', filePath));
     request.headers.addAll(headers);
     var res = await request.send();
     final respStr = await res.stream.bytesToString();

@@ -1,19 +1,21 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../components/my_dropdown.dart';
+import '../components/my_imageuplode.dart';
 import '../components/my_textfield.dart';
 import '../controller/constant.dart';
 import '../controller/web_api.dart';
 
-class MobileSetting extends StatefulWidget {
-  const MobileSetting({Key? key}) : super(key: key);
+class TabletSetting extends StatefulWidget {
+  const TabletSetting({Key? key}) : super(key: key);
 
   @override
-  State<MobileSetting> createState() => _MobileSettingState();
+  State<TabletSetting> createState() => _TabletSettingState();
 }
 
-class _MobileSettingState extends State<MobileSetting> {
+class _TabletSettingState extends State<TabletSetting> {
   String buttonSelected = '';
   late SharedPreferences sharedPreferences;
   late String userID;
@@ -42,6 +44,14 @@ class _MobileSettingState extends State<MobileSetting> {
   late FocusNode newPasswordFocusNode = FocusNode();
   late FocusNode confirmPasswordFocusNode = FocusNode();
   late FocusNode mobileFocusNode = FocusNode();
+
+  File? _selectedImage;
+
+  void setImage(File? image) {
+    setState(() {
+      _selectedImage = image;
+    });
+  }
 
   @override
   void initState() {
@@ -99,7 +109,7 @@ class _MobileSettingState extends State<MobileSetting> {
     sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       userID = sharedPreferences.getString('userID')!;
-      firstnameController.text = sharedPreferences.getString('first_name')!;
+      userFirstName = firstnameController.text = sharedPreferences.getString('firstname')!;
       lastnameController.text = sharedPreferences.getString('last_name')!;
       emailController.text = sharedPreferences.getString('email')!;
       mobileController.text = sharedPreferences.getString('phoneNo')! ?? '';
@@ -169,6 +179,7 @@ class _MobileSettingState extends State<MobileSetting> {
         userID: userID,
         mobileNumber: mobileController.text != "" ? mobileController.text : '',
         countryCode: mobileController.text != "" ? selectedCode : '91',
+        profileImage: _selectedImage
       );
 
       if (getData['status'] == true) {
@@ -240,7 +251,7 @@ class _MobileSettingState extends State<MobileSetting> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context, 'settings');
+    var drawer = myDrawer(context, 'settings',userFirstName);
     return Scaffold(
       backgroundColor: secondaryBackgroundColor,
       appBar: myAppBar,
@@ -262,7 +273,7 @@ class _MobileSettingState extends State<MobileSetting> {
                       height: 30,
                     ),
                     // message text
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(
@@ -402,10 +413,10 @@ class _MobileSettingState extends State<MobileSetting> {
                         ? Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(children: [
-                          Row(
+                          const Row(
                             mainAxisAlignment:
                             MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(16, 30, 0, 0),
                                 child: Text(
@@ -433,10 +444,10 @@ class _MobileSettingState extends State<MobileSetting> {
                               ),
                             ),
                           ),
-                          Row(
+                          const Row(
                             mainAxisAlignment:
                             MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(16, 20, 0, 0),
                                 child: Text(
@@ -451,10 +462,10 @@ class _MobileSettingState extends State<MobileSetting> {
                               ),
                             ],
                           ),
-                          Row(
+                          const Row(
                             mainAxisAlignment:
                             MainAxisAlignment.spaceBetween,
-                            children: const [
+                            children: [
                               Padding(
                                 padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
                                 child: Text(
@@ -485,6 +496,12 @@ class _MobileSettingState extends State<MobileSetting> {
                                             .size
                                             .height *
                                             0.05),
+                                    ProfilePage(sizes:100,setImage: setImage),
+                                    SizedBox(
+                                        height: MediaQuery.of(context)
+                                            .size
+                                            .height *
+                                            0.03),
                                     MyTextField(
                                       controller: firstnameController,
                                       hintText: 'First Name',
@@ -526,6 +543,7 @@ class _MobileSettingState extends State<MobileSetting> {
                                         MyDropdown(
                                           selectedCountryCode: selectedCode,
                                           list: dropdownItems,
+                                          margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.03),
                                           onValueChanged: (String value) {
                                             setState(() {
                                               selectedCode = value;

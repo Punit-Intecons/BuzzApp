@@ -84,7 +84,7 @@ class _TabletCampaignState extends State<TabletCampaign> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context,'campaign');
+    var drawer = myDrawer(context,'campaign',userName);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(

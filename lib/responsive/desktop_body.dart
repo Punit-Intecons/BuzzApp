@@ -280,7 +280,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context, 'inbox');
+    var drawer = myDrawer(context, 'inbox',userName);
     return Scaffold(
       backgroundColor: secondaryBackgroundColor,
       body: Padding(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../controller/constant.dart';
 
 class MyTextField extends StatefulWidget {
@@ -29,6 +30,12 @@ class _MyTextFieldState extends State<MyTextField> {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 25.0),
       child: TextField(
+        keyboardType: widget.hintText == 'Phone No.'
+            ? TextInputType.number
+            : TextInputType.text,
+        inputFormatters: widget.hintText == 'Phone No.'
+            ? [FilteringTextInputFormatter.allow(RegExp(r'[0-9]'))]
+            : null,
         controller: widget.controller,
         focusNode: widget.focusNode,
         obscureText: widget.obscureText && !_passwordVisible,
