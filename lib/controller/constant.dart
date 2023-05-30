@@ -95,8 +95,6 @@ getSharedData() async {
   return data;
 }
 
-
-
 ButtonStyle buttonStyle = ButtonStyle(
   alignment: Alignment.center,
   foregroundColor: MaterialStateProperty.all<Color>(primaryColor),
@@ -214,186 +212,162 @@ showAlert(BuildContext context) {
   );
 }
 
-Widget myDrawer(BuildContext context, String currentRouteName, String username) {
+Widget myDrawer(
+    BuildContext context, String currentRouteName, String username) {
   return Drawer(
     backgroundColor: whiteColor,
     elevation: 0,
-    child: SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    child: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          DrawerHeader(
-            child: Image.asset(
-              'assets/logo.png',
-              width: 202.px,
-              height: 216.px,
-            ),
+      children: [
+        DrawerHeader(
+          child: Image.asset(
+            'assets/logo.png',
+            width: 202.px,
+            height: 150.px,
           ),
-          Padding(
-            padding: tilePadding,
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              tileColor: currentRouteName == 'inbox' ? primaryColor : null,
-              leading: Icon(Icons.message_outlined,
-                  color: currentRouteName == 'inbox' ? iconColor : null),
-              title: Text(
-                'I N B O X',
-                style: currentRouteName == 'inbox'
-                    ? drawerTextActiveColor
-                    : drawerTextColor,
-              ),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const ResponsiveLayout(
-                    mobileBody: MobileScaffold(),
-                    tabletBody: TabletScaffold(),
-                    desktopBody: DesktopScaffold(),
-                  );
-                }));
-              },
+        ),
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
             ),
+            tileColor: currentRouteName == 'inbox' ? primaryColor : null,
+            leading: Icon(Icons.message_outlined,
+                color: currentRouteName == 'inbox' ? iconColor : null),
+            title: Text(
+              'I N B O X',
+              style: currentRouteName == 'inbox'
+                  ? drawerTextActiveColor
+                  : drawerTextColor,
+            ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const ResponsiveLayout(
+                  mobileBody: MobileScaffold(),
+                  tabletBody: TabletScaffold(),
+                  desktopBody: DesktopScaffold(),
+                );
+              }));
+            },
           ),
-          Padding(
-            padding: tilePadding,
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              tileColor: currentRouteName == 'campaign' ? primaryColor : null,
-              leading: Icon(Icons.campaign,
-                  color: currentRouteName == 'campaign' ? iconColor : null),
-              title: Text(
-                'C A M P A I G N S',
-                style: currentRouteName == 'campaign'
-                    ? drawerTextActiveColor
-                    : drawerTextColor,
-              ),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const ResponsiveCampaign(
-                    mobileCampaign: MobileCampaign(),
-                    tabletCampaign: TabletCampaign(),
-                    desktopCampaign: DesktopCampaign(),
-                  );
-                }));
-              },
+        ),
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
             ),
+            tileColor: currentRouteName == 'campaign' ? primaryColor : null,
+            leading: Icon(Icons.campaign,
+                color: currentRouteName == 'campaign' ? iconColor : null),
+            title: Text(
+              'C A M P A I G N S',
+              style: currentRouteName == 'campaign'
+                  ? drawerTextActiveColor
+                  : drawerTextColor,
+            ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const ResponsiveCampaign(
+                  mobileCampaign: MobileCampaign(),
+                  tabletCampaign: TabletCampaign(),
+                  desktopCampaign: DesktopCampaign(),
+                );
+              }));
+            },
           ),
-          Padding(
-            padding: tilePadding,
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              tileColor: currentRouteName == 'contacts' ? primaryColor : null,
-              leading: Icon(Icons.contacts,
-                  color: currentRouteName == 'contacts' ? iconColor : null),
-              title: Text(
-                'C O N T A C T S',
-                style: currentRouteName == 'contacts'
-                    ? drawerTextActiveColor
-                    : drawerTextColor,
-              ),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const ResponsiveContacts(
-                    mobileContacts: MobileContacts(),
-                    tabletContacts: TabletContacts(),
-                    desktopContacts: DesktopContacts(),
-                  );
-                }));
-              },
+        ),
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
             ),
+            tileColor: currentRouteName == 'contacts' ? primaryColor : null,
+            leading: Icon(Icons.contacts,
+                color: currentRouteName == 'contacts' ? iconColor : null),
+            title: Text(
+              'C O N T A C T S',
+              style: currentRouteName == 'contacts'
+                  ? drawerTextActiveColor
+                  : drawerTextColor,
+            ),
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return const ResponsiveContacts(
+                  mobileContacts: MobileContacts(),
+                  tabletContacts: TabletContacts(),
+                  desktopContacts: DesktopContacts(),
+                );
+              }));
+            },
           ),
-          Padding(
-            padding: tilePadding,
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              tileColor: currentRouteName == 'analytics' ? primaryColor : null,
-              leading: Icon(Icons.analytics,
-                  color: currentRouteName == 'analytics' ? iconColor : null),
-              title: Text(
-                'A N A L Y T I C S',
-                style: currentRouteName == 'analytics'
-                    ? drawerTextActiveColor
-                    : drawerTextColor,
-              ),
-              onTap: () {
-                // Navigator.pop(context);
-              },
+        ),
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
             ),
+            tileColor: currentRouteName == 'analytics' ? primaryColor : null,
+            leading: Icon(Icons.analytics,
+                color: currentRouteName == 'analytics' ? iconColor : null),
+            title: Text(
+              'A N A L Y T I C S',
+              style: currentRouteName == 'analytics'
+                  ? drawerTextActiveColor
+                  : drawerTextColor,
+            ),
+            onTap: () {
+              // Navigator.pop(context);
+            },
           ),
-          Padding(
-            padding: tilePadding,
-            child: ListTile(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10.0),
-              ),
-              tileColor: currentRouteName == 'settings' ? primaryColor : null,
-              leading: Icon(Icons.settings,
-                  color: currentRouteName == 'settings' ? iconColor : null),
-              title: Text(
-                'S E T T I N G S',
-                style: currentRouteName == 'settings'
-                    ? drawerTextActiveColor
-                    : drawerTextColor,
-              ),
-              onTap: () {
-                Navigator.push(context, MaterialPageRoute(builder: (context) {
-                  return const ResponsiveLayout(
-                    mobileBody: MobileSetting(),
-                    tabletBody: TabletSetting(),
-                    desktopBody: DesktopSetting(),
-                  );
-                }));
-              },
+        ),
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
             ),
-<<<<<<< HEAD
-=======
             tileColor: currentRouteName == 'settings' ? primaryColor : null,
             leading: Icon(Icons.settings,
                 color: currentRouteName == 'settings' ? iconColor : null),
             title: Text(
               'S E T T I N G S',
-              style: currentRouteName == 'settings' ? drawerTextActiveColor : drawerTextColor,
+              style: currentRouteName == 'settings'
+                  ? drawerTextActiveColor
+                  : drawerTextColor,
             ),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return  const ResponsiveSettings(
+                return const ResponsiveSettings(
                   mobileSettings: MobileSetting(),
                   tabletSettings: TabletSetting(),
                   desktopSettings: DesktopSetting(),
                 );
               }));
             },
->>>>>>> origin/Sneha
           ),
-          Padding(
-            padding: tilePadding,
-            child: ListTile(
-              leading: const Icon(Icons.logout),
-              title: Text(
-                'L O G O U T',
-                style: drawerTextColor,
-              ),
-              onTap: () {
-                showAlert(context);
-              },
+        ),
+        Padding(
+          padding: tilePadding,
+          child: ListTile(
+            leading: const Icon(Icons.logout),
+            title: Text(
+              'L O G O U T',
+              style: drawerTextColor,
             ),
+            onTap: () {
+              showAlert(context);
+            },
           ),
-<<<<<<< HEAD
-        ],
-      ),
-=======
         ),
         Padding(
           padding: EdgeInsets.only(left: 25.0, top: 2.0),
-          child:Text(
+          child: Text(
             'Selected Number:',
             style: drawerTextColor,
           ),
@@ -403,20 +377,16 @@ Widget myDrawer(BuildContext context, String currentRouteName, String username) 
           child: UserWhatsappNumber(),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 25.0),
-          child:ListTile(
-            leading: const Icon(Icons.account_circle_rounded),
-            title: Text(
-              'Hi, $username',
-              style: drawerTextColor,
-            ),
-            onTap: () {
-
-            },
-          )
-        ),
+            padding: EdgeInsets.only(left: 25.0),
+            child: ListTile(
+              leading: const Icon(Icons.account_circle_rounded),
+              title: Text(
+                'Hi, $username',
+                style: drawerTextColor,
+              ),
+              onTap: () {},
+            )),
       ],
->>>>>>> origin/Sneha
     ),
   );
 }

@@ -308,6 +308,20 @@ class WebConfig {
     return metaResponse;
   }
 
+  static Future<dynamic> addContacts(
+      {required List<File> files, required String userID}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      "userID": userID,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/addContactsFromCSV');
+    var contactData = await networkHelper.uploadMultiFileData(
+        files: files, headers: stringParams, bodyparams: bodyParams);
+    return contactData;
+  }
+
   static Future<dynamic> getWhatsappNumber({required String userID}) async {
     Map<String, String> stringParams = {
       'csrf-token': crsfToken,
@@ -319,5 +333,18 @@ class WebConfig {
     var metaResponse =
         await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return metaResponse;
+  }
+
+  static Future<dynamic> getContactsList({required String userID}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      "userID": userID,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getContactsList');
+    var contactData =
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return contactData;
   }
 }
