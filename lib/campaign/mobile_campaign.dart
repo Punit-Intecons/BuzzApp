@@ -83,12 +83,29 @@ class _MobileCampaignState extends State<MobileCampaign> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context,'campaign');
+    var drawer = myDrawer(context, 'campaign');
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         backgroundColor: secondaryBackgroundColor,
-        appBar: myAppBar,
+        appBar: AppBar(
+          backgroundColor: appBarColor,
+          elevation: 0,
+          centerTitle: true,
+          title: RichText(
+            textAlign: TextAlign.center,
+            text: const TextSpan(
+              children: [
+                TextSpan(
+                    text: "Campaign",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    )),
+              ],
+            ),
+          ),
+        ),
         drawer: drawer,
         body: isCampaignLoading == true
             ? const Center(
@@ -97,101 +114,72 @@ class _MobileCampaignState extends State<MobileCampaign> {
                 ),
               )
             : userCampaigns.isNotEmpty
-                ? ListView.builder(
-                    itemCount: userCampaigns.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final Campaign campaigns = userCampaigns[index];
-                      return Padding(
-                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                        child: GestureDetector(
-                          onTap: () => Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => CampaignDetail(
-                                  campaignId: campaigns.campaignID),
-                            ),
-                          ),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 20,
-                              vertical: 15,
-                            ),
-                            decoration: BoxDecoration(
-                              color: whiteColor,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: Row(
-                              children: <Widget>[
-                                Container(
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.60,
-                                  padding: const EdgeInsets.only(
-                                    left: 20,
+                ? Column(
+                    children: [
+                      Expanded(
+                        child: ListView.builder(
+                          shrinkWrap: true,
+                          itemCount: userCampaigns.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            final Campaign campaigns = userCampaigns[index];
+                            return InkWell(
+                              onTap: () => Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (_) => CampaignDetail(
+                                      campaignId: campaigns.campaignID),
+                                ),
+                              ),
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.only(bottom: 4.0, top: 10),
+                                child: ListTile(
+                                  title: Text(
+                                    campaigns.campaignName,
+                                    style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                  child: Column(
-                                    children: <Widget>[
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: <Widget>[
-                                          Row(
-                                            children: <Widget>[
-                                              Text(
-                                                campaigns.campaignName,
-                                                style: const TextStyle(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                ),
-                                              ),
-                                            ],
+                                  subtitle: Padding(
+                                    padding: const EdgeInsets.only(top: 5),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Text(
+                                          "Size:${campaigns.size}",
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: successColor,
                                           ),
-                                          Text(
-                                            campaigns.time,
-                                            style: const TextStyle(
-                                              fontSize: 11,
-                                              fontWeight: FontWeight.w300,
-                                              color: Colors.black54,
-                                            ),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          campaigns.metaCampaignName,
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            color: successColor,
                                           ),
-                                        ],
-                                      ),
-                                      const SizedBox(
-                                        height: 10,
-                                      ),
-                                      Row(
-                                        children: <Widget>[
-                                          Row(
-                                            children: <Widget>[
-                                              Text(
-                                                "Size:${campaigns.size}",
-                                                style: const TextStyle(
-                                                  fontSize: 12,
-                                                  color: successColor,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          const SizedBox(width: 10),
-                                          Text(
-                                            campaigns.metaCampaignName,
-                                            style: const TextStyle(
-                                              fontSize: 12,
-                                              color: successColor,
-                                            ),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 2,
-                                          ),
-                                        ],
-                                      ),
-                                    ],
+                                          overflow: TextOverflow.ellipsis,
+                                          maxLines: 2,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  trailing: Text(
+                                    campaigns.time,
+                                    style: const TextStyle(
+                                      fontSize: 11,
+                                      fontWeight: FontWeight.w300,
+                                      color: Colors.black54,
+                                    ),
                                   ),
                                 ),
-                              ],
-                            ),
-                          ),
+                              ),
+                            );
+                          },
                         ),
-                      );
-                    },
+                      ),
+                    ],
                   )
                 : const Center(
                     child: Text("No Campaign found."),

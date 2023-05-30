@@ -6,6 +6,7 @@ import '../controller/constant.dart';
 import '../controller/web_api.dart';
 
 class ChatScreen extends StatefulWidget {
+  static const routeName = '/chatwindow';
   final User user;
 
   const ChatScreen({super.key, required this.user});
@@ -111,25 +112,6 @@ class _ChatScreenState extends State<ChatScreen> {
                         color: Colors.black45,
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: CircleAvatar(
-                        radius: 15,
-                        backgroundImage: AssetImage(message.sender.imageUrl),
-                      ),
-                    ),
                   ],
                 )
               : Container(
@@ -170,25 +152,6 @@ class _ChatScreenState extends State<ChatScreen> {
           !isSameUser
               ? Row(
                   children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: CircleAvatar(
-                        radius: 15,
-                        backgroundImage: AssetImage(message.sender.imageUrl),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
                     Text(
                       message.time,
                       style: const TextStyle(
@@ -208,32 +171,39 @@ class _ChatScreenState extends State<ChatScreen> {
 
   _sendMessageArea() {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
       height: 70,
       color: Colors.white,
-      child: Row(
-        children: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.photo),
-            iconSize: 25,
-            color: primaryColor,
-            onPressed: () {},
-          ),
-          const Expanded(
-            child: TextField(
-              decoration: InputDecoration.collapsed(
-                hintText: 'Send a message..',
-              ),
-              textCapitalization: TextCapitalization.sentences,
+      child: Container(
+        color: secondaryBackgroundColor,
+        child: Row(
+          children: <Widget>[
+            IconButton(
+              icon: const Icon(Icons.photo),
+              iconSize: 25,
+              color: primaryColor,
+              onPressed: () {},
             ),
-          ),
-          IconButton(
-            icon: const Icon(Icons.send),
-            iconSize: 25,
-            color: primaryColor,
-            onPressed: () {},
-          ),
-        ],
+            Expanded(
+              child: TextFormField(
+                decoration: const InputDecoration.collapsed(
+                  hintText: 'Send a message..',
+                ),
+                keyboardType: TextInputType.multiline,
+                minLines: 1,
+                maxLines: 5,
+                textAlignVertical: TextAlignVertical.center,
+                textCapitalization: TextCapitalization.sentences,
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.send),
+              iconSize: 25,
+              color: primaryColor,
+              onPressed: () {},
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -241,9 +211,10 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: secondaryBackgroundColor,
+      backgroundColor: whiteColor,
       appBar: AppBar(
         backgroundColor: appBarColor,
+        elevation: 0,
         centerTitle: true,
         title: RichText(
           textAlign: TextAlign.center,

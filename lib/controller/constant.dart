@@ -215,145 +215,155 @@ Widget myDrawer(BuildContext context, String currentRouteName) {
   return Drawer(
     backgroundColor: whiteColor,
     elevation: 0,
-    child: Column(
-      children: [
-        DrawerHeader(
-          child: Image.asset(
-            'assets/logo.png',
-            width: 202.px,
-            height: 216.px,
+    child: SingleChildScrollView(
+      child: Column(
+        children: [
+          DrawerHeader(
+            child: Image.asset(
+              'assets/logo.png',
+              width: 202.px,
+              height: 216.px,
+            ),
           ),
-        ),
-        Padding(
-          padding: tilePadding,
-          child: ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+          Padding(
+            padding: tilePadding,
+            child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              tileColor: currentRouteName == 'inbox' ? primaryColor : null,
+              leading: Icon(Icons.message_outlined,
+                  color: currentRouteName == 'inbox' ? iconColor : null),
+              title: Text(
+                'I N B O X',
+                style: currentRouteName == 'inbox'
+                    ? drawerTextActiveColor
+                    : drawerTextColor,
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const ResponsiveLayout(
+                    mobileBody: MobileScaffold(),
+                    tabletBody: TabletScaffold(),
+                    desktopBody: DesktopScaffold(),
+                  );
+                }));
+              },
             ),
-            tileColor: currentRouteName == 'inbox' ? primaryColor : null,
-            leading: Icon(
-                Icons.message_outlined,
-                color: currentRouteName == 'inbox' ? iconColor : null),
-            title: Text(
-              'I N B O X',
-              style: currentRouteName == 'inbox' ? drawerTextActiveColor : drawerTextColor,
-            ),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const ResponsiveLayout(
-                  mobileBody: MobileScaffold(),
-                  tabletBody: TabletScaffold(),
-                  desktopBody: DesktopScaffold(),
-                );
-              }));
-            },
           ),
-        ),
-        Padding(
-          padding: tilePadding,
-          child: ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+          Padding(
+            padding: tilePadding,
+            child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              tileColor: currentRouteName == 'campaign' ? primaryColor : null,
+              leading: Icon(Icons.campaign,
+                  color: currentRouteName == 'campaign' ? iconColor : null),
+              title: Text(
+                'C A M P A I G N S',
+                style: currentRouteName == 'campaign'
+                    ? drawerTextActiveColor
+                    : drawerTextColor,
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const ResponsiveCampaign(
+                    mobileCampaign: MobileCampaign(),
+                    tabletCampaign: TabletCampaign(),
+                    desktopCampaign: DesktopCampaign(),
+                  );
+                }));
+              },
             ),
-            tileColor: currentRouteName == 'campaign' ? primaryColor : null,
-            leading: Icon(
-                Icons.campaign,
-                color: currentRouteName == 'campaign' ? iconColor : null),
-            title: Text(
-              'C A M P A I G N S',
-              style: currentRouteName == 'campaign' ? drawerTextActiveColor : drawerTextColor,
-            ),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const ResponsiveCampaign(
-                  mobileCampaign: MobileCampaign(),
-                  tabletCampaign: TabletCampaign(),
-                  desktopCampaign: DesktopCampaign(),
-                );
-              }));
-            },
           ),
-        ),
-        Padding(
-          padding: tilePadding,
-          child: ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+          Padding(
+            padding: tilePadding,
+            child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              tileColor: currentRouteName == 'contacts' ? primaryColor : null,
+              leading: Icon(Icons.contacts,
+                  color: currentRouteName == 'contacts' ? iconColor : null),
+              title: Text(
+                'C O N T A C T S',
+                style: currentRouteName == 'contacts'
+                    ? drawerTextActiveColor
+                    : drawerTextColor,
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const ResponsiveContacts(
+                    mobileContacts: MobileContacts(),
+                    tabletContacts: TabletContacts(),
+                    desktopContacts: DesktopContacts(),
+                  );
+                }));
+              },
             ),
-            tileColor: currentRouteName == 'contacts' ? primaryColor : null,
-            leading: Icon(Icons.contacts,
-            color: currentRouteName == 'contacts' ? iconColor : null),
-            title: Text(
-              'C O N T A C T S',
-              style: currentRouteName == 'contacts' ? drawerTextActiveColor : drawerTextColor,
-            ),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const ResponsiveContacts(
-                  mobileContacts: MobileContacts(),
-                  tabletContacts: TabletContacts(),
-                  desktopContacts: DesktopContacts(),
-                );
-              }));
-            },
           ),
-        ),
-        Padding(
-          padding: tilePadding,
-          child: ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+          Padding(
+            padding: tilePadding,
+            child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              tileColor: currentRouteName == 'analytics' ? primaryColor : null,
+              leading: Icon(Icons.analytics,
+                  color: currentRouteName == 'analytics' ? iconColor : null),
+              title: Text(
+                'A N A L Y T I C S',
+                style: currentRouteName == 'analytics'
+                    ? drawerTextActiveColor
+                    : drawerTextColor,
+              ),
+              onTap: () {
+                // Navigator.pop(context);
+              },
             ),
-            tileColor: currentRouteName == 'analytics' ? primaryColor : null,
-            leading: Icon(Icons.analytics,
-                color: currentRouteName == 'analytics' ? iconColor : null),
-            title: Text(
-              'A N A L Y T I C S',
-              style: currentRouteName == 'analytics' ? drawerTextActiveColor : drawerTextColor,
-            ),
-            onTap: () {
-              // Navigator.pop(context);
-            },
           ),
-        ),
-        Padding(
-          padding: tilePadding,
-          child: ListTile(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10.0),
+          Padding(
+            padding: tilePadding,
+            child: ListTile(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10.0),
+              ),
+              tileColor: currentRouteName == 'settings' ? primaryColor : null,
+              leading: Icon(Icons.settings,
+                  color: currentRouteName == 'settings' ? iconColor : null),
+              title: Text(
+                'S E T T I N G S',
+                style: currentRouteName == 'settings'
+                    ? drawerTextActiveColor
+                    : drawerTextColor,
+              ),
+              onTap: () {
+                Navigator.push(context, MaterialPageRoute(builder: (context) {
+                  return const ResponsiveLayout(
+                    mobileBody: MobileSetting(),
+                    tabletBody: TabletSetting(),
+                    desktopBody: DesktopSetting(),
+                  );
+                }));
+              },
             ),
-            tileColor: currentRouteName == 'settings' ? primaryColor : null,
-            leading: Icon(Icons.settings,
-                color: currentRouteName == 'settings' ? iconColor : null),
-            title: Text(
-              'S E T T I N G S',
-              style: currentRouteName == 'settings' ? drawerTextActiveColor : drawerTextColor,
-            ),
-            onTap: () {
-              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const ResponsiveLayout(
-                  mobileBody: MobileSetting(),
-                  tabletBody: TabletSetting(),
-                  desktopBody: DesktopSetting(),
-                );
-              }));
-            },
           ),
-        ),
-        Padding(
-          padding: tilePadding,
-          child: ListTile(
-            leading: const Icon(Icons.logout),
-            title: Text(
-              'L O G O U T',
-              style: drawerTextColor,
+          Padding(
+            padding: tilePadding,
+            child: ListTile(
+              leading: const Icon(Icons.logout),
+              title: Text(
+                'L O G O U T',
+                style: drawerTextColor,
+              ),
+              onTap: () {
+                showAlert(context);
+              },
             ),
-            onTap: () {
-              showAlert(context);
-            },
           ),
-        ),
-      ],
+        ],
+      ),
     ),
   );
 }

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'constant.dart';
 import 'network.dart';
 
@@ -24,7 +26,8 @@ class WebConfig {
   static Future<dynamic> verifyOTP(
       {required String otp,
       required String gcmID,
-      required String emailAddress,required String screenType}) async {
+      required String emailAddress,
+      required String screenType}) async {
     Map<String, String> stringParams = {'csrf-token': crsfToken};
     Map<String, String> bodyParams = {
       'OTP': otp,
@@ -224,7 +227,9 @@ class WebConfig {
 
   static Future<dynamic> saveMetaDetails(
       {required String metaKey,
-        required String WABA_ID,required String userID,required String userName}) async {
+      required String WABA_ID,
+      required String userID,
+      required String userName}) async {
     Map<String, String> stringParams = {
       'csrf-token': crsfToken,
     };
@@ -236,7 +241,7 @@ class WebConfig {
     };
     NetworkHelper networkHelper = NetworkHelper('$kBaseURL/addMetaKeys');
     var metaResponse =
-    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return metaResponse;
   }
 
@@ -247,12 +252,17 @@ class WebConfig {
     Map<String, String> bodyParams = {};
     NetworkHelper networkHelper = NetworkHelper('$kBaseURL/countryCodes');
     var response =
-    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return response;
   }
 
   static Future<dynamic> updateProfile(
-      {required String firstName,required String lastName,required String email,required String userID,required String mobileNumber,required String countryCode}) async {
+      {required String firstName,
+      required String lastName,
+      required String email,
+      required String userID,
+      required String mobileNumber,
+      required String countryCode}) async {
     Map<String, String> stringParams = {
       'csrf-token': crsfToken,
     };
@@ -264,14 +274,18 @@ class WebConfig {
       'mobileNumber': mobileNumber,
       'countryCode': countryCode,
     };
-    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/updateProfileDetails');
+    NetworkHelper networkHelper =
+        NetworkHelper('$kBaseURL/updateProfileDetails');
     var metaResponse =
-    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return metaResponse;
   }
 
   static Future<dynamic> updatePassword(
-      {required String currentPassword,required String newPassword,required String confirmPassword,required String userID}) async {
+      {required String currentPassword,
+      required String newPassword,
+      required String confirmPassword,
+      required String userID}) async {
     Map<String, String> stringParams = {
       'csrf-token': crsfToken,
     };
@@ -283,7 +297,34 @@ class WebConfig {
     };
     NetworkHelper networkHelper = NetworkHelper('$kBaseURL/updatePassword');
     var metaResponse =
-    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return metaResponse;
+  }
+
+  static Future<dynamic> addContacts(
+      {required List<File> files, required String userID}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      "userID": userID,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/addContactsFromCSV');
+    var contactData = await networkHelper.uploadMultiFileData(
+        files: files, headers: stringParams, bodyparams: bodyParams);
+    return contactData;
+  }
+
+  static Future<dynamic> getContactsList({required String userID}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      "userID": userID,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getContactsList');
+    var contactData =
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return contactData;
   }
 }

@@ -88,12 +88,29 @@ class _TabletScaffoldState extends State<TabletScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context,'inbox');
+    var drawer = myDrawer(context, 'inbox');
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
         backgroundColor: secondaryBackgroundColor,
-        appBar: myAppBar,
+        appBar: AppBar(
+          backgroundColor: appBarColor,
+          elevation: 0,
+          centerTitle: true,
+          title: RichText(
+            textAlign: TextAlign.center,
+            text: const TextSpan(
+              children: [
+                TextSpan(
+                    text: "Inbox",
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w400,
+                    )),
+              ],
+            ),
+          ),
+        ),
         drawer: drawer,
         body: Padding(
           padding: const EdgeInsets.all(8.0),
@@ -108,136 +125,63 @@ class _TabletScaffoldState extends State<TabletScaffold> {
                         ),
                       )
                     : userChats.isNotEmpty
-                        ? ListView.builder(
-                            itemCount: userChats.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              final Message chat = userChats[index];
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                                child: GestureDetector(
-                                  onTap: () => Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (_) => ChatScreen(
-                                        user: chat.sender,
+                        ? Column(
+                            children: [
+                              Expanded(
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: userChats.length,
+                                  itemBuilder:
+                                      (BuildContext context, int index) {
+                                    final Message chat = userChats[index];
+                                    return InkWell(
+                                      onTap: () => Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (_) => ChatScreen(
+                                            user: chat.sender,
+                                          ),
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  child: Container(
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 20,
-                                      vertical: 15,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      // add this line
-                                      color: whiteColor, // add this line
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: Row(
-                                      children: <Widget>[
-                                        Container(
-                                          padding: const EdgeInsets.all(2),
-                                          decoration: chat.unread
-                                              ? BoxDecoration(
-                                                  borderRadius:
-                                                      const BorderRadius.all(
-                                                          Radius.circular(40)),
-                                                  border: Border.all(
-                                                    width: 2,
-                                                    color: Theme.of(context)
-                                                        .primaryColor,
-                                                  ),
-                                                  // shape: BoxShape.circle,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.5),
-                                                      spreadRadius: 2,
-                                                      blurRadius: 5,
-                                                    ),
-                                                  ],
-                                                )
-                                              : BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.grey
-                                                          .withOpacity(0.5),
-                                                      spreadRadius: 2,
-                                                      blurRadius: 5,
-                                                    ),
-                                                  ],
-                                                ),
-                                          child: CircleAvatar(
-                                            radius: 35,
-                                            backgroundImage: AssetImage(
-                                                chat.sender.imageUrl),
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(
+                                            bottom: 4.0, top: 10),
+                                        child: ListTile(
+                                          title: Text(
+                                            chat.sender.name,
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          subtitle: Padding(
+                                            padding:
+                                                const EdgeInsets.only(top: 5),
+                                            child: Text(
+                                              chat.text,
+                                              style: const TextStyle(
+                                                fontSize: 13,
+                                                color: Colors.black54,
+                                              ),
+                                              overflow: TextOverflow.ellipsis,
+                                              maxLines: 2,
+                                            ),
+                                          ),
+                                          trailing: Text(
+                                            chat.time,
+                                            style: const TextStyle(
+                                              fontSize: 11,
+                                              fontWeight: FontWeight.w300,
+                                              color: Colors.black54,
+                                            ),
                                           ),
                                         ),
-                                        Container(
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.65,
-                                          padding: const EdgeInsets.only(
-                                            left: 20,
-                                          ),
-                                          child: Column(
-                                            children: <Widget>[
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: <Widget>[
-                                                  Row(
-                                                    children: <Widget>[
-                                                      Text(
-                                                        chat.sender.name,
-                                                        style: const TextStyle(
-                                                          fontSize: 16,
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  Text(
-                                                    chat.time,
-                                                    style: const TextStyle(
-                                                      fontSize: 11,
-                                                      fontWeight:
-                                                          FontWeight.w300,
-                                                      color: Colors.black54,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                              const SizedBox(
-                                                height: 10,
-                                              ),
-                                              Container(
-                                                alignment: Alignment.topLeft,
-                                                child: Text(
-                                                  chat.text,
-                                                  style: const TextStyle(
-                                                    fontSize: 13,
-                                                    color: Colors.black54,
-                                                  ),
-                                                  overflow:
-                                                      TextOverflow.ellipsis,
-                                                  maxLines: 2,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
+                              ),
+                            ],
                           )
                         : const Center(
                             child: Text("No Chats found."),

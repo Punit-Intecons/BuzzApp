@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../controller/constant.dart';
 
@@ -113,14 +112,14 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
         const SizedBox(
           height: 30,
         ),
-        Padding(
-          padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(20, 20, 20, 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const <Widget>[
+                children: <Widget>[
                   Text(
                     "Create a new campaign",
                     style: TextStyle(
@@ -192,10 +191,10 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Row(
-                        children: const <Widget>[
+                        children: <Widget>[
                           Text(
                             "Filter",
                             style: TextStyle(
@@ -212,10 +211,10 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                     const SizedBox(
                       height: 25,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Row(
-                        children: const <Widget>[
+                        children: <Widget>[
                           Text(
                             "Audience",
                             style: TextStyle(
@@ -254,6 +253,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
     String sendOn,
   ) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
         const SizedBox(
           height: 30,
@@ -262,74 +262,49 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
           padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(
-                    campaignName,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w400,
-                      fontSize: 24.0,
-                    ),
-                  ),
-                  const SizedBox(height: 8.0),
-                  Row(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Text(
-                            "Size: $size,",
-                            style: const TextStyle(
-                              fontSize: 14,
-                              color: successColor,
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        "Template send: $metaCampaignName,",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: successColor,
+            children: [
+              Text(
+                campaignName,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w400,
+                  fontSize: 24.0,
+                ),
+              ),
+              Row(
+                children: [
+                  PopupMenuButton<String>(
+                    onSelected: (choice) {
+                      // Handle the different options here
+                    },
+                    itemBuilder: (BuildContext context) {
+                      return const <PopupMenuEntry<String>>[
+                        PopupMenuItem<String>(
+                          value: 'edit',
+                          child: Text('Edit'),
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                      const SizedBox(width: 5),
-                      Text(
-                        "Sent on: $sendOn",
-                        style: const TextStyle(
-                          fontSize: 14,
-                          color: successColor,
+                        PopupMenuItem<String>(
+                          value: 'delete',
+                          child: Text('Delete'),
                         ),
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                      ),
-                    ],
+                      ];
+                    },
                   ),
                 ],
               ),
-              PopupMenuButton<String>(
-                onSelected: (choice) {
-                  // Handle the different options here
-                },
-                itemBuilder: (BuildContext context) {
-                  return const <PopupMenuEntry<String>>[
-                    PopupMenuItem<String>(
-                      value: 'edit',
-                      child: Text('Edit'),
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'delete',
-                      child: Text('Delete'),
-                    ),
-                  ];
-                },
-              ),
             ],
           ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+          child: Text(
+              "Size: $size, Template send: $metaCampaignName, Sent on: $sendOn",
+              style: const TextStyle(
+                fontSize: 14,
+                color: successColor,
+              ),
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              textAlign: TextAlign.left),
         ),
         Expanded(
           child: SingleChildScrollView(
@@ -347,10 +322,10 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Row(
-                        children: const <Widget>[
+                        children: <Widget>[
                           Text(
                             "Performance",
                             style: TextStyle(
@@ -389,8 +364,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Attempted',
                                         style: TextStyle(
@@ -425,8 +400,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Send',
                                         style: TextStyle(
@@ -462,8 +437,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Delivered',
                                         style: TextStyle(
@@ -499,8 +474,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Read',
                                         style: TextStyle(
@@ -536,8 +511,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Replied',
                                         style: TextStyle(
@@ -573,8 +548,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Failed',
                                         style: TextStyle(
@@ -592,10 +567,10 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                     const SizedBox(
                       height: 25,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Row(
-                        children: const <Widget>[
+                        children: <Widget>[
                           Text(
                             "Audience",
                             style: TextStyle(
@@ -877,214 +852,177 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
             drawer,
 
             // first half of page
-            Expanded(
-              flex: 1,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width / 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    // message text
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.fromLTRB(16, 30, 0, 0),
-                          child: Text(
-                            'Campaigns',
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.w700,
-                              color: primaryColor,
-                            ),
-                            textAlign: TextAlign.left,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(16, 30, 0, 0),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Add your onPressed code here!
-                              setState(() {
-                                print("new clicked");
-                                isCreateCampaign = true;
-                                isloadingFirstTime = false;
-                              });
-                            },
-                            style: ButtonStyle(
-                              minimumSize: MaterialStateProperty.all<Size>(
-                                const Size(110, 45),
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  color: whiteColor,
+                ),
+                width: MediaQuery.of(context).size.width / 5,
+                child: Expanded(
+                  flex: 1,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 30,
+                      ),
+                      // message text
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Padding(
+                            padding: EdgeInsets.fromLTRB(16, 30, 0, 0),
+                            child: Text(
+                              'Campaigns',
+                              style: TextStyle(
+                                fontSize: 28,
+                                fontWeight: FontWeight.w700,
+                                color: primaryColor,
                               ),
-                              backgroundColor: MaterialStateProperty.all<Color>(
-                                  primaryColor),
-                              foregroundColor:
-                                  MaterialStateProperty.all<Color>(whiteColor),
-                              shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
-                                  RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              )),
+                              textAlign: TextAlign.left,
                             ),
-                            child: const Text('New'),
                           ),
-                        ),
-                      ],
-                    ),
+                          Row(
+                            children: [
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(16, 30, 10, 0),
+                                child: ElevatedButton(
+                                  onPressed: () {
+                                    // Add your onPressed code here!
+                                    setState(() {
+                                      isCreateCampaign = true;
+                                      isloadingFirstTime = false;
+                                    });
+                                  },
+                                  style: ButtonStyle(
+                                    minimumSize:
+                                        MaterialStateProperty.all<Size>(
+                                      const Size(110, 45),
+                                    ),
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            primaryColor),
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            whiteColor),
+                                    shape: MaterialStateProperty.all<
+                                            RoundedRectangleBorder>(
+                                        RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(10.0),
+                                    )),
+                                  ),
+                                  child: const Text('New'),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
 
-                    // search bar with icon
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 30, 0, 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.grey[200],
-                        ),
-                        child: Row(
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left: 8.0), // added left padding
-                              child: Icon(Icons.search),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        8.0), // added horizontal padding
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    hintText: 'Search',
-                                    border: InputBorder.none,
+                      // search bar with icon
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 30, 16, 0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.grey[200],
+                          ),
+                          child: const Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 8.0), // added left padding
+                                child: Icon(Icons.search),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          8.0), // added horizontal padding
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      hintText: 'Search',
+                                      border: InputBorder.none,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    // list of previous days
+                      // list of previous days
 
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(16, 20, 0, 0),
-                      child: Text(
-                        'Recent Campaigns',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: greyColor,
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(16, 20, 0, 0),
+                        child: Text(
+                          'Recent Campaigns',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                            color: greyColor,
+                          ),
+                          textAlign: TextAlign.end,
                         ),
-                        textAlign: TextAlign.end,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Expanded(
-                      child: isCampaignLoading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                                color: primaryColor,
-                              ),
-                            )
-                          : userCampaigns.isNotEmpty
-                              ? ListView.builder(
-                                  itemCount: userCampaigns.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final Campaign campaigns =
-                                        userCampaigns[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 10, 10, 10),
-                                      child: GestureDetector(
-                                        onTap: (() {
-                                          setState(() {
-                                            isCreateCampaign = false;
-                                            isLoading = true;
-                                            getCampaignDetail(
-                                                campaigns.campaignID);
-                                          });
-                                        }),
-                                        child: Container(
-                                          width: 10,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                            vertical: 8,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            // add this line
-                                            color: whiteColor, // add this line
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Row(
-                                            children: <Widget>[
-                                              SizedBox(
-                                                width: ((MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        3) *
-                                                    2.1.sp),
-                                                child: Column(
-                                                  children: <Widget>[
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Expanded(
+                        child: isCampaignLoading == true
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: primaryColor,
+                                ),
+                              )
+                            : userCampaigns.isNotEmpty
+                                ? Column(
+                                    children: [
+                                      Expanded(
+                                        child: ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: userCampaigns.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            final Campaign campaigns =
+                                                userCampaigns[index];
+                                            return InkWell(
+                                              onTap: (() {
+                                                setState(() {
+                                                  isCreateCampaign = false;
+                                                  isLoading = true;
+                                                  getCampaignDetail(
+                                                      campaigns.campaignID);
+                                                });
+                                              }),
+                                              child: Padding(
+                                                padding: const EdgeInsets.only(
+                                                    bottom: 4.0, top: 10),
+                                                child: ListTile(
+                                                  title: Text(
+                                                    campaigns.campaignName,
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                    ),
+                                                  ),
+                                                  subtitle: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 5),
+                                                    child: Row(
                                                       children: <Widget>[
-                                                        Row(
-                                                          children: <Widget>[
-                                                            Text(
-                                                              campaigns
-                                                                  .campaignName,
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 2,
-                                                            ),
-                                                          ],
-                                                        ),
                                                         Text(
-                                                          campaigns.time,
+                                                          "Size:${campaigns.size}",
                                                           style:
                                                               const TextStyle(
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                            color:
-                                                                Colors.black54,
+                                                            fontSize: 12,
+                                                            color: successColor,
                                                           ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Row(
-                                                      children: <Widget>[
-                                                        Row(
-                                                          children: <Widget>[
-                                                            Text(
-                                                              "Size:${campaigns.size}",
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontSize: 12,
-                                                                color:
-                                                                    successColor,
-                                                              ),
-                                                            ),
-                                                          ],
                                                         ),
                                                         const SizedBox(
                                                             width: 10),
@@ -1102,21 +1040,30 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                                         ),
                                                       ],
                                                     ),
-                                                  ],
+                                                  ),
+                                                  trailing: Text(
+                                                    campaigns.time,
+                                                    style: const TextStyle(
+                                                      fontSize: 11,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      color: Colors.black54,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            );
+                                          },
                                         ),
                                       ),
-                                    );
-                                  },
-                                )
-                              : const Center(
-                                  child: Text("No Campaign found."),
-                                ),
-                    ),
-                  ],
+                                    ],
+                                  )
+                                : const Center(
+                                    child: Text("No Campaign found."),
+                                  ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -1124,7 +1071,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(left: 10, right: 10),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),

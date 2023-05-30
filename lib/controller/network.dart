@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 
 import 'package:http/http.dart' as http;
 
@@ -95,6 +96,24 @@ class NetworkHelper {
     request.files
         .add(await http.MultipartFile.fromPath('Profile_Image', filePath));
     request.headers.addAll(headers);
+    var res = await request.send();
+    final respStr = await res.stream.bytesToString();
+    return jsonDecode(respStr);
+  }
+
+  Future uploadMultiFileData(
+      {required List<File> files,
+      required Map<String, String> headers,
+      required Map<String, String> bodyparams}) async {
+    var request = http.MultipartRequest('POST', Uri.parse(url));
+    for (int i = 0; i < files.length; i++) {
+      request.files
+          .add(await http.MultipartFile.fromPath('files[$i]', files[i].path));
+    }
+    // request.files.add(await http.MultipartFile.fromPath('file', filePath));
+
+    request.headers.addAll(headers);
+    request.fields.addAll(bodyparams);
     var res = await request.send();
     final respStr = await res.stream.bytesToString();
     return jsonDecode(respStr);

@@ -264,7 +264,7 @@ class _DesktopSettingState extends State<DesktopSetting> {
                       height: 30,
                     ),
                     // message text
-                    Row(
+                    const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Padding(

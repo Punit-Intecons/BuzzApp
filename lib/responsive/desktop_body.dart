@@ -183,25 +183,6 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                         color: Colors.black45,
                       ),
                     ),
-                    const SizedBox(
-                      width: 10,
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: CircleAvatar(
-                        radius: 15,
-                        backgroundImage: AssetImage(message.sender.imageUrl),
-                      ),
-                    ),
                   ],
                 )
               : Container(
@@ -242,25 +223,6 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
           !isSameUser
               ? Row(
                   children: <Widget>[
-                    Container(
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
-                            blurRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: CircleAvatar(
-                        radius: 15,
-                        backgroundImage: AssetImage(message.sender.imageUrl),
-                      ),
-                    ),
-                    const SizedBox(
-                      width: 10,
-                    ),
                     Text(
                       message.time,
                       style: const TextStyle(
@@ -292,247 +254,162 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
             drawer,
 
             // first half of page
-            Expanded(
-              flex: 1,
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width / 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const SizedBox(
-                      height: 30,
-                    ),
-                    // message text
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(16, 30, 0, 0),
-                      // padding:
-                      // EdgeInsets.symmetric(vertical: 3.0, horizontal: 16),
-                      child: Text(
-                        'Message',
-                        style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: primaryColor,
-                        ),
-                        textAlign: TextAlign.left,
+            Padding(
+              padding: const EdgeInsets.only(left: 10),
+              child: Expanded(
+                flex: 1,
+                child: Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: whiteColor,
+                  ),
+                  width: MediaQuery.of(context).size.width / 5,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const SizedBox(
+                        height: 30,
                       ),
-                    ),
-
-                    // search bar with icon
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(16, 30, 0, 0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(8),
-                          color: Colors.grey[200],
+                      // message text
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(16, 30, 0, 0),
+                        // padding:
+                        // EdgeInsets.symmetric(vertical: 3.0, horizontal: 16),
+                        child: Text(
+                          'Message',
+                          style: TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.w700,
+                            color: primaryColor,
+                          ),
+                          textAlign: TextAlign.left,
                         ),
-                        child: Row(
-                          children: const [
-                            Padding(
-                              padding: EdgeInsets.only(
-                                  left: 8.0), // added left padding
-                              child: Icon(Icons.search),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal:
-                                        8.0), // added horizontal padding
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    hintText: 'Search',
-                                    border: InputBorder.none,
+                      ),
+
+                      // search bar with icon
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(16, 30, 16, 0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(8),
+                            color: Colors.grey[100],
+                          ),
+                          child: const Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.only(
+                                    left: 8.0), // added left padding
+                                child: Icon(Icons.search),
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          8.0), // added horizontal padding
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      hintText: 'Search',
+                                      border: InputBorder.none,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                    // list of previous days
+                      // list of previous days
 
-                    const Padding(
-                      padding: EdgeInsets.fromLTRB(16, 20, 0, 0),
-                      child: Text(
-                        'New Messages',
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w300,
-                          color: greyColor,
+                      const Padding(
+                        padding: EdgeInsets.fromLTRB(16, 20, 10, 0),
+                        child: Text(
+                          'New Messages',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.w300,
+                            color: greyColor,
+                          ),
+                          textAlign: TextAlign.end,
                         ),
-                        textAlign: TextAlign.end,
                       ),
-                    ),
-                    const SizedBox(
-                      height: 15,
-                    ),
-                    Expanded(
-                      child: isChatLoading == true
-                          ? const Center(
-                              child: CircularProgressIndicator(
-                                color: primaryColor,
-                              ),
-                            )
-                          : userChats.isNotEmpty
-                              ? ListView.builder(
-                                  itemCount: userChats.length,
-                                  itemBuilder:
-                                      (BuildContext context, int index) {
-                                    final Message chat = userChats[index];
-                                    return Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 10, 10, 10),
-                                      child: GestureDetector(
-                                        onTap: (() {
-                                          setState(() {
-                                            isLoading = true;
-                                            getUserMessages();
-                                          });
-                                        }),
-                                        child: Container(
-                                          width: 10,
-                                          padding: const EdgeInsets.symmetric(
-                                            horizontal: 10,
-                                            vertical: 8,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            // add this line
-                                            color: whiteColor, // add this line
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                          ),
-                                          child: Row(
-                                            children: <Widget>[
-                                              Container(
-                                                padding:
-                                                    const EdgeInsets.all(2),
-                                                decoration: chat.unread
-                                                    ? BoxDecoration(
-                                                        borderRadius:
-                                                            const BorderRadius
-                                                                    .all(
-                                                                Radius.circular(
-                                                                    40)),
-                                                        border: Border.all(
-                                                          width: 2,
-                                                          color:
-                                                              Theme.of(context)
-                                                                  .primaryColor,
-                                                        ),
-                                                        // shape: BoxShape.circle,
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Colors.grey
-                                                                .withOpacity(
-                                                                    0.5),
-                                                            spreadRadius: 2,
-                                                            blurRadius: 5,
-                                                          ),
-                                                        ],
-                                                      )
-                                                    : BoxDecoration(
-                                                        shape: BoxShape.circle,
-                                                        boxShadow: [
-                                                          BoxShadow(
-                                                            color: Colors.grey
-                                                                .withOpacity(
-                                                                    0.5),
-                                                            spreadRadius: 2,
-                                                            blurRadius: 5,
-                                                          ),
-                                                        ],
-                                                      ),
-                                                child: CircleAvatar(
-                                                  radius:
-                                                      ((MediaQuery.of(context)
-                                                                  .size
-                                                                  .width /
-                                                              3) *
-                                                          0.035),
-                                                  backgroundImage: AssetImage(
-                                                      chat.sender.imageUrl),
-                                                ),
-                                              ),
-                                              Container(
-                                                width: ((MediaQuery.of(context)
-                                                            .size
-                                                            .width /
-                                                        3) *
-                                                    .5),
+                      const SizedBox(
+                        height: 15,
+                      ),
+                      Expanded(
+                        child: isChatLoading == true
+                            ? const Center(
+                                child: CircularProgressIndicator(
+                                  color: primaryColor,
+                                ),
+                              )
+                            : userChats.isNotEmpty
+                                ? Column(
+                                    children: [
+                                      Expanded(
+                                        child: ListView.builder(
+                                          shrinkWrap: true,
+                                          itemCount: userChats.length,
+                                          itemBuilder: (BuildContext context,
+                                              int index) {
+                                            final Message chat =
+                                                userChats[index];
+                                            return InkWell(
+                                              onTap: (() {
+                                                setState(() {
+                                                  isLoading = true;
+                                                  getUserMessages();
+                                                });
+                                              }),
+                                              child: Padding(
                                                 padding: const EdgeInsets.only(
-                                                  left: 15,
-                                                ),
-                                                child: Column(
-                                                  children: <Widget>[
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: <Widget>[
-                                                        Row(
-                                                          children: <Widget>[
-                                                            Text(
-                                                              chat.sender.name,
-                                                              style:
-                                                                  const TextStyle(
-                                                                fontSize: 14,
-                                                                fontWeight:
-                                                                    FontWeight
-                                                                        .bold,
-                                                              ),
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              maxLines: 2,
-                                                            ),
-                                                          ],
-                                                        ),
-                                                        Text(
-                                                          chat.time,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 11,
-                                                            fontWeight:
-                                                                FontWeight.w300,
-                                                            color:
-                                                                Colors.black54,
-                                                          ),
-                                                        ),
-                                                      ],
+                                                    bottom: 4.0, top: 10),
+                                                child: ListTile(
+                                                  title: Text(
+                                                    chat.sender.name,
+                                                    style: const TextStyle(
+                                                      fontSize: 16,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                     ),
-                                                    const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    Container(
-                                                      alignment:
-                                                          Alignment.topLeft,
-                                                      child: Text(
-                                                        chat.text,
-                                                        style: const TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.black54,
-                                                        ),
-                                                        overflow: TextOverflow
-                                                            .ellipsis,
-                                                        maxLines: 2,
+                                                  ),
+                                                  subtitle: Padding(
+                                                    padding:
+                                                        const EdgeInsets.only(
+                                                            top: 5),
+                                                    child: Text(
+                                                      chat.text,
+                                                      style: const TextStyle(
+                                                        fontSize: 13,
+                                                        color: Colors.black54,
                                                       ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 2,
                                                     ),
-                                                  ],
+                                                  ),
+                                                  trailing: Text(
+                                                    chat.time,
+                                                    style: const TextStyle(
+                                                      fontSize: 11,
+                                                      fontWeight:
+                                                          FontWeight.w300,
+                                                      color: Colors.black54,
+                                                    ),
+                                                  ),
                                                 ),
                                               ),
-                                            ],
-                                          ),
+                                            );
+                                          },
                                         ),
                                       ),
-                                    );
-                                  },
-                                )
-                              : const Center(
-                                  child: Text("No Chats found."),
-                                ),
-                    ),
-                  ],
+                                    ],
+                                  )
+                                : const Center(
+                                    child: Text("No Chats found."),
+                                  ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -540,7 +417,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
             Expanded(
               flex: 2,
               child: Padding(
-                padding: const EdgeInsets.all(8.0),
+                padding: const EdgeInsets.only(left: 10, right: 10),
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
