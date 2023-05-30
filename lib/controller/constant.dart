@@ -95,6 +95,8 @@ getSharedData() async {
   return data;
 }
 
+
+
 ButtonStyle buttonStyle = ButtonStyle(
   alignment: Alignment.center,
   foregroundColor: MaterialStateProperty.all<Color>(primaryColor),
@@ -212,20 +214,21 @@ showAlert(BuildContext context) {
   );
 }
 
-Widget myDrawer(
-    BuildContext context, String currentRouteName, String username) {
+Widget myDrawer(BuildContext context, String currentRouteName, String username) {
   return Drawer(
     backgroundColor: whiteColor,
     elevation: 0,
-    child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    child: SingleChildScrollView(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        DrawerHeader(
-          child: Image.asset(
-            'assets/logo.png',
-            width: 202.px,
-            height: 150.px,
+        children: [
+          DrawerHeader(
+            child: Image.asset(
+              'assets/logo.png',
+              width: 202.px,
+              height: 216.px,
+            ),
           ),
           Padding(
             padding: tilePadding,
@@ -350,24 +353,25 @@ Widget myDrawer(
                 }));
               },
             ),
+<<<<<<< HEAD
+=======
             tileColor: currentRouteName == 'settings' ? primaryColor : null,
             leading: Icon(Icons.settings,
                 color: currentRouteName == 'settings' ? iconColor : null),
             title: Text(
               'S E T T I N G S',
-              style: currentRouteName == 'settings'
-                  ? drawerTextActiveColor
-                  : drawerTextColor,
+              style: currentRouteName == 'settings' ? drawerTextActiveColor : drawerTextColor,
             ),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return const ResponsiveSettings(
+                return  const ResponsiveSettings(
                   mobileSettings: MobileSetting(),
                   tabletSettings: TabletSetting(),
                   desktopSettings: DesktopSetting(),
                 );
               }));
             },
+>>>>>>> origin/Sneha
           ),
           Padding(
             padding: tilePadding,
@@ -382,10 +386,14 @@ Widget myDrawer(
               },
             ),
           ),
+<<<<<<< HEAD
+        ],
+      ),
+=======
         ),
         Padding(
           padding: EdgeInsets.only(left: 25.0, top: 2.0),
-          child: Text(
+          child:Text(
             'Selected Number:',
             style: drawerTextColor,
           ),
@@ -395,16 +403,20 @@ Widget myDrawer(
           child: UserWhatsappNumber(),
         ),
         Padding(
-            padding: EdgeInsets.only(left: 25.0),
-            child: ListTile(
-              leading: const Icon(Icons.account_circle_rounded),
-              title: Text(
-                'Hi, $username',
-                style: drawerTextColor,
-              ),
-              onTap: () {},
-            )),
+          padding: EdgeInsets.only(left: 25.0),
+          child:ListTile(
+            leading: const Icon(Icons.account_circle_rounded),
+            title: Text(
+              'Hi, $username',
+              style: drawerTextColor,
+            ),
+            onTap: () {
+
+            },
+          )
+        ),
       ],
+>>>>>>> origin/Sneha
     ),
   );
 }
