@@ -1,10 +1,12 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../components/my_dropdown.dart';
+import '../components/my_imageuplode.dart';
 import '../components/my_textfield.dart';
 import '../controller/constant.dart';
-import '../controller/settings.dart';
 import '../controller/web_api.dart';
 
 class DesktopSetting extends StatefulWidget {
@@ -43,6 +45,14 @@ class _DesktopSettingState extends State<DesktopSetting> {
   late FocusNode newPasswordFocusNode = FocusNode();
   late FocusNode confirmPasswordFocusNode = FocusNode();
   late FocusNode mobileFocusNode = FocusNode();
+
+  File? _selectedImage;
+
+  void setImage(File? image) {
+    setState(() {
+      _selectedImage = image;
+    });
+  }
 
   @override
   void initState() {
@@ -100,7 +110,7 @@ class _DesktopSettingState extends State<DesktopSetting> {
     sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
       userID = sharedPreferences.getString('userID')!;
-      firstnameController.text = sharedPreferences.getString('first_name')!;
+      userFirstName = firstnameController.text = sharedPreferences.getString('first_name')!;
       lastnameController.text = sharedPreferences.getString('last_name')!;
       emailController.text = sharedPreferences.getString('email')!;
       mobileController.text = sharedPreferences.getString('phoneNo')! ?? '';
@@ -170,6 +180,7 @@ class _DesktopSettingState extends State<DesktopSetting> {
         userID: userID,
         mobileNumber: mobileController.text != "" ? mobileController.text : '',
         countryCode: mobileController.text != "" ? selectedCode : '91',
+        profileImage: _selectedImage
       );
 
       if (getData['status'] == true) {
@@ -241,7 +252,7 @@ class _DesktopSettingState extends State<DesktopSetting> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context, 'settings');
+    var drawer = myDrawer(context, 'settings',userFirstName);
     return Scaffold(
       backgroundColor: secondaryBackgroundColor,
       body: Padding(
@@ -404,10 +415,10 @@ class _DesktopSettingState extends State<DesktopSetting> {
                         ? Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Column(children: [
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(16, 30, 0, 0),
                                     child: Text(
@@ -435,10 +446,10 @@ class _DesktopSettingState extends State<DesktopSetting> {
                                   ),
                                 ),
                               ),
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(16, 20, 0, 0),
                                     child: Text(
@@ -453,10 +464,10 @@ class _DesktopSettingState extends State<DesktopSetting> {
                                   ),
                                 ],
                               ),
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
                                     child: Text(
@@ -487,6 +498,12 @@ class _DesktopSettingState extends State<DesktopSetting> {
                                                     .size
                                                     .height *
                                                 0.05),
+                                        ProfilePage(sizes:100,setImage: setImage),
+                                        SizedBox(
+                                            height: MediaQuery.of(context)
+                                                .size
+                                                .height *
+                                                0.03),
                                         MyTextField(
                                           controller: firstnameController,
                                           hintText: 'First Name',
@@ -528,6 +545,7 @@ class _DesktopSettingState extends State<DesktopSetting> {
                                             MyDropdown(
                                               selectedCountryCode: selectedCode,
                                               list: dropdownItems,
+                                              margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.02),
                                               onValueChanged: (String value) {
                                                 setState(() {
                                                   selectedCode = value;
@@ -596,10 +614,10 @@ class _DesktopSettingState extends State<DesktopSetting> {
                                 child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
-                                      Row(
+                                      const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        children: const [
+                                        children: [
                                           Padding(
                                             padding: EdgeInsets.fromLTRB(
                                                 16, 30, 0, 0),
@@ -630,10 +648,10 @@ class _DesktopSettingState extends State<DesktopSetting> {
                                           ),
                                         ),
                                       ),
-                                      Row(
+                                      const Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        children: const [
+                                        children: [
                                           Padding(
                                             padding: EdgeInsets.fromLTRB(
                                                 16, 20, 0, 0),

@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 
-class ResponsiveCampaign extends StatelessWidget {
+class ResponsiveSettings extends StatelessWidget {
   static const routeName = '/settings';
-  final Widget mobileCampaign;
-  final Widget tabletCampaign;
-  final Widget desktopCampaign;
+  final Widget mobileSettings;
+  final Widget tabletSettings;
+  final Widget desktopSettings;
 
-  const ResponsiveCampaign({
+  const ResponsiveSettings({
     super.key,
-    required this.mobileCampaign,
-    required this.tabletCampaign,
-    required this.desktopCampaign,
+    required this.mobileSettings,
+    required this.tabletSettings,
+    required this.desktopSettings,
   });
 
   @override
@@ -18,11 +18,11 @@ class ResponsiveCampaign extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth < 500) {
-          return mobileCampaign;
+          return mobileSettings;
         } else if (constraints.maxWidth < 1100) {
-          return tabletCampaign;
+          return tabletSettings;
         } else {
-          return desktopCampaign;
+          return desktopSettings;
         }
       },
     );

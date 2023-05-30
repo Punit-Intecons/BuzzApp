@@ -24,7 +24,7 @@ Future<void> updateUI(BuildContext context, var response, var socialType, var da
     await sharedPreferences.setString(
         'phoneNo', response['user']['User_Mobile_No'] ?? '');
     await sharedPreferences.setString(
-        'countryCode', response['user']['Phone_Country_Code'] ?? '');
+        'countryCode', (response['user']['Phone_Country_Code']!=""?response['user']['Phone_Country_Code'].toString():''));
     await sharedPreferences.setString(
         'WABA_ID', response['user']['WABA_ID'] ?? '');
     await sharedPreferences.setString(

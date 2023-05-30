@@ -66,10 +66,9 @@ class _UserMetaDetailsState extends State<UserMetaDetails> {
           userID: userID,
           userName: userName,
       );
-      print(getData);
       if (getData['status'] == true) {
         await EasyLoading.showSuccess('Data updated successfully');
-        updateUI(context, '','Form','Filled');
+        updateUI(context, getData,'Form','Filled');
       } else {
         await EasyLoading.showError(getData['msg']);
       }

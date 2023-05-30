@@ -262,22 +262,29 @@ class WebConfig {
       required String email,
       required String userID,
       required String mobileNumber,
-      required String countryCode}) async {
+      required String countryCode,
+      File? profileImage}) async {
     Map<String, String> stringParams = {
       'csrf-token': crsfToken,
     };
-    Map<String, String> bodyParams = {
+    Map<String, String> bodyParams;
+    var profile = '';
+    if (profileImage != null) {
+      profile = profileImage.path;
+    }
+    bodyParams = {
       'Email': email,
       'firstName': firstName,
       'lastName': lastName,
       'userID': userID,
       'mobileNumber': mobileNumber,
-      'countryCode': countryCode,
+      'countryCode': countryCode
     };
+
     NetworkHelper networkHelper =
         NetworkHelper('$kBaseURL/updateProfileDetails');
     var metaResponse =
-        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+        await networkHelper.uploadFileData(profile, bodyParams, stringParams);
     return metaResponse;
   }
 
@@ -301,30 +308,16 @@ class WebConfig {
     return metaResponse;
   }
 
-  static Future<dynamic> addContacts(
-      {required List<File> files, required String userID}) async {
+  static Future<dynamic> getWhatsappNumber({required String userID}) async {
     Map<String, String> stringParams = {
       'csrf-token': crsfToken,
     };
     Map<String, String> bodyParams = {
       "userID": userID,
     };
-    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/addContactsFromCSV');
-    var contactData = await networkHelper.uploadMultiFileData(
-        files: files, headers: stringParams, bodyparams: bodyParams);
-    return contactData;
-  }
-
-  static Future<dynamic> getContactsList({required String userID}) async {
-    Map<String, String> stringParams = {
-      'csrf-token': crsfToken,
-    };
-    Map<String, String> bodyParams = {
-      "userID": userID,
-    };
-    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getContactsList');
-    var contactData =
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getWhatsappNumber');
+    var metaResponse =
         await networkHelper.postHeaderBodyData(stringParams, bodyParams);
-    return contactData;
+    return metaResponse;
   }
 }

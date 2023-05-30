@@ -40,14 +40,13 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
         builder: EasyLoading.init(),
         debugShowCheckedModeBanner: false,
-        initialRoute: ResponsiveLayout.routeName,
+        initialRoute: SplashScreen.routeName,
         routes: {
           LoginPage.routeName: (context) => const LoginPage(),
           SplashScreen.routeName: (context) => const SplashScreen(),
           DashboardScreen.routeName: (context) => const DashboardScreen(),
           VerifyOTPScreen.routeName: (context) =>
               const VerifyOTPScreen(emailAddress: '', screenType: ''),
-
           // ignore: equal_keys_in_map
           ResponsiveLayout.routeName: (context) => const ResponsiveLayout(
                 mobileBody: MobileScaffold(),

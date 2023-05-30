@@ -19,7 +19,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
   bool isChatLoading = true;
   late SharedPreferences sharedPreferences;
   late String userID;
-  late String userName;
+  late String userName = '';
 
   @override
   void initState() {
@@ -87,7 +87,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context, 'inbox');
+    var drawer = myDrawer(context, 'inbox', userName);
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
