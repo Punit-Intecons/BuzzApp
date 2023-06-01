@@ -71,8 +71,6 @@ class NetworkHelper {
     http.Response response =
         await http.post(Uri.parse(url), headers: headers, body: body);
     String data = response.body;
-    print(body);
-    print(data);
     return jsonDecode(data);
   }
 

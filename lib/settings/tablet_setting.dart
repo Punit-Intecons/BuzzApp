@@ -19,7 +19,7 @@ class _TabletSettingState extends State<TabletSetting> {
   String buttonSelected = '';
   late SharedPreferences sharedPreferences;
   late String userID;
-  late String userFirstName;
+  late String userFirstName="";
   late String userlastName;
   late String email;
   late bool _error = false;
@@ -55,8 +55,6 @@ class _TabletSettingState extends State<TabletSetting> {
 
   @override
   void initState() {
-    getSharedData();
-    super.initState();
     firstnameController = TextEditingController();
     lastnameController = TextEditingController();
     emailController = TextEditingController();
@@ -75,50 +73,55 @@ class _TabletSettingState extends State<TabletSetting> {
     confirmPasswordFocusNode = FocusNode();
     mobileFocusNode = FocusNode();
     dropdownItems = [];
+    getSharedData();
     if (!isCountryCodeLoaded) {
       getCountryCode();
     }
     toggleSettingPage('info');
+    super.initState();
   }
 
   @override
   void dispose() {
-    // _connectivitySubscription.cancel();
-    super.dispose();
-    firstnameController = TextEditingController();
-    lastnameController = TextEditingController();
-    emailController = TextEditingController();
-    currentPasswordController = TextEditingController();
-    newPasswordController = TextEditingController();
-    confirmPasswordController = TextEditingController();
-    mobileController = TextEditingController();
+    firstnameController.dispose();
+    lastnameController.dispose();
+    emailController.dispose();
+    currentPasswordController.dispose();
+    newPasswordController.dispose();
+    confirmPasswordController.dispose();
+    mobileController.dispose();
 
-    emailFocusNode = FocusNode();
-    firstnameFocusNode = FocusNode();
-    lastnameFocusNode = FocusNode();
-    currentPasswordFocusNode = FocusNode();
-    newPasswordFocusNode = FocusNode();
-    confirmPasswordFocusNode = FocusNode();
-    mobileFocusNode = FocusNode();
-    metaKeyController = TextEditingController();
-    wabaidController = TextEditingController();
+    emailFocusNode.dispose();
+    firstnameFocusNode.dispose();
+    lastnameFocusNode.dispose();
+    currentPasswordFocusNode.dispose();
+    newPasswordFocusNode.dispose();
+    confirmPasswordFocusNode.dispose();
+    mobileFocusNode.dispose();
+    metaKeyController.dispose();
+    wabaidController.dispose();
     dropdownItems = [];
+    isCountryCodeLoaded = false;
+
+    super.dispose();
   }
 
   getSharedData() async {
     sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      userID = sharedPreferences.getString('userID')!;
-      userFirstName = firstnameController.text = sharedPreferences.getString('firstname')!;
-      lastnameController.text = sharedPreferences.getString('last_name')!;
-      emailController.text = sharedPreferences.getString('email')!;
-      mobileController.text = sharedPreferences.getString('phoneNo')! ?? '';
-      selectedCode = (sharedPreferences.getString('countryCode') != ""
-          ? sharedPreferences.getString('countryCode')
-          : selectedCode)!;
-      mobileController.text = sharedPreferences.getString('phoneNo')! ?? '';
-      metaKeyController.text = sharedPreferences.getString('Meta_Key')! ?? '';
-      wabaidController.text = sharedPreferences.getString('WABA_ID')! ?? '';
+      setState(() {
+        userID = sharedPreferences.getString('userID') ?? '';
+        userFirstName = firstnameController.text = sharedPreferences.getString('firstname') ?? '';
+        lastnameController.text = sharedPreferences.getString('last_name') ?? '';
+        emailController.text = sharedPreferences.getString('email') ?? '';
+        mobileController.text = sharedPreferences.getString('phoneNo') ?? '';
+        selectedCode = (sharedPreferences.getString('countryCode') != ""
+            ? sharedPreferences.getString('countryCode')
+            : selectedCode)!;
+        mobileController.text = sharedPreferences.getString('phoneNo') ?? '';
+        metaKeyController.text = sharedPreferences.getString('Meta_Key') ?? '';
+        wabaidController.text = sharedPreferences.getString('WABA_ID') ?? '';
+      });
     });
   }
 
@@ -132,16 +135,18 @@ class _TabletSettingState extends State<TabletSetting> {
     var getData = await WebConfig.getCountryCode();
     if (getData['status'] == true) {
       var countries = getData['country'] as List<dynamic>;
-      setState(() {
-        dropdownItems = countries.map<DropdownMenuItem<String>>((country) {
-          return DropdownMenuItem<String>(
-            value: country['countryCode'],
-            child: Text('+${country["countryCode"]}',
-                overflow: TextOverflow.ellipsis),
-          );
-        }).toList();
-        isCountryCodeLoaded = true;
-      });
+      if (mounted) {
+        setState(() {
+          dropdownItems = countries.map<DropdownMenuItem<String>>((country) {
+            return DropdownMenuItem<String>(
+              value: country['countryCode'],
+              child: Text('+${country["countryCode"]}',
+                  overflow: TextOverflow.ellipsis),
+            );
+          }).toList();
+          isCountryCodeLoaded = true;
+        });
+      }
     }
   }
 
@@ -399,411 +404,414 @@ class _TabletSettingState extends State<TabletSetting> {
               ),
             ),
 
-            Expanded(
-              flex: 2,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Container(
+            Flex(
+              direction: Axis.horizontal,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Container(
                     width: MediaQuery.of(context).size.width * 0.7,
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(8),
                       color: Colors.white,
                     ),
                     child: buttonSelected == 'info'
-                        ? Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(children: [
-                          const Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(16, 30, 0, 0),
-                                child: Text(
-                                  'Profile Settings',
-                                  style: TextStyle(
-                                    fontSize: 25,
-                                    fontWeight: FontWeight.w700,
-                                    color: primaryColor,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
+                    ? Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: Column(children: [
+                      const Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(16, 30, 0, 0),
+                            child: Text(
+                              'Profile Settings',
+                              style: TextStyle(
+                                fontSize: 25,
+                                fontWeight: FontWeight.w700,
+                                color: primaryColor,
                               ),
-                            ],
-                          ),
-                          SizedBox(
-                              height: MediaQuery.of(context).size.height *
-                                  0.05),
-                          Container(
-                            decoration: const BoxDecoration(
-                              border: Border(
-                                bottom: BorderSide(
-                                  color: greyColor,
-                                  width: 1.0,
-                                ),
-                              ),
+                              textAlign: TextAlign.left,
                             ),
                           ),
-                          const Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(16, 20, 0, 0),
-                                child: Text(
-                                  'Personal Information',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.w700,
-                                    color: blackColor,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
-                              ),
-                            ],
+                        ],
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height *
+                              0.05),
+                      Container(
+                        decoration: const BoxDecoration(
+                          border: Border(
+                            bottom: BorderSide(
+                              color: greyColor,
+                              width: 1.0,
+                            ),
                           ),
-                          const Row(
-                            mainAxisAlignment:
-                            MainAxisAlignment.spaceBetween,
-                            children: [
-                              Padding(
-                                padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
-                                child: Text(
-                                  'Update your profile here',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    color: greyColor,
-                                  ),
-                                  textAlign: TextAlign.left,
-                                ),
+                        ),
+                      ),
+                      const Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(16, 20, 0, 0),
+                            child: Text(
+                              'Personal Information',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.w700,
+                                color: blackColor,
                               ),
-                            ],
+                              textAlign: TextAlign.left,
+                            ),
                           ),
-                          SizedBox(
-                              height: MediaQuery.of(context).size.height *
-                                  0.05),
-                          Expanded(
-                            child: SingleChildScrollView(
-                              child: ConstrainedBox(
-                                constraints:
-                                const BoxConstraints(maxWidth: 600),
-                                child: Column(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.center,
+                        ],
+                      ),
+                      const Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(16, 8, 0, 0),
+                            child: Text(
+                              'Update your profile here',
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: greyColor,
+                              ),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                          height: MediaQuery.of(context).size.height *
+                              0.05),
+                      Expanded(
+                        child: SingleChildScrollView(
+                          child: ConstrainedBox(
+                            constraints:
+                            const BoxConstraints(maxWidth: 600),
+                            child: Column(
+                              mainAxisAlignment:
+                              MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                    height: MediaQuery.of(context)
+                                        .size
+                                        .height *
+                                        0.05),
+                                ProfilePage(sizes:100,setImage: setImage),
+                                SizedBox(
+                                    height: MediaQuery.of(context)
+                                        .size
+                                        .height *
+                                        0.03),
+                                MyTextField(
+                                  controller: firstnameController,
+                                  hintText: 'First Name',
+                                  obscureText: false,
+                                  error: _error,
+                                  focusNode: firstnameFocusNode,
+                                ),
+                                SizedBox(
+                                    height: MediaQuery.of(context)
+                                        .size
+                                        .height *
+                                        0.03),
+                                MyTextField(
+                                  controller: lastnameController,
+                                  hintText: 'Last Name',
+                                  obscureText: false,
+                                  error: _error,
+                                  focusNode: lastnameFocusNode,
+                                ),
+                                SizedBox(
+                                    height: MediaQuery.of(context)
+                                        .size
+                                        .height *
+                                        0.03),
+                                MyTextField(
+                                    controller: emailController,
+                                    hintText: 'Email',
+                                    obscureText: false,
+                                    error: _error,
+                                    focusNode: emailFocusNode),
+                                SizedBox(
+                                  height: MediaQuery.of(context)
+                                      .size
+                                      .height *
+                                      0.03,
+                                ),
+                                Row(
                                   children: [
-                                    SizedBox(
-                                        height: MediaQuery.of(context)
-                                            .size
-                                            .height *
-                                            0.05),
-                                    ProfilePage(sizes:100,setImage: setImage),
-                                    SizedBox(
-                                        height: MediaQuery.of(context)
-                                            .size
-                                            .height *
-                                            0.03),
-                                    MyTextField(
-                                      controller: firstnameController,
-                                      hintText: 'First Name',
-                                      obscureText: false,
-                                      error: _error,
-                                      focusNode: firstnameFocusNode,
+                                    MyDropdown(
+                                      selectedCountryCode: selectedCode,
+                                      list: dropdownItems,
+                                      margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.03),
+                                      onValueChanged: (String value) {
+                                        setState(() {
+                                          selectedCode = value;
+                                        });
+                                      },
                                     ),
-                                    SizedBox(
-                                        height: MediaQuery.of(context)
-                                            .size
-                                            .height *
-                                            0.03),
-                                    MyTextField(
-                                      controller: lastnameController,
-                                      hintText: 'Last Name',
-                                      obscureText: false,
-                                      error: _error,
-                                      focusNode: lastnameFocusNode,
-                                    ),
-                                    SizedBox(
-                                        height: MediaQuery.of(context)
-                                            .size
-                                            .height *
-                                            0.03),
-                                    MyTextField(
-                                        controller: emailController,
-                                        hintText: 'Email',
+                                    Expanded(
+                                      child: MyTextField(
+                                        controller: mobileController,
+                                        hintText: 'Phone No.',
                                         obscureText: false,
                                         error: _error,
-                                        focusNode: emailFocusNode),
-                                    SizedBox(
-                                      height: MediaQuery.of(context)
-                                          .size
-                                          .height *
-                                          0.03,
-                                    ),
-                                    Row(
-                                      children: [
-                                        MyDropdown(
-                                          selectedCountryCode: selectedCode,
-                                          list: dropdownItems,
-                                          margin: EdgeInsets.only(left: MediaQuery.of(context).size.width * 0.03),
-                                          onValueChanged: (String value) {
-                                            setState(() {
-                                              selectedCode = value;
-                                            });
-                                          },
-                                        ),
-                                        Expanded(
-                                          child: MyTextField(
-                                            controller: mobileController,
-                                            hintText: 'Phone No.',
-                                            obscureText: false,
-                                            error: _error,
-                                            focusNode: mobileFocusNode,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                    SizedBox(
-                                      height: MediaQuery.of(context)
-                                          .size
-                                          .height *
-                                          0.05,
-                                    ),
-                                    Row(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.end,
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.all(18),
-                                          child: ElevatedButton(
-                                            onPressed: () {
-                                              updateProfile(context);
-                                            },
-                                            style: ElevatedButton.styleFrom(
-                                              backgroundColor:
-                                              primaryColor, // Set the background color to blue
-                                              minimumSize: const Size(100,
-                                                  50), // Set the minimum width and height of the button
-                                              shape: RoundedRectangleBorder(
-                                                borderRadius:
-                                                BorderRadius.circular(
-                                                    8), // Apply rounded corners
-                                              ),
-                                            ),
-                                            child: const Text(
-                                              'Save',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ],
+                                        focusNode: mobileFocusNode,
+                                      ),
                                     ),
                                   ],
                                 ),
-                              ),
+                                SizedBox(
+                                  height: MediaQuery.of(context)
+                                      .size
+                                      .height *
+                                      0.05,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                  MainAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(18),
+                                      child: ElevatedButton(
+                                        onPressed: () {
+                                          updateProfile(context);
+                                        },
+                                        style: ElevatedButton.styleFrom(
+                                          backgroundColor:
+                                          primaryColor, // Set the background color to blue
+                                          minimumSize: const Size(100,
+                                              50), // Set the minimum width and height of the button
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                            BorderRadius.circular(
+                                                8), // Apply rounded corners
+                                          ),
+                                        ),
+                                        child: const Text(
+                                          'Save',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
-                        ]))
-                        : buttonSelected == 'passwordScreen'
-                        ? Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        16, 30, 0, 0),
-                                    child: Text(
-                                      'Password Settings',
-                                      style: TextStyle(
-                                        fontSize: 25,
-                                        fontWeight: FontWeight.w700,
-                                        color: primaryColor,
-                                      ),
-                                      textAlign: TextAlign.left,
+                        ),
+                      ),
+                    ]))
+                    : buttonSelected == 'passwordScreen'
+                    ? Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                            const Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      16, 30, 0, 0),
+                                  child: Text(
+                                    'Password Settings',
+                                    style: TextStyle(
+                                      fontSize: 25,
+                                      fontWeight: FontWeight.w700,
+                                      color: primaryColor,
                                     ),
+                                    textAlign: TextAlign.left,
                                   ),
-                                ],
-                              ),
-                              SizedBox(
-                                  height: MediaQuery.of(context)
-                                      .size
-                                      .height *
-                                      0.05),
-                              Container(
-                                decoration: const BoxDecoration(
-                                  border: Border(
-                                    bottom: BorderSide(
-                                      color: greyColor,
-                                      width: 1.0,
-                                    ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                                height: MediaQuery.of(context)
+                                    .size
+                                    .height *
+                                    0.05),
+                            Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  bottom: BorderSide(
+                                    color: greyColor,
+                                    width: 1.0,
                                   ),
                                 ),
                               ),
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        16, 20, 0, 0),
-                                    child: Text(
-                                      'Change Password',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w700,
-                                        color: blackColor,
-                                      ),
-                                      textAlign: TextAlign.left,
+                            ),
+                            const Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      16, 20, 0, 0),
+                                  child: Text(
+                                    'Change Password',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w700,
+                                      color: blackColor,
                                     ),
+                                    textAlign: TextAlign.left,
                                   ),
-                                ],
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
-                                children: const [
-                                  Padding(
-                                    padding: EdgeInsets.fromLTRB(
-                                        16, 8, 0, 0),
-                                    child: Text(
-                                      'You can update your password here',
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        color: greyColor,
-                                      ),
-                                      textAlign: TextAlign.left,
+                                ),
+                              ],
+                            ),
+                            const Row(
+                              mainAxisAlignment:
+                              MainAxisAlignment.spaceBetween,
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.fromLTRB(
+                                      16, 8, 0, 0),
+                                  child: Text(
+                                    'You can update your password here',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      color: greyColor,
                                     ),
+                                    textAlign: TextAlign.left,
                                   ),
-                                ],
-                              ),
-                              SizedBox(
-                                  height: MediaQuery.of(context)
-                                      .size
-                                      .height *
-                                      0.05),
-                              Expanded(
-                                child: SingleChildScrollView(
-                                  child: ConstrainedBox(
-                                    constraints: const BoxConstraints(
-                                        maxWidth: 600),
-                                    child: Column(
-                                      mainAxisAlignment:
-                                      MainAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                            height:
-                                            MediaQuery.of(context)
-                                                .size
-                                                .height *
-                                                0.05),
-                                        MyTextField(
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                                height: MediaQuery.of(context)
+                                    .size
+                                    .height *
+                                    0.05),
+                            Expanded(
+                              child: SingleChildScrollView(
+                                child: ConstrainedBox(
+                                  constraints: const BoxConstraints(
+                                      maxWidth: 600),
+                                  child: Column(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.center,
+                                    children: [
+                                      SizedBox(
+                                          height:
+                                          MediaQuery.of(context)
+                                              .size
+                                              .height *
+                                              0.05),
+                                      MyTextField(
+                                        controller:
+                                        currentPasswordController,
+                                        hintText: 'Current Password',
+                                        obscureText: true,
+                                        error: _error,
+                                        focusNode:
+                                        currentPasswordFocusNode,
+                                      ),
+                                      SizedBox(
+                                        height: MediaQuery.of(context)
+                                            .size
+                                            .height *
+                                            0.03,
+                                      ),
+                                      MyTextField(
+                                        controller:
+                                        newPasswordController,
+                                        hintText: 'New Password',
+                                        obscureText: true,
+                                        error: _error,
+                                        focusNode:
+                                        newPasswordFocusNode,
+                                      ),
+                                      SizedBox(
+                                        height: MediaQuery.of(context)
+                                            .size
+                                            .height *
+                                            0.03,
+                                      ),
+                                      MyTextField(
                                           controller:
-                                          currentPasswordController,
-                                          hintText: 'Current Password',
+                                          confirmPasswordController,
+                                          hintText:
+                                          'Confirm Password',
                                           obscureText: true,
                                           error: _error,
                                           focusNode:
-                                          currentPasswordFocusNode,
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height *
-                                              0.03,
-                                        ),
-                                        MyTextField(
-                                          controller:
-                                          newPasswordController,
-                                          hintText: 'New Password',
-                                          obscureText: true,
-                                          error: _error,
-                                          focusNode:
-                                          newPasswordFocusNode,
-                                        ),
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height *
-                                              0.03,
-                                        ),
-                                        MyTextField(
-                                            controller:
-                                            confirmPasswordController,
-                                            hintText:
-                                            'Confirm Password',
-                                            obscureText: true,
-                                            error: _error,
-                                            focusNode:
-                                            confirmPasswordFocusNode),
-                                        SizedBox(
-                                          height: MediaQuery.of(context)
-                                              .size
-                                              .height *
-                                              0.05,
-                                        ),
-                                        Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.end,
-                                          children: [
-                                            Container(
-                                              padding:
-                                              const EdgeInsets.all(
-                                                  18),
-                                              child: ElevatedButton(
-                                                onPressed: () {
-                                                  changePassword(
-                                                      context);
-                                                },
-                                                style: ElevatedButton
-                                                    .styleFrom(
-                                                  backgroundColor:
-                                                  primaryColor, // Set the background color to blue
-                                                  minimumSize: const Size(
-                                                      100,
-                                                      50), // Set the minimum width and height of the button
-                                                  shape:
-                                                  RoundedRectangleBorder(
-                                                    borderRadius:
-                                                    BorderRadius
-                                                        .circular(
-                                                        8), // Apply rounded corners
-                                                  ),
-                                                ),
-                                                child: const Text(
-                                                  'Change',
-                                                  style: TextStyle(
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                    FontWeight.bold,
-                                                    color: Colors.white,
-                                                  ),
+                                          confirmPasswordFocusNode),
+                                      SizedBox(
+                                        height: MediaQuery.of(context)
+                                            .size
+                                            .height *
+                                            0.05,
+                                      ),
+                                      Row(
+                                        mainAxisAlignment:
+                                        MainAxisAlignment.end,
+                                        children: [
+                                          Container(
+                                            padding:
+                                            const EdgeInsets.all(
+                                                18),
+                                            child: ElevatedButton(
+                                              onPressed: () {
+                                                changePassword(
+                                                    context);
+                                              },
+                                              style: ElevatedButton
+                                                  .styleFrom(
+                                                backgroundColor:
+                                                primaryColor, // Set the background color to blue
+                                                minimumSize: const Size(
+                                                    100,
+                                                    50), // Set the minimum width and height of the button
+                                                shape:
+                                                RoundedRectangleBorder(
+                                                  borderRadius:
+                                                  BorderRadius
+                                                      .circular(
+                                                      8), // Apply rounded corners
                                                 ),
                                               ),
-                                            )
-                                          ],
-                                        ),
-                                      ],
-                                    ),
+                                              child: const Text(
+                                                'Change',
+                                                style: TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight:
+                                                  FontWeight.bold,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
-                            ]))
-                        : Padding(
+                            ),
+                          ]
+                      )
+                    )
+                    : Padding(
                         padding: const EdgeInsets.all(10.0),
                         child: Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(
                                         16, 30, 0, 0),
@@ -834,10 +842,10 @@ class _TabletSettingState extends State<TabletSetting> {
                                   ),
                                 ),
                               ),
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(
                                         16, 20, 0, 0),
@@ -853,10 +861,10 @@ class _TabletSettingState extends State<TabletSetting> {
                                   ),
                                 ],
                               ),
-                              Row(
+                              const Row(
                                 mainAxisAlignment:
                                 MainAxisAlignment.spaceBetween,
-                                children: const [
+                                children: [
                                   Padding(
                                     padding: EdgeInsets.fromLTRB(
                                         16, 8, 0, 0),
@@ -911,7 +919,7 @@ class _TabletSettingState extends State<TabletSetting> {
                                               Colors.grey.shade200,
                                               filled: true,
                                               suffixIcon:
-                                              Icon(Icons.lock),
+                                              const Icon(Icons.lock),
                                             )),
                                         SizedBox(
                                           height: MediaQuery.of(context)
@@ -939,15 +947,19 @@ class _TabletSettingState extends State<TabletSetting> {
                                               Colors.grey.shade200,
                                               filled: true,
                                               suffixIcon:
-                                              Icon(Icons.lock),
+                                              const Icon(Icons.lock),
                                             )),
                                       ],
                                     ),
                                   ),
                                 ),
                               ),
-                            ]))),
-              ),
+                            ]
+                        )
+                      )
+                  ),
+                ),
+              ],
             ),
           ],
         ),

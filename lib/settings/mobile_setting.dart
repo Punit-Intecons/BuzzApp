@@ -55,8 +55,6 @@ class _MobileSettingState extends State<MobileSetting> {
 
   @override
   void initState() {
-    getSharedData();
-    super.initState();
     firstnameController = TextEditingController();
     lastnameController = TextEditingController();
     emailController = TextEditingController();
@@ -75,51 +73,55 @@ class _MobileSettingState extends State<MobileSetting> {
     confirmPasswordFocusNode = FocusNode();
     mobileFocusNode = FocusNode();
     dropdownItems = [];
+    getSharedData();
     if (!isCountryCodeLoaded) {
       getCountryCode();
     }
     toggleSettingPage('info');
+    super.initState();
   }
 
   @override
   void dispose() {
-    // _connectivitySubscription.cancel();
-    super.dispose();
-    firstnameController = TextEditingController();
-    lastnameController = TextEditingController();
-    emailController = TextEditingController();
-    currentPasswordController = TextEditingController();
-    newPasswordController = TextEditingController();
-    confirmPasswordController = TextEditingController();
-    mobileController = TextEditingController();
+    firstnameController.dispose();
+    lastnameController.dispose();
+    emailController.dispose();
+    currentPasswordController.dispose();
+    newPasswordController.dispose();
+    confirmPasswordController.dispose();
+    mobileController.dispose();
 
-    emailFocusNode = FocusNode();
-    firstnameFocusNode = FocusNode();
-    lastnameFocusNode = FocusNode();
-    currentPasswordFocusNode = FocusNode();
-    newPasswordFocusNode = FocusNode();
-    confirmPasswordFocusNode = FocusNode();
-    mobileFocusNode = FocusNode();
-    metaKeyController = TextEditingController();
-    wabaidController = TextEditingController();
+    emailFocusNode.dispose();
+    firstnameFocusNode.dispose();
+    lastnameFocusNode.dispose();
+    currentPasswordFocusNode.dispose();
+    newPasswordFocusNode.dispose();
+    confirmPasswordFocusNode.dispose();
+    mobileFocusNode.dispose();
+    metaKeyController.dispose();
+    wabaidController.dispose();
     dropdownItems = [];
+    isCountryCodeLoaded = false;
+
+    super.dispose();
   }
 
   getSharedData() async {
     sharedPreferences = await SharedPreferences.getInstance();
     setState(() {
-      userID = sharedPreferences.getString('userID')!;
-      userFirstName =
-          firstnameController.text = sharedPreferences.getString('first_name')!;
-      lastnameController.text = sharedPreferences.getString('last_name')!;
-      emailController.text = sharedPreferences.getString('email')!;
-      mobileController.text = sharedPreferences.getString('phoneNo')! ?? '';
-      selectedCode = (sharedPreferences.getString('countryCode') != ""
-          ? sharedPreferences.getString('countryCode')
-          : selectedCode)!;
-      mobileController.text = sharedPreferences.getString('phoneNo')! ?? '';
-      metaKeyController.text = sharedPreferences.getString('Meta_Key')! ?? '';
-      wabaidController.text = sharedPreferences.getString('WABA_ID')! ?? '';
+      setState(() {
+        userID = sharedPreferences.getString('userID') ?? '';
+        userFirstName = firstnameController.text = sharedPreferences.getString('firstname') ?? '';
+        lastnameController.text = sharedPreferences.getString('last_name') ?? '';
+        emailController.text = sharedPreferences.getString('email') ?? '';
+        mobileController.text = sharedPreferences.getString('phoneNo') ?? '';
+        selectedCode = (sharedPreferences.getString('countryCode') != ""
+            ? sharedPreferences.getString('countryCode')
+            : selectedCode)!;
+        mobileController.text = sharedPreferences.getString('phoneNo') ?? '';
+        metaKeyController.text = sharedPreferences.getString('Meta_Key') ?? '';
+        wabaidController.text = sharedPreferences.getString('WABA_ID') ?? '';
+      });
     });
   }
 
@@ -133,16 +135,18 @@ class _MobileSettingState extends State<MobileSetting> {
     var getData = await WebConfig.getCountryCode();
     if (getData['status'] == true) {
       var countries = getData['country'] as List<dynamic>;
-      setState(() {
-        dropdownItems = countries.map<DropdownMenuItem<String>>((country) {
-          return DropdownMenuItem<String>(
-            value: country['countryCode'],
-            child: Text('+${country["countryCode"]}',
-                overflow: TextOverflow.ellipsis),
-          );
-        }).toList();
-        isCountryCodeLoaded = true;
-      });
+      if (mounted) {
+        setState(() {
+          dropdownItems = countries.map<DropdownMenuItem<String>>((country) {
+            return DropdownMenuItem<String>(
+              value: country['countryCode'],
+              child: Text('+${country["countryCode"]}',
+                  overflow: TextOverflow.ellipsis),
+            );
+          }).toList();
+          isCountryCodeLoaded = true;
+        });
+      }
     }
   }
 

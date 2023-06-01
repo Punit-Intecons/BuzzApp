@@ -20,8 +20,8 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
   bool isChatLoading = true;
   bool isloadingFirstTime = true;
   late SharedPreferences sharedPreferences;
-  late String userID;
-  late String userName;
+  late String userID='';
+  late String userName='';
   @override
   void initState() {
     getSharedData();

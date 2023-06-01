@@ -24,6 +24,13 @@ class _CampaignDetailState extends State<CampaignDetail> {
     getSharedData();
     super.initState();
   }
+  @override
+  void dispose() {
+    isLoading = false;
+    campaignDetail.clear();
+    // Cancel any ongoing asynchronous operations here if necessary
+    super.dispose();
+  }
 
   getSharedData() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -44,24 +51,26 @@ class _CampaignDetailState extends State<CampaignDetail> {
         userID: userID, userName: userName, campaignID: campaignID);
     if (getData['status'] == true) {
       var list = getData['campaignDetail'];
-      setState(() {
-        campaignDetail.add(CampaignDetails(
-          campaignID: list['campaignID'],
-          campaignName: list['campaignName'],
-          time: list['time'],
-          size: list['size'],
-          metaCampaignName: list['metaCampaignName'],
-          attempted: list['attempted'],
-          sent: list['sent'],
-          delivered: list['delivered'],
-          failed: list['failed'],
-          read: list['read'],
-          replied: list['replied'],
-          sendOn: list['sendOn'],
-        ));
+      if (mounted) {
+        setState(() {
+          campaignDetail.add(CampaignDetails(
+            campaignID: list['campaignID'],
+            campaignName: list['campaignName'],
+            time: list['time'],
+            size: list['size'],
+            metaCampaignName: list['metaCampaignName'],
+            attempted: list['attempted'],
+            sent: list['sent'],
+            delivered: list['delivered'],
+            failed: list['failed'],
+            read: list['read'],
+            replied: list['replied'],
+            sendOn: list['sendOn'],
+          ));
 
-        isLoading = false;
-      });
+          isLoading = false;
+        });
+      }
     } else {
       setState(() {
         isLoading = false;
@@ -166,10 +175,10 @@ class _CampaignDetailState extends State<CampaignDetail> {
                     const SizedBox(
                       height: 20,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Row(
-                        children: const <Widget>[
+                        children: <Widget>[
                           Text(
                             "Performance",
                             style: TextStyle(
@@ -208,8 +217,8 @@ class _CampaignDetailState extends State<CampaignDetail> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Attempted',
                                         style: TextStyle(
@@ -244,8 +253,8 @@ class _CampaignDetailState extends State<CampaignDetail> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Send',
                                         style: TextStyle(
@@ -281,8 +290,8 @@ class _CampaignDetailState extends State<CampaignDetail> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Delivered',
                                         style: TextStyle(
@@ -318,8 +327,8 @@ class _CampaignDetailState extends State<CampaignDetail> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Read',
                                         style: TextStyle(
@@ -355,8 +364,8 @@ class _CampaignDetailState extends State<CampaignDetail> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Replied',
                                         style: TextStyle(
@@ -392,8 +401,8 @@ class _CampaignDetailState extends State<CampaignDetail> {
                                     ],
                                   ),
                                   const SizedBox(height: 8.0),
-                                  Row(
-                                    children: const [
+                                  const Row(
+                                    children: [
                                       Text(
                                         'Failed',
                                         style: TextStyle(
@@ -411,10 +420,10 @@ class _CampaignDetailState extends State<CampaignDetail> {
                     const SizedBox(
                       height: 25,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Row(
-                        children: const <Widget>[
+                        children: <Widget>[
                           Text(
                             "Audience",
                             style: TextStyle(
@@ -428,10 +437,10 @@ class _CampaignDetailState extends State<CampaignDetail> {
                     const SizedBox(
                       height: 10,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                       child: Row(
-                        children: const [
+                        children: [
                           Text(
                             'Your contact where: ',
                             style: TextStyle(

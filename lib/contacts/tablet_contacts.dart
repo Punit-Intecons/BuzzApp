@@ -15,8 +15,8 @@ class TabletContacts extends StatefulWidget {
 
 class _TabletContactsState extends State<TabletContacts> {
   late SharedPreferences sharedPreferences;
-  late String userID;
-  late String userName;
+  late String userID='';
+  late String userName='';
   List<String> headers = [];
   List<List<String>> data = [];
   List<File> files = [];
@@ -24,15 +24,6 @@ class _TabletContactsState extends State<TabletContacts> {
   @override
   void initState() {
     getSharedData();
-    headers = [
-      'Mobile',
-      'Attribute 1',
-      'Attribute 2',
-      'Attribute 3',
-      'Tag 1',
-      'Attribute 4'
-    ];
-
     super.initState();
   }
 
@@ -52,20 +43,21 @@ class _TabletContactsState extends State<TabletContacts> {
     });
     var getData = await WebConfig.getContactsList(userID: userID);
     if (getData['status'] == true) {
-      var list = getData['list'];
-      setState(() {
-        for (int i = 0; i < list.length; i++) {
-          data.add([
-            list[i]['Mobile_Number'],
-            list[i]['Attribute_1'],
-            list[i]['Attribute_2'],
-            list[i]['Attribute_3'],
-            list[i]['Tag'],
-            list[i]['Added_on'],
-          ]);
-        }
-        isContactsLoading = false;
-      });
+      var list = getData['contacts'];
+      if (list != null && list.isNotEmpty) {
+        var firstContact = list[0];
+        headers = firstContact.keys.toList(); // Extract column names
+        setState(() {
+          for (int i = 0; i < list.length; i++) {
+            List<String> rowData = [];
+            for (var columnName in headers) {
+              rowData.add(list[i][columnName]);
+            }
+            data.add(rowData);
+          }
+          isContactsLoading = false;
+        });
+      }
     } else {
       setState(() {
         isContactsLoading = false;

@@ -18,7 +18,7 @@ class _MobileScaffoldState extends State<MobileScaffold> {
   late List<Message> userChats = [];
   bool isChatLoading = true;
   late SharedPreferences sharedPreferences;
-  late String userID;
+  late String userID='';
   late String userName = '';
 
   @override

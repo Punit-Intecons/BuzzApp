@@ -347,4 +347,32 @@ class WebConfig {
         await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return contactData;
   }
+
+  static Future<dynamic> getCampaignSearchedValue({required String searchedValue, required String userID}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      "userID": userID,
+      "searchedValue": searchedValue,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getCampaignSearchedValue');
+    var contactData =
+    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return contactData;
+  }
+
+  static Future<dynamic> getFilterSearchedValue({required String filterData, required String userID}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      "userID": userID,
+      "filterData": filterData,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getFilterSearchedValue');
+    var contactData =
+    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return contactData;
+  }
 }

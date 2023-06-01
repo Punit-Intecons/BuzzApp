@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../components/my_data_table_source.dart';
 import '../controller/constant.dart';
 
 import '../controller/web_api.dart';
@@ -16,13 +17,19 @@ class DesktopCampaign extends StatefulWidget {
 class _DesktopCampaignState extends State<DesktopCampaign> {
   late List<CampaignDetails> campaignDetail = [];
   late List<Campaign> userCampaigns = [];
+  late List<String> searchedData = [];
+  List<String> headers = [];
+  List<List<String>> data = [];
   bool isLoading = true;
   bool isCampaignLoading = true;
   bool isloadingFirstTime = true;
   bool isCreateCampaign = false;
+  final TextEditingController _inputController = TextEditingController();
   late SharedPreferences sharedPreferences;
-  late String userID;
-  late String userName;
+  late String userID="";
+  late String userName="";
+  String inputValue = '';
+  bool isdataLoading = true;
   @override
   void initState() {
     getSharedData();
@@ -70,6 +77,60 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
     }
   }
 
+  fetchSearchedValue(searchedVal) async {
+    setState(() {
+      searchedData = [];
+    });
+    var getData = await WebConfig.getCampaignSearchedValue(
+      searchedValue: searchedVal,
+      userID: userID,
+    );
+    if (getData['status'] == true) {
+      setState(() {
+        searchedData = List<String>.from(getData['searchedValue']);
+      });
+    } else {
+      setState(() {
+        searchedData = [];
+      });
+    }
+  }
+  filterSearchedValue(filterData) async {
+    setState(() {
+      isdataLoading = true;
+      headers = [];
+      data = [];
+    });
+    var getData = await WebConfig.getFilterSearchedValue(
+      filterData: filterData,
+      userID: userID,
+    );
+    if (getData['status'] == true) {
+      var list = getData['filteredData'];
+      print(list);
+      if (list != null && list.isNotEmpty) {
+        var column = list[0];
+        headers = column.keys.toList(); // Extract column names
+        setState(() {
+          for (int i = 0; i < list.length; i++) {
+            List<String> rowData = [];
+            for (var columnName in headers) {
+              rowData.add(list[i][columnName]);
+            }
+            data.add(rowData);
+          }
+          isdataLoading = false;
+        });
+      }
+    } else {
+      setState(() {
+        isdataLoading = false;
+        headers = [];
+        data = [];
+      });
+    }
+  }
+
   getCampaignDetail(campaignID) async {
     setState(() {
       isLoading = true;
@@ -104,6 +165,110 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
         isLoading = false;
       });
     }
+  }
+
+  void onBoxTap(String value) {
+    final updatedText = '${_inputController.text.trim()} [$value]'; // Append the selected value with a space
+    _inputController.text = updatedText.replaceAll('+','');
+  }
+  void onTextChanged(String value) {
+    setState(() {
+      int plusIndex = value.indexOf('+');
+      if (plusIndex != -1) {
+        // Remove any characters before the '+' sign
+        value = value.substring(plusIndex);
+      }
+      inputValue = value.trim();
+      fetchSearchedValue(inputValue); // Call the API with the modified search text
+    });
+  }
+  Widget buildPaginatedDataTable() {
+    if (data.isEmpty) {
+      return const Center(
+        child: Text('No records found'),
+      );
+    }
+
+    return PaginatedDataTable(
+      header: const Text('Table'),
+      columns: [
+        for (var columnName in headers)
+          DataColumn(label: Text(columnName)),
+      ],
+      source: MyDataTableSource(data, headers),
+      rowsPerPage: 5, // Number of rows to display per page
+    );
+  }
+
+  Widget searchedBox() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: Row(
+            children: [
+              Expanded(
+                child: TextField(
+                  controller: _inputController,
+                  maxLines: null,
+                  onChanged: onTextChanged,
+                  decoration: const InputDecoration(
+                    labelText: 'Type here',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+              ),
+              const SizedBox(width: 10), // Spacing between text field and button
+              ElevatedButton(
+                onPressed: () {
+                  filterSearchedValue(_inputController.text);
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      primaryColor),
+                ),
+                child: const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Text(
+                    'Filter',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+        if (searchedData.isNotEmpty)
+          Container(
+            padding: const EdgeInsets.all(8.0),
+            child: Wrap(
+              spacing: 8.0,
+              runSpacing: 8.0,
+              children: searchedData.map((value) {
+                return GestureDetector(
+                  onTap: () => onBoxTap(value),
+                  child: Container(
+                    padding: const EdgeInsets.all(8.0),
+                    decoration: BoxDecoration(
+                      color: primaryColor,
+                      border: null,
+                      borderRadius: BorderRadius.circular(4.0),
+                    ),
+                    child: Text(value,
+                      style: const TextStyle(
+                        color: whiteColor,
+                      ),
+                    ),
+                  ),
+                );
+              }).toList(),
+            ),
+          )
+        else
+          Text('No results'),
+        buildPaginatedDataTable(),
+      ],
+    );
   }
 
   Widget createCampaign() {
@@ -166,6 +331,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
+                              border: Border.all(),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Padding(
@@ -225,9 +391,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                         ],
                       ),
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+                    searchedBox(),
+                    const SizedBox(height: 10),
                   ],
                 ),
               ),
@@ -839,6 +1004,16 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   }
 
   @override
+  void dispose() {
+    // Cancel any ongoing asynchronous operations here if necessary
+    getSharedData();
+    isdataLoading = false;
+    headers = [];
+    data = [];
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var drawer = myDrawer(context, 'campaign',userName);
     return Scaffold(
@@ -898,23 +1073,16 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     });
                                   },
                                   style: ButtonStyle(
-                                    minimumSize:
-                                        MaterialStateProperty.all<Size>(
-                                      const Size(110, 45),
+                                    minimumSize: MaterialStateProperty.all<Size>(
+                                      const Size(45, 45),
                                     ),
-                                    backgroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            primaryColor),
-                                    foregroundColor:
-                                        MaterialStateProperty.all<Color>(
-                                            whiteColor),
-                                    shape: MaterialStateProperty.all<
-                                            RoundedRectangleBorder>(
-                                        RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10.0),
-                                    )),
+                                    backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
+                                    foregroundColor: MaterialStateProperty.all<Color>(whiteColor),
+                                    shape: MaterialStateProperty.all<OutlinedBorder>(
+                                      CircleBorder(),
+                                    ),
                                   ),
-                                  child: const Text('New'),
+                                  child: const Text('+'),
                                 ),
                               ),
                             ],

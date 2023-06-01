@@ -19,8 +19,8 @@ class _TabletScaffoldState extends State<TabletScaffold> {
   late List<Message> userChats = [];
   bool isChatLoading = true;
   late SharedPreferences sharedPreferences;
-  late String userID;
-  late String userName;
+  late String userID='';
+  late String userName='';
 
   @override
   void initState() {

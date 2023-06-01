@@ -22,6 +22,12 @@ class _UserWhatsappNumberState extends State<UserWhatsappNumber> {
     super.initState();
     getSharedData();
   }
+  
+  @override
+  void dispose() {
+    // Cancel any ongoing asynchronous operations here if necessary
+    super.dispose();
+  }
 
   getSharedData() async {
     sharedPreferences = await SharedPreferences.getInstance();
@@ -34,20 +40,21 @@ class _UserWhatsappNumberState extends State<UserWhatsappNumber> {
   }
 
   getSelectedWhatsappNumber() async {
-    var getData = await WebConfig.getWhatsappNumber(userID:userID);
-    if (getData['status'] == true) {
-      var numbers = getData['numberList'] as List<dynamic>;
-      setState(() {
-        whatsappnumItems = numbers.map<DropdownMenuItem<String>>((number) {
-          if(number['Default_Number'] == 'Yes') defaultWaNum =number['Whatsapp_Number'];
-          return DropdownMenuItem<String>(
-            value: number['Whatsapp_Number'],
-            child: Text(number["Whatsapp_Number"],
-                overflow: TextOverflow.ellipsis),
-          );
-        }).toList();
-        isnumberLoaded = true;
-      });
+    var getData = await WebConfig.getWhatsappNumber(userID: userID);
+    if (mounted) {
+      if (getData['status'] == true) {
+        var numbers = getData['numberList'] as List<dynamic>;
+        setState(() {
+          whatsappnumItems = numbers.map<DropdownMenuItem<String>>((number) {
+            if (number['Default_Number'] == 'Yes') defaultWaNum = number['Whatsapp_Number'];
+            return DropdownMenuItem<String>(
+              value: number['Whatsapp_Number'],
+              child: Text(number["Whatsapp_Number"], overflow: TextOverflow.ellipsis),
+            );
+          }).toList();
+          isnumberLoaded = true;
+        });
+      }
     }
   }
 

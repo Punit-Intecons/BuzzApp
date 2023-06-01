@@ -43,7 +43,7 @@ const String appName = 'BuzzApp';
 
 const double kTextScaleFactor = 0.8;
 
-var tilePadding = const EdgeInsets.only(left: 10.0, right: 5.0);
+var tilePadding = const EdgeInsets.only(left: 10.0, top:5.0, right: 5.0);
 
 var myAppBar = AppBar(
   backgroundColor: appBarColor,
@@ -218,7 +218,6 @@ Widget myDrawer(
     backgroundColor: whiteColor,
     elevation: 0,
     child: Column(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         DrawerHeader(
@@ -366,26 +365,27 @@ Widget myDrawer(
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(left: 25.0, top: 2.0),
+          padding: const EdgeInsets.only(left: 25.0, top: 2.0),
           child: Text(
             'Selected Number:',
             style: drawerTextColor,
           ),
         ),
-        Padding(
+        const Padding(
           padding: EdgeInsets.only(left: 25.0),
           child: UserWhatsappNumber(),
         ),
         Padding(
-            padding: EdgeInsets.only(left: 25.0),
-            child: ListTile(
-              leading: const Icon(Icons.account_circle_rounded),
-              title: Text(
-                'Hi, $username',
-                style: drawerTextColor,
-              ),
-              onTap: () {},
-            )),
+          padding: const EdgeInsets.only(left: 25.0),
+          child: ListTile(
+            leading: const Icon(Icons.account_circle_rounded),
+            title: Text(
+              'Hi, $username',
+              style: drawerTextColor,
+            ),
+            onTap: () {},
+          )
+        ),
       ],
     ),
   );
