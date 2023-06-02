@@ -47,18 +47,20 @@ class _TabletCampaignState extends State<TabletCampaign> {
     );
     if (getData['status'] == true) {
       var list = getData['campaignDetail'];
-      setState(() {
-        for (int i = 0; i < list.length; i++) {
-          userCampaigns.add(Campaign(
-            campaignID: list[i]['campaignID'],
-            campaignName: list[i]['campaignName'],
-            time: list[i]['time'],
-            size: list[i]['size'],
-            metaCampaignName: list[i]['metaCampaignName'],
-          ));
-        }
-        isCampaignLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          for (int i = 0; i < list.length; i++) {
+            userCampaigns.add(Campaign(
+              campaignID: list[i]['campaignID'],
+              campaignName: list[i]['campaignName'],
+              time: list[i]['time'],
+              size: list[i]['size'],
+              metaCampaignName: list[i]['metaCampaignName'],
+            ));
+          }
+          isCampaignLoading = false;
+        });
+      }
     } else {
       setState(() {
         isCampaignLoading = false;
@@ -80,6 +82,16 @@ class _TabletCampaignState extends State<TabletCampaign> {
       return false;
     }
     return true;
+  }
+
+  @override
+  void dispose() {
+    // Cancel any ongoing asynchronous operations here if necessary
+    getSharedData();
+    // isdataLoading = false;
+    // headers = [];
+    // data = [];
+    super.dispose();
   }
 
   @override
