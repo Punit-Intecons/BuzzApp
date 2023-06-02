@@ -26,8 +26,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   bool isCreateCampaign = false;
   final TextEditingController _inputController = TextEditingController();
   late SharedPreferences sharedPreferences;
-  late String userID="";
-  late String userName="";
+  late String userID = "";
+  late String userName = "";
   String inputValue = '';
   bool isdataLoading = true;
   @override
@@ -95,6 +95,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
       });
     }
   }
+
   filterSearchedValue(filterData) async {
     setState(() {
       isdataLoading = true;
@@ -168,9 +169,11 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   }
 
   void onBoxTap(String value) {
-    final updatedText = '${_inputController.text.trim()} [$value]'; // Append the selected value with a space
-    _inputController.text = updatedText.replaceAll('+','');
+    final updatedText =
+        '${_inputController.text.trim()} [$value]'; // Append the selected value with a space
+    _inputController.text = updatedText.replaceAll('+', '');
   }
+
   void onTextChanged(String value) {
     setState(() {
       int plusIndex = value.indexOf('+');
@@ -179,9 +182,11 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
         value = value.substring(plusIndex);
       }
       inputValue = value.trim();
-      fetchSearchedValue(inputValue); // Call the API with the modified search text
+      fetchSearchedValue(
+          inputValue); // Call the API with the modified search text
     });
   }
+
   Widget buildPaginatedDataTable() {
     if (data.isEmpty) {
       return const Center(
@@ -192,8 +197,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
     return PaginatedDataTable(
       header: const Text('Table'),
       columns: [
-        for (var columnName in headers)
-          DataColumn(label: Text(columnName)),
+        for (var columnName in headers) DataColumn(label: Text(columnName)),
       ],
       source: MyDataTableSource(data, headers),
       rowsPerPage: 5, // Number of rows to display per page
@@ -218,14 +222,15 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                   ),
                 ),
               ),
-              const SizedBox(width: 10), // Spacing between text field and button
+              const SizedBox(
+                  width: 10), // Spacing between text field and button
               ElevatedButton(
                 onPressed: () {
                   filterSearchedValue(_inputController.text);
                 },
                 style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      primaryColor),
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(primaryColor),
                 ),
                 child: const Padding(
                   padding: EdgeInsets.all(10.0),
@@ -254,7 +259,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                       border: null,
                       borderRadius: BorderRadius.circular(4.0),
                     ),
-                    child: Text(value,
+                    child: Text(
+                      value,
                       style: const TextStyle(
                         color: whiteColor,
                       ),
@@ -1015,7 +1021,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context, 'campaign',userName);
+    var drawer = myDrawer(context, 'campaign', userName);
     return Scaffold(
       backgroundColor: secondaryBackgroundColor,
       body: Padding(
@@ -1073,12 +1079,18 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     });
                                   },
                                   style: ButtonStyle(
-                                    minimumSize: MaterialStateProperty.all<Size>(
+                                    minimumSize:
+                                        MaterialStateProperty.all<Size>(
                                       const Size(45, 45),
                                     ),
-                                    backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
-                                    foregroundColor: MaterialStateProperty.all<Color>(whiteColor),
-                                    shape: MaterialStateProperty.all<OutlinedBorder>(
+                                    backgroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            primaryColor),
+                                    foregroundColor:
+                                        MaterialStateProperty.all<Color>(
+                                            whiteColor),
+                                    shape: MaterialStateProperty.all<
+                                        OutlinedBorder>(
                                       CircleBorder(),
                                     ),
                                   ),
@@ -1182,31 +1194,15 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                                     padding:
                                                         const EdgeInsets.only(
                                                             top: 5),
-                                                    child: Row(
-                                                      children: <Widget>[
-                                                        Text(
-                                                          "Size:${campaigns.size}",
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 12,
-                                                            color: successColor,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                            width: 10),
-                                                        Text(
-                                                          campaigns
-                                                              .metaCampaignName,
-                                                          style:
-                                                              const TextStyle(
-                                                            fontSize: 12,
-                                                            color: successColor,
-                                                          ),
-                                                          overflow: TextOverflow
-                                                              .ellipsis,
-                                                          maxLines: 2,
-                                                        ),
-                                                      ],
+                                                    child: Text(
+                                                      "Size:${campaigns.size}, ${campaigns.metaCampaignName}",
+                                                      style: const TextStyle(
+                                                        fontSize: 12,
+                                                        color: successColor,
+                                                      ),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                      maxLines: 2,
                                                     ),
                                                   ),
                                                   trailing: Text(

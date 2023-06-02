@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserWhatsappNumber extends StatefulWidget {
-
   const UserWhatsappNumber({Key? key}) : super(key: key);
 
   @override
@@ -14,7 +13,7 @@ class _UserWhatsappNumberState extends State<UserWhatsappNumber> {
   late String defaultWaNum = '';
   List<DropdownMenuItem<String>> whatsappnumItems = [];
   bool isnumberLoaded = false;
-  late String userID='';
+  late String userID = '';
   late SharedPreferences sharedPreferences;
 
   @override
@@ -22,7 +21,7 @@ class _UserWhatsappNumberState extends State<UserWhatsappNumber> {
     super.initState();
     getSharedData();
   }
-  
+
   @override
   void dispose() {
     // Cancel any ongoing asynchronous operations here if necessary
@@ -46,10 +45,12 @@ class _UserWhatsappNumberState extends State<UserWhatsappNumber> {
         var numbers = getData['numberList'] as List<dynamic>;
         setState(() {
           whatsappnumItems = numbers.map<DropdownMenuItem<String>>((number) {
-            if (number['Default_Number'] == 'Yes') defaultWaNum = number['Whatsapp_Number'];
+            if (number['Default_Number'] == 'Yes')
+              defaultWaNum = number['Whatsapp_Number'];
             return DropdownMenuItem<String>(
               value: number['Whatsapp_Number'],
-              child: Text(number["Whatsapp_Number"], overflow: TextOverflow.ellipsis),
+              child: Text(number["Whatsapp_Number"],
+                  overflow: TextOverflow.ellipsis),
             );
           }).toList();
           isnumberLoaded = true;
