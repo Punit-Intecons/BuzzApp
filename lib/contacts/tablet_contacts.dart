@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../components/my_data_table_source.dart';
 import '../controller/constant.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:file_picker/file_picker.dart';
@@ -21,6 +22,8 @@ class _TabletContactsState extends State<TabletContacts> {
   List<List<String>> data = [];
   List<File> files = [];
   bool isContactsLoading = true;
+  int rowsPerPage = 10; // Number of rows to display per page
+  int currentPage = 0; // Current page index
   @override
   void initState() {
     getSharedData();
@@ -55,6 +58,7 @@ class _TabletContactsState extends State<TabletContacts> {
             }
             data.add(rowData);
           }
+          rowsPerPage = (data.length < 20?data.length:20);
           isContactsLoading = false;
         });
       }
@@ -96,125 +100,59 @@ class _TabletContactsState extends State<TabletContacts> {
               ),
             )
           : SizedBox(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: SingleChildScrollView(
-                  child: data.isNotEmpty
-                      ? Table(
-                          border: TableBorder.all(
-                            color: greyColor,
-                            width: 1.0,
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(10)),
-                          ),
-                          defaultColumnWidth: const FixedColumnWidth(120.0),
-                          children: [
-                            // Header row
-                            TableRow(
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
+            width: double.infinity,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SingleChildScrollView(
+                child: PaginatedDataTable(
+                  header: const Text('Table'),
+                  columns: [
+                    const DataColumn(label: Text('#')),
+                    // Dynamic columns
+                    for (var i = 0; i < headers.length; i++)
+                      DataColumn(
+                        label: headers[i] == 'Mobile'
+                        ? const Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.phone,
+                                color: blackColor,
+                                size: 18,
                               ),
-                              children: [
-                                const TableCell(
-                                  child: Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Center(
-                                      child: Text(
-                                        '#',
-                                        style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: blackColor,
-                                          fontSize: 18,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
+                              SizedBox(width: 10),
+                              Text(
+                                'Mobile',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  color: blackColor,
+                                  fontSize: 16,
                                 ),
-                                // Dynamic columns
-                                for (var i = 0; i < headers.length; i++)
-                                  headers[i] == "Mobile"
-                                      ? const TableCell(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Center(
-                                              child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Icon(
-                                                    Icons.phone,
-                                                    color: blackColor,
-                                                    size: 18,
-                                                  ),
-                                                  SizedBox(
-                                                    width: 10,
-                                                  ),
-                                                  Text(
-                                                    'Mobile',
-                                                    style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      color: blackColor,
-                                                      fontSize: 16,
-                                                    ),
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                        )
-                                      : TableCell(
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Center(
-                                              child: Text(
-                                                headers[i],
-                                                style: const TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: blackColor,
-                                                  fontSize: 16,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                              ],
-                            ),
-                            // Dynamic rows
-                            for (var j = 0; j < data.length; j++)
-                              TableRow(
-                                children: [
-                                  TableCell(
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8.0),
-                                      child: Center(
-                                        child: Text((j + 1).toString()),
-                                      ),
-                                    ),
-                                  ),
-                                  // Dynamic cells
-                                  for (var k = 0; k < data[j].length; k++)
-                                    TableCell(
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Center(
-                                          child: Text(
-                                            data[j][k],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                ],
                               ),
-                          ],
-                        )
-                      : const Center(
-                          child: Text("No Contact found"),
+                            ],
+                          )
+                        : Text(
+                          headers[i],
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: blackColor,
+                            fontSize: 16,
+                          ),
                         ),
+                      ),
+                    ],
+                    source: MyContactDataTableSource(data),
+                    rowsPerPage: rowsPerPage,
+                    availableRowsPerPage: const [10, 20, 25], // Number of rows per page options
+                    onPageChanged: (pageIndex) {
+                      setState(() {
+                        currentPage = pageIndex;
+                      });
+                    },
                 ),
               ),
             ),
+          ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           FilePickerResult? result = await FilePicker.platform.pickFiles(

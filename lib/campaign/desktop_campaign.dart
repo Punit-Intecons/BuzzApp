@@ -30,6 +30,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   late String userName="";
   String inputValue = '';
   bool isdataLoading = true;
+  List<String> tagData = [];
   @override
   void initState() {
     getSharedData();
@@ -58,18 +59,20 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
     );
     if (getData['status'] == true) {
       var list = getData['campaignDetail'];
-      setState(() {
-        for (int i = 0; i < list.length; i++) {
-          userCampaigns.add(Campaign(
-            campaignID: list[i]['campaignID'],
-            campaignName: list[i]['campaignName'],
-            time: list[i]['time'],
-            size: list[i]['size'],
-            metaCampaignName: list[i]['metaCampaignName'],
-          ));
-        }
-        isCampaignLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          for (int i = 0; i < list.length; i++) {
+            userCampaigns.add(Campaign(
+              campaignID: list[i]['campaignID'],
+              campaignName: list[i]['campaignName'],
+              time: list[i]['time'],
+              size: list[i]['size'],
+              metaCampaignName: list[i]['metaCampaignName'],
+            ));
+          }
+          isCampaignLoading = false;
+        });
+      }
     } else {
       setState(() {
         isCampaignLoading = false;
@@ -86,13 +89,23 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
       userID: userID,
     );
     if (getData['status'] == true) {
-      setState(() {
-        searchedData = List<String>.from(getData['searchedValue']);
-      });
+      if (mounted) {
+        setState(() {
+          searchedData = List<String>.from(getData['searchedValue']);
+          tagData = List<String>.from(searchedData);
+        });
+      }
     } else {
       setState(() {
         searchedData = [];
       });
+    }
+  }
+  void filterData(String searchValue) {
+    if (searchValue.isNotEmpty) {
+      tagData = searchedData.where((value) => value.contains(searchValue)).toList();
+    } else {
+      tagData = List<String>.from(searchedData);
     }
   }
   filterSearchedValue(filterData) async {
@@ -107,7 +120,6 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
     );
     if (getData['status'] == true) {
       var list = getData['filteredData'];
-      print(list);
       if (list != null && list.isNotEmpty) {
         var column = list[0];
         headers = column.keys.toList(); // Extract column names
@@ -168,18 +180,36 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   }
 
   void onBoxTap(String value) {
-    final updatedText = '${_inputController.text.trim()} [$value]'; // Append the selected value with a space
-    _inputController.text = updatedText.replaceAll('+','');
+    List<String> symbolsToRemove = ['+','/'];
+    final updatedText = '${_inputController.text.trim()} $value'; // Append the selected value with a space
+    String result = updatedText;
+    for (var symbol in symbolsToRemove) {
+      result = result.replaceAll(symbol, ''); // Remove the specified symbols
+    }
+    _inputController.text = result.trim();
   }
+
   void onTextChanged(String value) {
     setState(() {
-      int plusIndex = value.indexOf('+');
-      if (plusIndex != -1) {
-        // Remove any characters before the '+' sign
-        value = value.substring(plusIndex);
+      List<String> symbols = ['+', '/']; // Add more symbols if needed
+      int symbolIndex = -1;
+
+      for (var symbol in symbols) {
+        int index = value.indexOf(symbol);
+        if (index != -1) {
+          symbolIndex = index;
+          break;
+        }
       }
+
+      if (symbolIndex != -1) {
+        // Remove any characters before the symbol
+        value = value.substring(symbolIndex);
+      }
+
       inputValue = value.trim();
       fetchSearchedValue(inputValue); // Call the API with the modified search text
+      filterData(value.replaceAll("+", ''));
     });
   }
   Widget buildPaginatedDataTable() {
@@ -195,8 +225,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
         for (var columnName in headers)
           DataColumn(label: Text(columnName)),
       ],
-      source: MyDataTableSource(data, headers),
-      rowsPerPage: 5, // Number of rows to display per page
+      source: MyDataTableSource(data),
+      rowsPerPage: (data.length < 10?data.length:10), // Number of rows to display per page
     );
   }
 
@@ -263,9 +293,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                 );
               }).toList(),
             ),
-          )
-        else
-          Text('No results'),
+          ),
         buildPaginatedDataTable(),
       ],
     );
@@ -1079,7 +1107,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     backgroundColor: MaterialStateProperty.all<Color>(primaryColor),
                                     foregroundColor: MaterialStateProperty.all<Color>(whiteColor),
                                     shape: MaterialStateProperty.all<OutlinedBorder>(
-                                      CircleBorder(),
+                                      const CircleBorder(),
                                     ),
                                   ),
                                   child: const Text('+'),
