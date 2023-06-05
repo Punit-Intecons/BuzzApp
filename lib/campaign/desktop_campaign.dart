@@ -19,6 +19,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   late List<CampaignDetails> campaignDetail = [];
   late List<Campaign> userCampaigns = [];
   late List<Template> metaTemplates = [];
+  String? selectedLanguage;
+  List<DropdownMenuItem<String>> dropdownItems = [];
   late List<String> searchedData = [];
   List<String> headers = [];
   List<List<String>> data = [];
@@ -30,6 +32,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   late SharedPreferences sharedPreferences;
   late String userID = "";
   late String userName = "";
+  late String metaKey = "";
   String inputValue = '';
   bool isdataLoading = true;
   List<String> tagData = [];
@@ -44,6 +47,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
     setState(() {
       userID = sharedPreferences.getString('userID')!;
       userName = sharedPreferences.getString('first_name')!;
+      metaKey = sharedPreferences.getString('Meta_Key')!;
 
       isloadingFirstTime = true;
       getCampaignListing();
@@ -101,6 +105,42 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
           }
         });
       }
+    }
+  }
+
+  void getMetaTemplateLanguage(String selectedTemplate) async {
+    setState(() {
+      metaTemplates.clear();
+      dropdownItems.clear();
+    });
+
+    var getData = await WebConfig.getMetaTemplateLanguage(
+      userID: userID,
+      metaKey: metaKey,
+      selectedTemplate: selectedTemplate,
+    );
+
+    if (getData['status'] == true) {
+      var templateLanguageList = getData['templateLanguage'] as List<dynamic>;
+      if (mounted) {
+        setState(() {
+          // Create dropdown items from the template language data
+          dropdownItems = templateLanguageList.map<DropdownMenuItem<String>>(
+                (templateLanguage) {
+              return DropdownMenuItem<String>(
+                value: templateLanguage['LangCode'],
+                child: Text(templateLanguage['LangName'], overflow: TextOverflow.ellipsis),
+              );
+            },
+          ).toList();
+
+          // Check if selectedLanguage matches any of the dropdown values
+          if (selectedLanguage != null && !dropdownItems.any((item) => item.value == selectedLanguage)) {
+            selectedLanguage = 'Template Language'; // Set to static value
+          }
+        });
+      }
+      print(dropdownItems);
     }
   }
 
@@ -479,7 +519,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                       height: 20,
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                       child: Row(
                         children: [
                           Container(
@@ -493,7 +533,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                             child: DropdownButtonFormField<String>(
                               value: "Template Name",
                               onChanged: (String? newValue) {
-                                setState(() {});
+                                getMetaTemplateLanguage(newValue!);
                               },
                               isExpanded: true,
                               // ignore: unnecessary_null_comparison
@@ -525,39 +565,29 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                             width: MediaQuery.of(context).size.width * 0.15,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              border: Border.all(
-                                color: Colors.grey,
-                              ),
+                              border: Border.all(color: Colors.grey),
                             ),
                             child: DropdownButtonFormField<String>(
-                              value: "Template Name",
+                              value: selectedLanguage,
                               onChanged: (String? newValue) {
-                                setState(() {});
+                                setState(() {
+                                  selectedLanguage = newValue ?? 'Template Language'; // Assign the selected value or fallback to 'Template Language'
+                                });
                               },
                               isExpanded: true,
-                              // ignore: unnecessary_null_comparison
-                              items: metaTemplates != null &&
-                                      metaTemplates.isNotEmpty
-                                  ? metaTemplates.map<DropdownMenuItem<String>>(
-                                      (Template template) {
-                                      return DropdownMenuItem<String>(
-                                        value: template.tempalteName,
-                                        child: Text(template.tempalteName,
-                                            overflow: TextOverflow.ellipsis),
-                                      );
-                                    }).toList()
+                              items: dropdownItems.isNotEmpty
+                                  ? dropdownItems
                                   : [
-                                      const DropdownMenuItem<String>(
-                                        value: "Template Name",
-                                        child: Text("Template Name",
-                                            overflow: TextOverflow.ellipsis),
-                                      ),
-                                    ],
+                                const DropdownMenuItem<String>(
+                                  value: 'Template Language',
+                                  child: Text('Template Language', overflow: TextOverflow.ellipsis),
+                                ),
+                              ],
                               decoration: const InputDecoration(
                                 contentPadding: EdgeInsets.all(8),
                                 border: InputBorder.none,
                               ),
-                            ),
+                            )
                           ),
                         ],
                       ),
