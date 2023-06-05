@@ -126,16 +126,18 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
         setState(() {
           // Create dropdown items from the template language data
           dropdownItems = templateLanguageList.map<DropdownMenuItem<String>>(
-                (templateLanguage) {
+            (templateLanguage) {
               return DropdownMenuItem<String>(
                 value: templateLanguage['LangCode'],
-                child: Text(templateLanguage['LangName'], overflow: TextOverflow.ellipsis),
+                child: Text(templateLanguage['LangName'],
+                    overflow: TextOverflow.ellipsis),
               );
             },
           ).toList();
 
           // Check if selectedLanguage matches any of the dropdown values
-          if (selectedLanguage != null && !dropdownItems.any((item) => item.value == selectedLanguage)) {
+          if (selectedLanguage != null &&
+              !dropdownItems.any((item) => item.value == selectedLanguage)) {
             selectedLanguage = 'Template Language'; // Set to static value
           }
         });
@@ -562,33 +564,34 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                           ),
                           const SizedBox(width: 16),
                           Container(
-                            width: MediaQuery.of(context).size.width * 0.15,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey),
-                            ),
-                            child: DropdownButtonFormField<String>(
-                              value: selectedLanguage,
-                              onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedLanguage = newValue ?? 'Template Language'; // Assign the selected value or fallback to 'Template Language'
-                                });
-                              },
-                              isExpanded: true,
-                              items: dropdownItems.isNotEmpty
-                                  ? dropdownItems
-                                  : [
-                                const DropdownMenuItem<String>(
-                                  value: 'Template Language',
-                                  child: Text('Template Language', overflow: TextOverflow.ellipsis),
-                                ),
-                              ],
-                              decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.all(8),
-                                border: InputBorder.none,
+                              width: MediaQuery.of(context).size.width * 0.15,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(color: Colors.grey),
                               ),
-                            )
-                          ),
+                              child: DropdownButtonFormField<String>(
+                                value: selectedLanguage,
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    selectedLanguage = newValue ??
+                                        'Template Language'; // Assign the selected value or fallback to 'Template Language'
+                                  });
+                                },
+                                isExpanded: true,
+                                items: dropdownItems.isNotEmpty
+                                    ? dropdownItems
+                                    : [
+                                        const DropdownMenuItem<String>(
+                                          value: 'Template Language',
+                                          child: Text('Template Language',
+                                              overflow: TextOverflow.ellipsis),
+                                        ),
+                                      ],
+                                decoration: const InputDecoration(
+                                  contentPadding: EdgeInsets.all(8),
+                                  border: InputBorder.none,
+                                ),
+                              )),
                         ],
                       ),
                     ),
