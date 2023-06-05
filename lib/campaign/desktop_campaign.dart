@@ -109,7 +109,6 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   }
 
   void getMetaTemplateLanguage(String selectedTemplate) async {
-    print(selectedTemplate);
     setState(() {
       dropdownItems.clear();
     });
