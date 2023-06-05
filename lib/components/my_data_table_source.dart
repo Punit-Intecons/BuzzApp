@@ -11,8 +11,7 @@ class MyDataTableSource extends DataTableSource {
     }
     final row = data[index];
     return DataRow(cells: [
-      for (var value in row)
-        DataCell(Text(value)),
+      for (var value in row) DataCell(Text(value)),
     ]);
   }
 

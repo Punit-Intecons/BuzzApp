@@ -18,8 +18,8 @@ class DesktopContacts extends StatefulWidget {
 
 class _DesktopContactsState extends State<DesktopContacts> {
   late SharedPreferences sharedPreferences;
-  late String userID='';
-  late String userName='';
+  late String userID = '';
+  late String userName = '';
   List<String> headers = [];
   List<List<String>> data = [];
   List<File> files = [];
@@ -61,7 +61,7 @@ class _DesktopContactsState extends State<DesktopContacts> {
             }
             data.add(rowData);
           }
-          rowsPerPage = (data.length < 20?data.length:20);
+          rowsPerPage = (data.length < 20 ? data.length : 20);
           isContactsLoading = false;
         });
       }
@@ -74,7 +74,7 @@ class _DesktopContactsState extends State<DesktopContacts> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context, 'contacts',userName);
+    var drawer = myDrawer(context, 'contacts', userName);
     return Scaffold(
       backgroundColor: secondaryBackgroundColor,
       body: Padding(
@@ -205,52 +205,72 @@ class _DesktopContactsState extends State<DesktopContacts> {
                         child: Padding(
                           padding: const EdgeInsets.all(16.0),
                           child: SingleChildScrollView(
-                            child: PaginatedDataTable(
-                              header: const Text('Table'),
-                              columns: [
-                                const DataColumn(label: Text('#')),
-                                // Dynamic columns
-                                for (var i = 0; i < headers.length; i++)
-                                  DataColumn(
-                                    label: headers[i] == 'Mobile'
-                                        ? const Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Icon(
-                                          Icons.phone,
-                                          color: blackColor,
-                                          size: 18,
-                                        ),
-                                        SizedBox(width: 10),
-                                        Text(
-                                          'Mobile',
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: blackColor,
-                                            fontSize: 16,
-                                          ),
-                                        ),
-                                      ],
-                                    )
-                                        : Text(
-                                      headers[i],
-                                      style: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: blackColor,
-                                        fontSize: 16,
-                                      ),
+                            child: isContactsLoading == false
+                                ? data.isEmpty
+                                    ? const Center(
+                                        child: Text("No Contact found."),
+                                      )
+                                    : PaginatedDataTable(
+                                        header: const Text('Table'),
+                                        columns: [
+                                          const DataColumn(label: Text('#')),
+                                          // Dynamic columns
+                                          for (var i = 0;
+                                              i < headers.length;
+                                              i++)
+                                            DataColumn(
+                                              label: headers[i] == 'Mobile'
+                                                  ? const Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons.phone,
+                                                          color: blackColor,
+                                                          size: 18,
+                                                        ),
+                                                        SizedBox(width: 10),
+                                                        Text(
+                                                          'Mobile',
+                                                          style: TextStyle(
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                            color: blackColor,
+                                                            fontSize: 16,
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    )
+                                                  : Text(
+                                                      headers[i],
+                                                      style: const TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: blackColor,
+                                                        fontSize: 16,
+                                                      ),
+                                                    ),
+                                            ),
+                                        ],
+                                        source: MyContactDataTableSource(data),
+                                        rowsPerPage: rowsPerPage,
+                                        availableRowsPerPage: const [
+                                          10,
+                                          20,
+                                          25
+                                        ], // Number of rows per page options
+                                        onPageChanged: (pageIndex) {
+                                          setState(() {
+                                            currentPage = pageIndex;
+                                          });
+                                        },
+                                      )
+                                : const Center(
+                                    child: CircularProgressIndicator(
+                                      color: primaryColor,
                                     ),
                                   ),
-                              ],
-                              source: MyContactDataTableSource(data),
-                              rowsPerPage: rowsPerPage,
-                              availableRowsPerPage: const [10, 20, 25], // Number of rows per page options
-                              onPageChanged: (pageIndex) {
-                                setState(() {
-                                  currentPage = pageIndex;
-                                });
-                              },
-                            ),
                           ),
                         ),
                       ),
