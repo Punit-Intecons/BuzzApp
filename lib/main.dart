@@ -40,7 +40,7 @@ class MyApp extends StatelessWidget {
       return MaterialApp(
         builder: EasyLoading.init(),
         debugShowCheckedModeBanner: false,
-        initialRoute: SplashScreen.routeName,
+        initialRoute: ResponsiveCampaign.routeName,
         routes: {
           LoginPage.routeName: (context) => const LoginPage(),
           SplashScreen.routeName: (context) => const SplashScreen(),

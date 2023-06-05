@@ -6,6 +6,7 @@ import '../controller/constant.dart';
 import '../controller/web_api.dart';
 import '../models/campaign_detail_model.dart';
 import '../models/campaign_model.dart';
+import '../models/template_model.dart';
 
 class DesktopCampaign extends StatefulWidget {
   const DesktopCampaign({Key? key}) : super(key: key);
@@ -17,6 +18,7 @@ class DesktopCampaign extends StatefulWidget {
 class _DesktopCampaignState extends State<DesktopCampaign> {
   late List<CampaignDetails> campaignDetail = [];
   late List<Campaign> userCampaigns = [];
+  late List<Template> metaTemplates = [];
   late List<String> searchedData = [];
   List<String> headers = [];
   List<List<String>> data = [];
@@ -45,6 +47,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
 
       isloadingFirstTime = true;
       getCampaignListing();
+      getMetaCampaigns();
     });
   }
 
@@ -77,6 +80,27 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
       setState(() {
         isCampaignLoading = false;
       });
+    }
+  }
+
+  getMetaCampaigns() async {
+    setState(() {
+      metaTemplates.clear();
+    });
+    var getData = await WebConfig.getMetaTemplates(
+      userID: userID,
+    );
+    if (getData['status'] == true) {
+      var list = getData['Templates'];
+      if (mounted) {
+        setState(() {
+          for (int i = 0; i < list.length; i++) {
+            metaTemplates.add(Template(
+              tempalteName: list[i]['templateName'],
+            ));
+          }
+        });
+      }
     }
   }
 
@@ -266,7 +290,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                       MaterialStateProperty.all<Color>(primaryColor),
                 ),
                 child: const Padding(
-                  padding: EdgeInsets.all(10.0),
+                  padding: EdgeInsets.all(17.0),
                   child: Text(
                     'Filter',
                     style: TextStyle(color: Colors.white),
@@ -303,7 +327,15 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
               }).toList(),
             ),
           ),
-        buildPaginatedDataTable(),
+        SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: SingleChildScrollView(
+              child: buildPaginatedDataTable(),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -409,10 +441,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                       ),
                     ),
                     const SizedBox(
-                      height: 10,
-                    ),
-                    const SizedBox(
-                      height: 25,
+                      height: 20,
                     ),
                     const Padding(
                       padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -429,7 +458,113 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                       ),
                     ),
                     searchedBox(),
-                    const SizedBox(height: 10),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Row(
+                        children: <Widget>[
+                          Text(
+                            "Template",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.15,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            child: DropdownButtonFormField<String>(
+                              value: "Template Name",
+                              onChanged: (String? newValue) {
+                                setState(() {});
+                              },
+                              isExpanded: true,
+                              // ignore: unnecessary_null_comparison
+                              items: metaTemplates != null &&
+                                      metaTemplates.isNotEmpty
+                                  ? metaTemplates.map<DropdownMenuItem<String>>(
+                                      (Template template) {
+                                      return DropdownMenuItem<String>(
+                                        value: template.tempalteName,
+                                        child: Text(template.tempalteName,
+                                            overflow: TextOverflow.ellipsis),
+                                      );
+                                    }).toList()
+                                  : [
+                                      const DropdownMenuItem<String>(
+                                        value: "Template Name",
+                                        child: Text("Template Name",
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    ],
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.all(8),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 16),
+                          Container(
+                            width: MediaQuery.of(context).size.width * 0.15,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(8),
+                              border: Border.all(
+                                color: Colors.grey,
+                              ),
+                            ),
+                            child: DropdownButtonFormField<String>(
+                              value: "Template Name",
+                              onChanged: (String? newValue) {
+                                setState(() {});
+                              },
+                              isExpanded: true,
+                              // ignore: unnecessary_null_comparison
+                              items: metaTemplates != null &&
+                                      metaTemplates.isNotEmpty
+                                  ? metaTemplates.map<DropdownMenuItem<String>>(
+                                      (Template template) {
+                                      return DropdownMenuItem<String>(
+                                        value: template.tempalteName,
+                                        child: Text(template.tempalteName,
+                                            overflow: TextOverflow.ellipsis),
+                                      );
+                                    }).toList()
+                                  : [
+                                      const DropdownMenuItem<String>(
+                                        value: "Template Name",
+                                        child: Text("Template Name",
+                                            overflow: TextOverflow.ellipsis),
+                                      ),
+                                    ],
+                              decoration: const InputDecoration(
+                                contentPadding: EdgeInsets.all(8),
+                                border: InputBorder.none,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
                   ],
                 ),
               ),
@@ -1044,6 +1179,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   void dispose() {
     // Cancel any ongoing asynchronous operations here if necessary
     getSharedData();
+    getMetaCampaigns();
+
     isdataLoading = false;
     headers = [];
     data = [];
@@ -1107,6 +1244,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     setState(() {
                                       isCreateCampaign = true;
                                       isloadingFirstTime = false;
+                                      // getMetaCampaigns();
                                     });
                                   },
                                   style: ButtonStyle(

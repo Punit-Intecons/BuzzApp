@@ -348,7 +348,8 @@ class WebConfig {
     return contactData;
   }
 
-  static Future<dynamic> getCampaignSearchedValue({required String searchedValue, required String userID}) async {
+  static Future<dynamic> getCampaignSearchedValue(
+      {required String searchedValue, required String userID}) async {
     Map<String, String> stringParams = {
       'csrf-token': crsfToken,
     };
@@ -356,13 +357,15 @@ class WebConfig {
       "userID": userID,
       "searchedValue": searchedValue,
     };
-    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getCampaignSearchedValue');
+    NetworkHelper networkHelper =
+        NetworkHelper('$kBaseURL/getCampaignSearchedValue');
     var contactData =
-    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return contactData;
   }
 
-  static Future<dynamic> getFilterSearchedValue({required String filterData, required String userID}) async {
+  static Future<dynamic> getFilterSearchedValue(
+      {required String filterData, required String userID}) async {
     Map<String, String> stringParams = {
       'csrf-token': crsfToken,
     };
@@ -370,9 +373,23 @@ class WebConfig {
       "userID": userID,
       "filterData": filterData,
     };
-    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/getFilterSearchedValue');
+    NetworkHelper networkHelper =
+        NetworkHelper('$kBaseURL/getFilterSearchedValue');
     var contactData =
-    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return contactData;
+  }
+
+  static Future<dynamic> getMetaTemplates({required String userID}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      "userID": userID,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/templates');
+    var metaTemplateResponse =
+        await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return metaTemplateResponse;
   }
 }
