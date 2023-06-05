@@ -20,7 +20,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   late List<Campaign> userCampaigns = [];
   late List<Template> metaTemplates = [];
   String? selectedLanguage;
-  List<DropdownMenuItem<String>> dropdownItems = [];
+  late List<TemplateLang> dropdownItems = [];
   late List<String> searchedData = [];
   List<String> headers = [];
   List<List<String>> data = [];
@@ -100,7 +100,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
         setState(() {
           for (int i = 0; i < list.length; i++) {
             metaTemplates.add(Template(
-              tempalteName: list[i]['templateName'],
+              templateName: list[i]['templateName'],
             ));
           }
         });
@@ -109,8 +109,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   }
 
   void getMetaTemplateLanguage(String selectedTemplate) async {
+    print(selectedTemplate);
     setState(() {
-      metaTemplates.clear();
       dropdownItems.clear();
     });
 
@@ -544,8 +544,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                   ? metaTemplates.map<DropdownMenuItem<String>>(
                                       (Template template) {
                                       return DropdownMenuItem<String>(
-                                        value: template.tempalteName,
-                                        child: Text(template.tempalteName,
+                                        value: template.templateName,
+                                        child: Text(template.templateName,
                                             overflow: TextOverflow.ellipsis),
                                       );
                                     }).toList()
