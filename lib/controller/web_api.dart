@@ -392,4 +392,19 @@ class WebConfig {
         await networkHelper.postHeaderBodyData(stringParams, bodyParams);
     return metaTemplateResponse;
   }
+
+  static Future<dynamic> getMetaTemplateLanguage({required String userID,required String metaKey,required String selectedTemplate}) async {
+    Map<String, String> stringParams = {
+      'csrf-token': crsfToken,
+    };
+    Map<String, String> bodyParams = {
+      "userID": userID,
+      "metaKey": metaKey,
+      "selectedTemplate": selectedTemplate,
+    };
+    NetworkHelper networkHelper = NetworkHelper('$kBaseURL/templateLanguage');
+    var metaTemplateResponse =
+    await networkHelper.postHeaderBodyData(stringParams, bodyParams);
+    return metaTemplateResponse;
+  }
 }
