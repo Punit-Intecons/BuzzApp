@@ -1,15 +1,17 @@
 class Template {
-  final String tempalteName;
+  final String templateName;
 
   Template({
-    required this.tempalteName,
+    required this.templateName,
   });
 }
 
 class TemplateLang {
-  final  String templatelang;
+  final  String langCode;
+  final  String langName;
 
   TemplateLang({
-    required this.templatelang,
+    required this.langCode,
+    required this.langName,
   });
 }

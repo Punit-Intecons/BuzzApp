@@ -20,7 +20,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   late List<Campaign> userCampaigns = [];
   late List<Template> metaTemplates = [];
   String? selectedLanguage;
-  List<DropdownMenuItem<String>> dropdownItems = [];
+  late List<TemplateLang> dropdownItems = [];
   late List<String> searchedData = [];
   List<String> headers = [];
   List<List<String>> data = [];
@@ -100,7 +100,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
         setState(() {
           for (int i = 0; i < list.length; i++) {
             metaTemplates.add(Template(
-              tempalteName: list[i]['templateName'],
+              templateName: list[i]['templateName'],
             ));
           }
         });
@@ -109,8 +109,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   }
 
   void getMetaTemplateLanguage(String selectedTemplate) async {
+    print(selectedTemplate);
     setState(() {
-      metaTemplates.clear();
       dropdownItems.clear();
     });
 
@@ -125,18 +125,11 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
       if (mounted) {
         setState(() {
           // Create dropdown items from the template language data
-          dropdownItems = templateLanguageList.map<DropdownMenuItem<String>>(
-                (templateLanguage) {
-              return DropdownMenuItem<String>(
-                value: templateLanguage['LangCode'],
-                child: Text(templateLanguage['LangName'], overflow: TextOverflow.ellipsis),
-              );
-            },
-          ).toList();
-
-          // Check if selectedLanguage matches any of the dropdown values
-          if (selectedLanguage != null && !dropdownItems.any((item) => item.value == selectedLanguage)) {
-            selectedLanguage = 'Template Language'; // Set to static value
+          for (int i = 0; i < templateLanguageList.length; i++) {
+            dropdownItems.add(TemplateLang(
+              langCode: templateLanguageList[i]['LangCode'],
+              langName: templateLanguageList[i]['LangName'],
+            ));
           }
         });
       }
@@ -542,8 +535,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                   ? metaTemplates.map<DropdownMenuItem<String>>(
                                       (Template template) {
                                       return DropdownMenuItem<String>(
-                                        value: template.tempalteName,
-                                        child: Text(template.tempalteName,
+                                        value: template.templateName,
+                                        child: Text(template.templateName,
                                             overflow: TextOverflow.ellipsis),
                                       );
                                     }).toList()
@@ -565,29 +558,39 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                             width: MediaQuery.of(context).size.width * 0.15,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: Colors.grey),
+                              border: Border.all(
+                                color: Colors.grey,
+                              ),
                             ),
                             child: DropdownButtonFormField<String>(
-                              value: selectedLanguage,
+                              value: "Template Language",
                               onChanged: (String? newValue) {
-                                setState(() {
-                                  selectedLanguage = newValue ?? 'Template Language'; // Assign the selected value or fallback to 'Template Language'
-                                });
+                                getMetaTemplateLanguage(newValue!);
                               },
                               isExpanded: true,
-                              items: dropdownItems.isNotEmpty
-                                  ? dropdownItems
+                              // ignore: unnecessary_null_comparison
+                              items: dropdownItems != null &&
+                                  dropdownItems.isNotEmpty
+                                  ? dropdownItems.map<DropdownMenuItem<String>>(
+                                      (TemplateLang templateLang) {
+                                    return DropdownMenuItem<String>(
+                                      value: templateLang.langCode,
+                                      child: Text(templateLang.langName,
+                                          overflow: TextOverflow.ellipsis),
+                                    );
+                                  }).toList()
                                   : [
                                 const DropdownMenuItem<String>(
-                                  value: 'Template Language',
-                                  child: Text('Template Language', overflow: TextOverflow.ellipsis),
+                                  value: "Template Language",
+                                  child: Text("Template Language",
+                                      overflow: TextOverflow.ellipsis),
                                 ),
                               ],
                               decoration: const InputDecoration(
                                 contentPadding: EdgeInsets.all(8),
                                 border: InputBorder.none,
                               ),
-                            )
+                            ),
                           ),
                         ],
                       ),
