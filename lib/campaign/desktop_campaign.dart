@@ -19,15 +19,17 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   late List<CampaignDetails> campaignDetail = [];
   late List<Campaign> userCampaigns = [];
   late List<Template> metaTemplates = [];
-  String? selectedLanguage;
+  String? selectedLanguage = "Choose Language";
   late List<TemplateLang> dropdownItems = [];
   late List<String> searchedData = [];
   List<String> headers = [];
   List<List<String>> data = [];
   bool isLoading = true;
   bool isCampaignLoading = true;
+  bool isTempLangLoading = false;
   bool isloadingFirstTime = true;
   bool isCreateCampaign = false;
+  Map<String, dynamic> templateLangComponents = {};
   final TextEditingController _inputController = TextEditingController();
   late SharedPreferences sharedPreferences;
   late String userID = "";
@@ -111,6 +113,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   void getMetaTemplateLanguage(String selectedTemplate) async {
     setState(() {
       dropdownItems.clear();
+      selectedLanguage = "Choose Language";
     });
 
     var getData = await WebConfig.getMetaTemplateLanguage(
@@ -130,9 +133,9 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
               langName: templateLanguageList[i]['LangName'],
             ));
           }
+          templateLangComponents = getData['templateComponents'];
         });
       }
-      print(dropdownItems);
     }
   }
 
@@ -372,6 +375,78 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
     );
   }
 
+  String extractBodyText(lang, type) {
+    List<dynamic>? enComponents = templateLangComponents[lang];
+    if (enComponents != null) {
+      Map<String, dynamic>? bodyComponent = enComponents.firstWhere(
+          (component) => component['type'] == type,
+          orElse: () => null);
+      if (bodyComponent != null) {
+        if (type == "BODY") {
+          return bodyComponent['text'] ?? '';
+        } else if (type == "HEADER" && bodyComponent['format'] == "IMAGE") {
+          return bodyComponent['example']['header_handle'][0] ?? '';
+        }
+      }
+    }
+    return '';
+  }
+
+  Widget templateUI(lang) {
+    if (lang != "" && lang != "Choose Language") {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: LayoutBuilder(
+          builder: (BuildContext context, BoxConstraints constraints) {
+            return SingleChildScrollView(
+              child: Row(
+                children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width * 0.20,
+                    decoration: BoxDecoration(
+                      color: whiteColor,
+                      borderRadius: BorderRadius.circular(8),
+                      border: null,
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                          child: Center(
+                            child: Image.network(
+                              extractBodyText(lang,
+                                  "HEADER"), // Replace with the actual image URL
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                          child: Text(
+                            extractBodyText(lang, "BODY"),
+                            style: const TextStyle(fontSize: 14.0),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      );
+    } else {
+      return const Padding(
+        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+        child: Row(
+          children: [
+            Text(""),
+          ],
+        ),
+      );
+    }
+  }
+
   Widget createCampaign() {
     return Column(
       children: <Widget>[
@@ -515,7 +590,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                       child: Row(
                         children: [
                           Container(
-                            width: MediaQuery.of(context).size.width * 0.15,
+                            width: MediaQuery.of(context).size.width * 0.20,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
@@ -523,7 +598,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                               ),
                             ),
                             child: DropdownButtonFormField<String>(
-                              value: "Template Name",
+                              value: "Choose Template",
                               onChanged: (String? newValue) {
                                 getMetaTemplateLanguage(newValue!);
                               },
@@ -541,9 +616,26 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     }).toList()
                                   : [
                                       const DropdownMenuItem<String>(
-                                        value: "Template Name",
-                                        child: Text("Template Name",
-                                            overflow: TextOverflow.ellipsis),
+                                        value: "Choose Template",
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.dvr_sharp,
+                                                color: Colors
+                                                    .grey), // Add the desired icon
+                                            SizedBox(
+                                                width:
+                                                    3), // Add spacing between the icon and text
+                                            Text(
+                                              "Choose Template",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize:
+                                                      16.0 // Set the text color to gray
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                               decoration: const InputDecoration(
@@ -554,7 +646,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                           ),
                           const SizedBox(width: 16),
                           Container(
-                            width: MediaQuery.of(context).size.width * 0.15,
+                            width: MediaQuery.of(context).size.width * 0.20,
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(8),
                               border: Border.all(
@@ -562,14 +654,17 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                               ),
                             ),
                             child: DropdownButtonFormField<String>(
-                              value: "Template Language",
+                              value:
+                                  selectedLanguage, // Use the selected value variable
                               onChanged: (String? newValue) {
-                                getMetaTemplateLanguage(newValue!);
+                                setState(() {
+                                  selectedLanguage =
+                                      newValue; // Update the selected value
+                                });
+                                // Handle onChanged event
                               },
                               isExpanded: true,
-                              // ignore: unnecessary_null_comparison
-                              items: dropdownItems != null &&
-                                      dropdownItems.isNotEmpty
+                              items: dropdownItems.isNotEmpty
                                   ? dropdownItems.map<DropdownMenuItem<String>>(
                                       (TemplateLang templateLang) {
                                       return DropdownMenuItem<String>(
@@ -580,9 +675,26 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                     }).toList()
                                   : [
                                       const DropdownMenuItem<String>(
-                                        value: "Template Language",
-                                        child: Text("Template Language",
-                                            overflow: TextOverflow.ellipsis),
+                                        value: "Choose Language",
+                                        child: Row(
+                                          children: [
+                                            Icon(Icons.language,
+                                                color: Colors
+                                                    .grey), // Add the desired icon
+                                            SizedBox(
+                                                width:
+                                                    3), // Add spacing between the icon and text
+                                            Text(
+                                              "Choose Language",
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize:
+                                                      16.0 // Set the text color to gray
+                                                  ),
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                     ],
                               decoration: const InputDecoration(
@@ -590,13 +702,14 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                 border: InputBorder.none,
                               ),
                             ),
-                          ),
+                          )
                         ],
                       ),
                     ),
                     const SizedBox(
                       height: 20,
                     ),
+                    templateUI(selectedLanguage)
                   ],
                 ),
               ),
