@@ -34,6 +34,7 @@ const Color greyBlueColor = Color(0XFFB8B8D2);
 const Color greyColor = Color(0XFFA4A4A4);
 const Color backgroundColor = Color(0XFFF1F1FA);
 const Color secondaryBackgroundColor = Color(0XFFF6F8FC);
+const Color searchColor = Color(0XFFF9F9F9);
 var defaultBackgroundColor = Colors.grey[300];
 const Color appBarColor = Color(0XFF296EFF);
 

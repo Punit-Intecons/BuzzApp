@@ -20,8 +20,8 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
   bool isChatLoading = true;
   bool isloadingFirstTime = true;
   late SharedPreferences sharedPreferences;
-  late String userID='';
-  late String userName='';
+  late String userID = '';
+  late String userName = '';
   @override
   void initState() {
     getSharedData();
@@ -242,7 +242,7 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
 
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context, 'inbox',userName);
+    var drawer = myDrawer(context, 'inbox', userName);
     return Scaffold(
       backgroundColor: secondaryBackgroundColor,
       body: Padding(
@@ -308,9 +308,9 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                                           8.0), // added horizontal padding
                                   child: TextField(
                                     decoration: InputDecoration(
-                                      hintText: 'Search',
-                                      border: InputBorder.none,
-                                    ),
+                                        hintText: 'Search',
+                                        border: InputBorder.none,
+                                        fillColor: searchColor),
                                   ),
                                 ),
                               ),

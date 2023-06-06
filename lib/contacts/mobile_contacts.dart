@@ -17,14 +17,16 @@ class MobileContacts extends StatefulWidget {
 
 class _MobileContactsState extends State<MobileContacts> {
   late SharedPreferences sharedPreferences;
-  late String userID='';
-  late String userName='';
+  late String userID = '';
+  late String userName = '';
   List<String> headers = [];
   List<List<String>> data = [];
   List<File> files = [];
   bool isContactsLoading = true;
   int rowsPerPage = 10; // Number of rows to display per page
   int currentPage = 0;
+  List<List<String>> originalData = [];
+  String _searchText = '';
   @override
   void initState() {
     getSharedData();
@@ -60,6 +62,7 @@ class _MobileContactsState extends State<MobileContacts> {
               }
               data.add(rowData);
             }
+            originalData = [...data];
             rowsPerPage = (data.length < 20 ? data.length : 20);
             isContactsLoading = false;
           });
@@ -72,9 +75,28 @@ class _MobileContactsState extends State<MobileContacts> {
     }
   }
 
+  searchContacts(String query) {
+    List<List<String>> filteredData = [];
+    data = originalData;
+    for (List<String> row in data) {
+      if (row.any(
+          (element) => element.toLowerCase().contains(query.toLowerCase()))) {
+        filteredData.add(row);
+      }
+    }
+    setState(() {
+      rowsPerPage = (filteredData.length < 20 ? filteredData.length : 20);
+      MyContactDataTableSource source = MyContactDataTableSource(filteredData);
+      source.addListener(() {
+        setState(() {});
+      });
+      data = filteredData;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    var drawer = myDrawer(context, 'contacts',userName);
+    var drawer = myDrawer(context, 'contacts', userName);
     return Scaffold(
       backgroundColor: whiteColor,
       appBar: AppBar(
@@ -96,66 +118,90 @@ class _MobileContactsState extends State<MobileContacts> {
         ),
       ),
       drawer: drawer,
-      body: isContactsLoading == true
-          ? const Center(
+      body: isContactsLoading == false
+          ? data.isEmpty
+              ? const Center(
+                  child: Text("No Contact found."),
+                )
+              : SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: TextField(
+                          decoration: const InputDecoration(
+                            labelText: 'Search',
+                            border: OutlineInputBorder(),
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              _searchText = value;
+                              searchContacts(_searchText);
+                            });
+                          },
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: PaginatedDataTable(
+                          columns: [
+                            const DataColumn(label: Text('#')),
+                            // Dynamic columns
+                            for (var i = 0; i < headers.length; i++)
+                              DataColumn(
+                                label: headers[i] == 'Mobile'
+                                    ? const Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Icon(
+                                            Icons.phone,
+                                            color: blackColor,
+                                            size: 18,
+                                          ),
+                                          SizedBox(width: 10),
+                                          Text(
+                                            'Mobile',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                              color: blackColor,
+                                              fontSize: 16,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    : Text(
+                                        headers[i],
+                                        style: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: blackColor,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                              ),
+                          ],
+                          source: MyContactDataTableSource(data),
+                          rowsPerPage: rowsPerPage,
+                          availableRowsPerPage: const [
+                            10,
+                            20,
+                            25
+                          ], // Number of rows per page options
+                          onPageChanged: (pageIndex) {
+                            setState(() {
+                              currentPage = pageIndex;
+                            });
+                          },
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+          : const Center(
               child: CircularProgressIndicator(
                 color: primaryColor,
               ),
-            )
-          : SizedBox(
-            width: double.infinity,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: PaginatedDataTable(
-                  header: const Text('Table'),
-                  columns: [
-                    const DataColumn(label: Text('#')),
-                    // Dynamic columns
-                    for (var i = 0; i < headers.length; i++)
-                      DataColumn(
-                        label: headers[i] == 'Mobile'
-                        ? const Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.phone,
-                              color: blackColor,
-                              size: 18,
-                            ),
-                            SizedBox(width: 10),
-                            Text(
-                              'Mobile',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: blackColor,
-                                fontSize: 16,
-                              ),
-                            ),
-                          ],
-                        )
-                        : Text(
-                          headers[i],
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: blackColor,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ),
-                  ],
-                  source: MyContactDataTableSource(data),
-                  rowsPerPage: rowsPerPage,
-                  availableRowsPerPage: const [10, 20, 25], // Number of rows per page options
-                  onPageChanged: (pageIndex) {
-                    setState(() {
-                      currentPage = pageIndex;
-                    });
-                  },
-                ),
-              ),
             ),
-          ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
           FilePickerResult? result = await FilePicker.platform.pickFiles(

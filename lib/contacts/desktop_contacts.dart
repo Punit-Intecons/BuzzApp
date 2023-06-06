@@ -23,9 +23,11 @@ class _DesktopContactsState extends State<DesktopContacts> {
   List<String> headers = [];
   List<List<String>> data = [];
   List<File> files = [];
+  List<List<String>> originalData = [];
   bool isContactsLoading = true;
   int rowsPerPage = 10; // Number of rows to display per page
   int currentPage = 0;
+  String _searchText = '';
   @override
   void initState() {
     super.initState();
@@ -61,6 +63,7 @@ class _DesktopContactsState extends State<DesktopContacts> {
             }
             data.add(rowData);
           }
+          originalData = [...data];
           rowsPerPage = (data.length < 20 ? data.length : 20);
           isContactsLoading = false;
         });
@@ -70,6 +73,25 @@ class _DesktopContactsState extends State<DesktopContacts> {
         isContactsLoading = false;
       });
     }
+  }
+
+  searchContacts(String query) {
+    List<List<String>> filteredData = [];
+    data = originalData;
+    for (List<String> row in data) {
+      if (row.any(
+          (element) => element.toLowerCase().contains(query.toLowerCase()))) {
+        filteredData.add(row);
+      }
+    }
+    setState(() {
+      rowsPerPage = (filteredData.length < 20 ? filteredData.length : 20);
+      MyContactDataTableSource source = MyContactDataTableSource(filteredData);
+      source.addListener(() {
+        setState(() {});
+      });
+      data = filteredData;
+    });
   }
 
   @override
@@ -169,24 +191,30 @@ class _DesktopContactsState extends State<DesktopContacts> {
                       child: Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(8),
-                          color: Colors.grey[200],
+                          color: searchColor,
                         ),
-                        child: const Row(
+                        child: Row(
                           children: [
-                            Padding(
+                            const Padding(
                               padding: EdgeInsets.only(
                                   left: 8.0), // added left padding
                               child: Icon(Icons.search),
                             ),
                             Expanded(
                               child: Padding(
-                                padding: EdgeInsets.symmetric(
+                                padding: const EdgeInsets.symmetric(
                                     horizontal:
                                         8.0), // added horizontal padding
                                 child: SizedBox(
                                   width: 10,
                                   child: TextField(
-                                    decoration: InputDecoration(
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _searchText = value;
+                                        searchContacts(_searchText);
+                                      });
+                                    },
+                                    decoration: const InputDecoration(
                                       hintText: 'Search',
                                       border: InputBorder.none,
                                     ),
@@ -211,7 +239,6 @@ class _DesktopContactsState extends State<DesktopContacts> {
                                         child: Text("No Contact found."),
                                       )
                                     : PaginatedDataTable(
-                                        header: const Text('Table'),
                                         columns: [
                                           const DataColumn(label: Text('#')),
                                           // Dynamic columns

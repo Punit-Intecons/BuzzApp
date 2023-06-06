@@ -111,8 +111,10 @@ class _MobileSettingState extends State<MobileSetting> {
     setState(() {
       setState(() {
         userID = sharedPreferences.getString('userID') ?? '';
-        userFirstName = firstnameController.text = sharedPreferences.getString('firstname') ?? '';
-        lastnameController.text = sharedPreferences.getString('last_name') ?? '';
+        userFirstName = firstnameController.text =
+            sharedPreferences.getString('firstname') ?? '';
+        lastnameController.text =
+            sharedPreferences.getString('last_name') ?? '';
         emailController.text = sharedPreferences.getString('email') ?? '';
         mobileController.text = sharedPreferences.getString('phoneNo') ?? '';
         selectedCode = (sharedPreferences.getString('countryCode') != ""
@@ -245,7 +247,6 @@ class _MobileSettingState extends State<MobileSetting> {
         userID: userID,
       );
 
-      print(getData);
       if (getData['status'] == true) {
         await EasyLoading.showSuccess('Password changed successfully');
       } else {
@@ -271,21 +272,23 @@ class _MobileSettingState extends State<MobileSetting> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Container(
-                    width: MediaQuery.of(context).size.width * 0.7,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                      color: Colors.white,
-                    ),
-                    child: buttonSelected == 'info'
-                        ? Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Column(children: [
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    color: Colors.white,
+                  ),
+                  child: buttonSelected == 'info'
+                      ? Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Column(
+                            children: [
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(16, 20, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(16, 20, 0, 0),
                                     child: Text(
                                       'Profile Settings',
                                       style: TextStyle(
@@ -318,7 +321,8 @@ class _MobileSettingState extends State<MobileSetting> {
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Padding(
-                                    padding: EdgeInsets.fromLTRB(16, 20, 0, 0),
+                                    padding:
+                                        const EdgeInsets.fromLTRB(16, 20, 0, 0),
                                     child: Text(
                                       'Personal Information',
                                       style: TextStyle(
@@ -483,384 +487,369 @@ class _MobileSettingState extends State<MobileSetting> {
                                   ),
                                 ),
                               ),
-                            ]))
-                        : buttonSelected == 'passwordScreen'
-                            ? Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                            ],
+                          ),
+                        )
+                      : buttonSelected == 'passwordScreen'
+                          ? Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                16, 20, 0, 0),
-                                            child: Text(
-                                              'Password Settings',
-                                              style: TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.07,
-                                                fontWeight: FontWeight.w700,
-                                                color: primaryColor,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            16, 20, 0, 0),
+                                        child: Text(
+                                          'Password Settings',
+                                          style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.07,
+                                            fontWeight: FontWeight.w700,
+                                            color: primaryColor,
                                           ),
-                                        ],
-                                      ),
-                                      SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
-                                              0.04),
-                                      Container(
-                                        decoration: const BoxDecoration(
-                                          border: Border(
-                                            bottom: BorderSide(
-                                              color: greyColor,
-                                              width: 1.0,
-                                            ),
-                                          ),
+                                          textAlign: TextAlign.left,
                                         ),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                16, 20, 0, 0),
-                                            child: Text(
-                                              'Change Password',
-                                              style: TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.05,
-                                                fontWeight: FontWeight.w700,
-                                                color: blackColor,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
-                                          ),
-                                        ],
+                                    ],
+                                  ),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.04),
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: greyColor,
+                                          width: 1.0,
+                                        ),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                16, 8, 0, 0),
-                                            child: Text(
-                                              'You can update your password here',
-                                              style: TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.04,
-                                                color: greyColor,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            16, 20, 0, 0),
+                                        child: Text(
+                                          'Change Password',
+                                          style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.05,
+                                            fontWeight: FontWeight.w700,
+                                            color: blackColor,
                                           ),
-                                        ],
+                                          textAlign: TextAlign.left,
+                                        ),
                                       ),
-                                      SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            16, 8, 0, 0),
+                                        child: Text(
+                                          'You can update your password here',
+                                          style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.04,
+                                            color: greyColor,
+                                          ),
+                                          textAlign: TextAlign.left,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
                                               0.03),
-                                      Expanded(
-                                        child: SingleChildScrollView(
-                                          child: ConstrainedBox(
-                                            constraints: const BoxConstraints(
-                                                maxWidth: 600),
-                                            child: Column(
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      child: ConstrainedBox(
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 600),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.05),
+                                            MyTextField(
+                                              controller:
+                                                  currentPasswordController,
+                                              hintText: 'Current Password',
+                                              obscureText: true,
+                                              error: _error,
+                                              focusNode:
+                                                  currentPasswordFocusNode,
+                                            ),
+                                            SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.03,
+                                            ),
+                                            MyTextField(
+                                              controller: newPasswordController,
+                                              hintText: 'New Password',
+                                              obscureText: true,
+                                              error: _error,
+                                              focusNode: newPasswordFocusNode,
+                                            ),
+                                            SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.03,
+                                            ),
+                                            MyTextField(
+                                                controller:
+                                                    confirmPasswordController,
+                                                hintText: 'Confirm Password',
+                                                obscureText: true,
+                                                error: _error,
+                                                focusNode:
+                                                    confirmPasswordFocusNode),
+                                            SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.04,
+                                            ),
+                                            Row(
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.center,
+                                                  MainAxisAlignment.end,
                                               children: [
-                                                SizedBox(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.05),
-                                                MyTextField(
-                                                  controller:
-                                                      currentPasswordController,
-                                                  hintText: 'Current Password',
-                                                  obscureText: true,
-                                                  error: _error,
-                                                  focusNode:
-                                                      currentPasswordFocusNode,
-                                                ),
-                                                SizedBox(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.03,
-                                                ),
-                                                MyTextField(
-                                                  controller:
-                                                      newPasswordController,
-                                                  hintText: 'New Password',
-                                                  obscureText: true,
-                                                  error: _error,
-                                                  focusNode:
-                                                      newPasswordFocusNode,
-                                                ),
-                                                SizedBox(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.03,
-                                                ),
-                                                MyTextField(
-                                                    controller:
-                                                        confirmPasswordController,
-                                                    hintText:
-                                                        'Confirm Password',
-                                                    obscureText: true,
-                                                    error: _error,
-                                                    focusNode:
-                                                        confirmPasswordFocusNode),
-                                                SizedBox(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.04,
-                                                ),
-                                                Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.end,
-                                                  children: [
-                                                    Container(
-                                                      padding:
-                                                          const EdgeInsets.all(
-                                                              18),
-                                                      child: ElevatedButton(
-                                                        onPressed: () {
-                                                          changePassword(
-                                                              context);
-                                                        },
-                                                        style: ElevatedButton
-                                                            .styleFrom(
-                                                          backgroundColor:
-                                                              primaryColor, // Set the background color to blue
-                                                          minimumSize: const Size(
-                                                              100,
-                                                              50), // Set the minimum width and height of the button
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8), // Apply rounded corners
-                                                          ),
-                                                        ),
-                                                        child: const Text(
-                                                          'Change',
-                                                          style: TextStyle(
-                                                            fontSize: 16,
-                                                            fontWeight:
-                                                                FontWeight.bold,
-                                                            color: Colors.white,
-                                                          ),
-                                                        ),
+                                                Container(
+                                                  padding:
+                                                      const EdgeInsets.all(18),
+                                                  child: ElevatedButton(
+                                                    onPressed: () {
+                                                      changePassword(context);
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor:
+                                                          primaryColor, // Set the background color to blue
+                                                      minimumSize: const Size(
+                                                          100,
+                                                          50), // Set the minimum width and height of the button
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                8), // Apply rounded corners
                                                       ),
-                                                    )
-                                                  ],
-                                                ),
+                                                    ),
+                                                    child: const Text(
+                                                      'Change',
+                                                      style: TextStyle(
+                                                        fontSize: 16,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: Colors.white,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                )
                                               ],
                                             ),
-                                          ),
+                                          ],
                                         ),
                                       ),
-                                    ]))
-                            : Padding(
-                                padding: const EdgeInsets.all(10.0),
-                                child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            )
+                          : Padding(
+                              padding: const EdgeInsets.all(10.0),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                16, 20, 0, 0),
-                                            child: Text(
-                                              'Meta Information',
-                                              style: TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.07,
-                                                fontWeight: FontWeight.w700,
-                                                color: primaryColor,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            16, 20, 0, 0),
+                                        child: Text(
+                                          'Meta Information',
+                                          style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.07,
+                                            fontWeight: FontWeight.w700,
+                                            color: primaryColor,
                                           ),
-                                        ],
+                                          textAlign: TextAlign.left,
+                                        ),
                                       ),
-                                      SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
+                                    ],
+                                  ),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
                                               0.04),
-                                      Container(
-                                        decoration: const BoxDecoration(
-                                          border: Border(
-                                            bottom: BorderSide(
-                                              color: greyColor,
-                                              width: 1.0,
-                                            ),
-                                          ),
+                                  Container(
+                                    decoration: const BoxDecoration(
+                                      border: Border(
+                                        bottom: BorderSide(
+                                          color: greyColor,
+                                          width: 1.0,
                                         ),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                16, 20, 0, 0),
-                                            child: Text(
-                                              'Meta Details',
-                                              style: TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.05,
-                                                fontWeight: FontWeight.w700,
-                                                color: blackColor,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
+                                    ),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            16, 20, 0, 0),
+                                        child: Text(
+                                          'Meta Details',
+                                          style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.05,
+                                            fontWeight: FontWeight.w700,
+                                            color: blackColor,
                                           ),
-                                        ],
+                                          textAlign: TextAlign.left,
+                                        ),
                                       ),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                16, 8, 0, 0),
-                                            child: Text(
-                                              'You can view your meta details below',
-                                              style: TextStyle(
-                                                fontSize: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.04,
-                                                color: greyColor,
-                                              ),
-                                              textAlign: TextAlign.left,
-                                            ),
+                                    ],
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            16, 8, 0, 0),
+                                        child: Text(
+                                          'You can view your meta details below',
+                                          style: TextStyle(
+                                            fontSize: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.04,
+                                            color: greyColor,
                                           ),
-                                        ],
+                                          textAlign: TextAlign.left,
+                                        ),
                                       ),
-                                      SizedBox(
-                                          height: MediaQuery.of(context)
-                                                  .size
-                                                  .height *
+                                    ],
+                                  ),
+                                  SizedBox(
+                                      height:
+                                          MediaQuery.of(context).size.height *
                                               0.03),
-                                      Expanded(
-                                        child: SingleChildScrollView(
-                                          child: ConstrainedBox(
-                                            constraints: const BoxConstraints(
-                                                maxWidth: 600),
-                                            child: Column(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.center,
-                                              children: [
-                                                SizedBox(
-                                                    height:
-                                                        MediaQuery.of(context)
-                                                                .size
-                                                                .height *
-                                                            0.05),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
+                                  Expanded(
+                                    child: SingleChildScrollView(
+                                      child: ConstrainedBox(
+                                        constraints:
+                                            const BoxConstraints(maxWidth: 600),
+                                        child: Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            SizedBox(
+                                                height: MediaQuery.of(context)
+                                                        .size
+                                                        .height *
+                                                    0.05),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
                                                       horizontal: 25.0),
-                                                  child: TextField(
-                                                      controller:
-                                                          metaKeyController,
-                                                      readOnly: true,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        enabledBorder:
-                                                            const OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  color: Colors
-                                                                      .grey),
-                                                        ),
-                                                        focusedBorder:
-                                                            const OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                        fillColor: Colors
-                                                            .grey.shade200,
-                                                        filled: true,
-                                                        suffixIcon:
-                                                            Icon(Icons.lock),
-                                                      )),
+                                              child: TextField(
+                                                controller: metaKeyController,
+                                                readOnly: true,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                  fillColor: searchColor,
+                                                  filled: true,
+                                                  suffixIcon: Icon(Icons.lock),
                                                 ),
-                                                SizedBox(
-                                                  height: MediaQuery.of(context)
-                                                          .size
-                                                          .height *
-                                                      0.03,
-                                                ),
-                                                Padding(
-                                                  padding: const EdgeInsets
-                                                          .symmetric(
-                                                      horizontal: 25.0),
-                                                  child: TextField(
-                                                      controller:
-                                                          wabaidController,
-                                                      readOnly: true,
-                                                      decoration:
-                                                          InputDecoration(
-                                                        enabledBorder:
-                                                            const OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                                  color: Colors
-                                                                      .grey),
-                                                        ),
-                                                        focusedBorder:
-                                                            const OutlineInputBorder(
-                                                          borderSide:
-                                                              BorderSide(
-                                                            color: Colors.grey,
-                                                          ),
-                                                        ),
-                                                        fillColor: Colors
-                                                            .grey.shade200,
-                                                        filled: true,
-                                                        suffixIcon:
-                                                            Icon(Icons.lock),
-                                                      )),
-                                                ),
-                                              ],
+                                              ),
                                             ),
-                                          ),
+                                            SizedBox(
+                                              height: MediaQuery.of(context)
+                                                      .size
+                                                      .height *
+                                                  0.03,
+                                            ),
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 25.0),
+                                              child: TextField(
+                                                controller: wabaidController,
+                                                readOnly: true,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  enabledBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                      color: Colors.grey,
+                                                    ),
+                                                  ),
+                                                  fillColor: searchColor,
+                                                  filled: true,
+                                                  suffixIcon: Icon(Icons.lock),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                    ]))),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                ),
               ),
             ),
           ],
