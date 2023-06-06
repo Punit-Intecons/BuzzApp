@@ -280,7 +280,6 @@ class _DesktopSettingState extends State<DesktopSetting> {
                     const SizedBox(
                       height: 30,
                     ),
-                    // message text
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -298,7 +297,6 @@ class _DesktopSettingState extends State<DesktopSetting> {
                         ),
                       ],
                     ),
-                    // list of previous days
                     SizedBox(height: MediaQuery.of(context).size.height * 0.05),
                     Expanded(
                       flex: 2,

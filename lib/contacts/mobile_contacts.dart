@@ -121,7 +121,13 @@ class _MobileContactsState extends State<MobileContacts> {
       body: isContactsLoading == false
           ? data.isEmpty
               ? const Center(
-                  child: Text("No Contact found."),
+                  child: Text(
+                    "No Contact found.",
+                    style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w300,
+                        color: blackColor),
+                  ),
                 )
               : SingleChildScrollView(
                   child: Column(

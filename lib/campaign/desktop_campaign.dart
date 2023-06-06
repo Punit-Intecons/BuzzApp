@@ -254,7 +254,16 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
 
   void onTextChanged(String value) {
     setState(() {
-      List<String> symbols = ['+', '/']; // Add more symbols if needed
+      List<String> symbols = [
+        '+',
+        'or',
+        'and',
+        'like',
+        'between',
+        'in',
+        'not',
+        '='
+      ]; // Add more symbols if needed
       int symbolIndex = -1;
 
       for (var symbol in symbols) {
@@ -280,7 +289,11 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
   Widget buildPaginatedDataTable() {
     if (data.isEmpty) {
       return const Center(
-        child: Text('No records found'),
+        child: Text(
+          'No records found',
+          style: TextStyle(
+              fontSize: 18, fontWeight: FontWeight.w300, color: blackColor),
+        ),
       );
     }
 
@@ -325,7 +338,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                       MaterialStateProperty.all<Color>(primaryColor),
                 ),
                 child: const Padding(
-                  padding: EdgeInsets.all(17.0),
+                  padding: EdgeInsets.all(16.0),
                   child: Text(
                     'Filter',
                     style: TextStyle(color: Colors.white),
@@ -507,7 +520,7 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              border: Border.all(),
+                              border: Border.all(color: Colors.grey, width: 1),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: Padding(
@@ -1582,7 +1595,13 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                                               campaignDetail[0].replied,
                                               campaignDetail[0].sendOn)
                                           : const Center(
-                                              child: Text("No campaign found."),
+                                              child: Text(
+                                                "No campaign found.",
+                                                style: TextStyle(
+                                                    fontSize: 18,
+                                                    fontWeight: FontWeight.w300,
+                                                    color: blackColor),
+                                              ),
                                             ),
                                 ),
                               ],
@@ -1595,8 +1614,13 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                               ],
                             )
                       : const Center(
-                          child:
-                              Text("Please select a campaign from left window"),
+                          child: Text(
+                            "Please select a campaign from left window",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w300,
+                                color: blackColor),
+                          ),
                         ),
                 ),
               ),

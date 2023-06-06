@@ -461,7 +461,13 @@ class _DesktopScaffoldState extends State<DesktopScaffold> {
                           ],
                         )
                       : const Center(
-                          child: Text("Please select a chat from left window"),
+                          child: Text(
+                            "Please select a chat from left window",
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w300,
+                                color: blackColor),
+                          ),
                         ),
                 ),
               ),

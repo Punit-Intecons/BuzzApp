@@ -24,6 +24,7 @@ class _CampaignDetailState extends State<CampaignDetail> {
     getSharedData();
     super.initState();
   }
+
   @override
   void dispose() {
     isLoading = false;
@@ -790,7 +791,13 @@ class _CampaignDetailState extends State<CampaignDetail> {
                         campaignDetail[0].replied,
                         campaignDetail[0].sendOn)
                     : const Center(
-                        child: Text("No campaign found."),
+                        child: Text(
+                          "No campaign found.",
+                          style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w300,
+                              color: blackColor),
+                        ),
                       ),
           ),
         ],

@@ -236,7 +236,13 @@ class _DesktopContactsState extends State<DesktopContacts> {
                             child: isContactsLoading == false
                                 ? data.isEmpty
                                     ? const Center(
-                                        child: Text("No Contact found."),
+                                        child: Text(
+                                          "No Contact found.",
+                                          style: TextStyle(
+                                              fontSize: 18,
+                                              fontWeight: FontWeight.w300,
+                                              color: blackColor),
+                                        ),
                                       )
                                     : PaginatedDataTable(
                                         columns: [
