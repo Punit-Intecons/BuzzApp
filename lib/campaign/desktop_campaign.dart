@@ -7,6 +7,8 @@ import '../controller/web_api.dart';
 import '../models/campaign_detail_model.dart';
 import '../models/campaign_model.dart';
 import '../models/template_model.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 class DesktopCampaign extends StatefulWidget {
   const DesktopCampaign({Key? key}) : super(key: key);
@@ -382,48 +384,174 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
           (component) => component['type'] == type,
           orElse: () => null);
       if (bodyComponent != null) {
-        if (type == "BODY") {
-          return bodyComponent['text'] ?? '';
-        } else if (type == "HEADER" && bodyComponent['format'] == "IMAGE") {
+        if (type == "HEADER" && bodyComponent['format'] == "IMAGE") {
           return bodyComponent['example']['header_handle'][0] ?? '';
+        } else if(type == "BUTTONS") {
+          if(bodyComponent['buttons'][0]['type'] == 'URL'){
+            return bodyComponent['buttons'][0]['url'] ?? '';
+          }
+        }
+        else {
+          return bodyComponent['text'] ?? '';
         }
       }
     }
     return '';
   }
+  String getCurrentTime() {
+    final timeZone = tz.local;
+    final currentTime = tz.TZDateTime.now(timeZone);
+
+    return currentTime.toString();
+  }
 
   Widget templateUI(lang) {
     if (lang != "" && lang != "Choose Language") {
+      String templateImage = extractBodyText(lang,"HEADER");
+      String templateBody = extractBodyText(lang,"BODY");
+      String templateFooter = extractBodyText(lang,"FOOTER");
+      String templateButton = extractBodyText(lang,"BUTTONS");
+      final String currentTime = getCurrentTime();
       return Padding(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-        child: LayoutBuilder(
-          builder: (BuildContext context, BoxConstraints constraints) {
-            return SingleChildScrollView(
-              child: Row(
+        child: SingleChildScrollView(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Column(
                 children: [
                   Container(
                     width: MediaQuery.of(context).size.width * 0.20,
+                    height: MediaQuery.of(context).size.height * 0.6,
                     decoration: BoxDecoration(
                       color: whiteColor,
                       borderRadius: BorderRadius.circular(8),
                       border: null,
                     ),
-                    child: Column(
+                    child: SingleChildScrollView(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (templateImage != "")
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                              child: Center(
+                                child: Container(
+                                  width: double.infinity, // Take full width of the container
+                                  height: 200, // Set the desired fixed height
+                                  child: AspectRatio(
+                                    aspectRatio: 16 / 9, // Adjust the aspect ratio as needed
+                                    child: Image.network(
+                                      templateImage, // Replace with the actual image URL
+                                      fit: BoxFit.fitWidth, // Adjust the image fit to fit the width
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          if (templateBody != "")
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                              child: Text(
+                                templateBody,
+                                style: const TextStyle(fontSize: 14.0),
+                              ),
+                            ),
+                          if (templateFooter != "")
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                              child: Text(
+                                templateFooter,
+                                style: const TextStyle(fontSize: 14.0, color: greyColor),
+                                textAlign: TextAlign.left,
+                              ),
+                            ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                            child: Text(
+                              DateTime.now().toString(),
+                              style: const TextStyle(fontSize: 14.0, color: greyColor),
+                              textAlign: TextAlign.left,
+                            ),
+                          ),
+                          if (templateButton != "")
+                            Container(
+                              decoration: const BoxDecoration(
+                                border: Border(
+                                  top: BorderSide(
+                                    color: Colors.grey, // Set the border color
+                                    width: 1.0, // Set the border width
+                                  ),
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    // Handle the button click here
+                                    // You can navigate to a new screen or perform any desired action
+                                  },
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.open_in_browser,
+                                          color: Colors.blue), // Add the desired icon
+                                      const SizedBox(
+                                          width: 3), // Add spacing between the icon and text
+                                      Text(
+                                        templateButton,
+                                        style: const TextStyle(
+                                          fontSize: 14.0,
+                                          color: Colors.blue,
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    width: MediaQuery.of(context).size.width * 0.20,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                          child: Center(
-                            child: Image.network(
-                              extractBodyText(lang,
-                                  "HEADER"), // Replace with the actual image URL
+                        ElevatedButton(
+                          onPressed: () {
+                            filterSearchedValue(_inputController.text);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(primaryColor),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'Send Campaign',
+                              style: TextStyle(color: Colors.white),
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
-                          child: Text(
-                            extractBodyText(lang, "BODY"),
-                            style: const TextStyle(fontSize: 14.0),
+                        const SizedBox(
+                            width: 10), // Spacing between text field and button
+                        ElevatedButton(
+                          onPressed: () {
+                            filterSearchedValue(_inputController.text);
+                          },
+                          style: ButtonStyle(
+                            backgroundColor:
+                                MaterialStateProperty.all<Color>(errorColor),
+                          ),
+                          child: const Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: Text(
+                              'Discard',
+                              style: TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ],
@@ -431,8 +559,8 @@ class _DesktopCampaignState extends State<DesktopCampaign> {
                   ),
                 ],
               ),
-            );
-          },
+            ],
+          ),
         ),
       );
     } else {
